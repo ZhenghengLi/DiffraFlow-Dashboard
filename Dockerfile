@@ -16,8 +16,11 @@ RUN set -x \
 # deploy ############################################################
 FROM nginx:stable-alpine
 
+ARG DIST_DIR=/opt/angular-devel/dist/diffraflow-dashboard
+ARG ROOT_DIR=/usr/share/nginx/html
+
 # copy from builder
-COPY --from=builder /opt/angular-devel/dist/diffraflow-dashboard /usr/share/nginx/html
+COPY --from=builder $DIST_DIR $ROOT_DIR
 
 # add labels
 ARG SOURCE_COMMIT
@@ -28,3 +31,12 @@ LABEL description="Dashboard for DiffraFlow project" \
     source_commit="$SOURCE_COMMIT" \
     commit_msg="$COMMIT_MSG" \
     build_time="$BUILD_TIME"
+
+# set runtime environment variables
+ENV AGGREGATOR_ADDRESS=10.10.10.10:1000 \
+    CONTROLLER_ADDRESS=10.10.10.10:1010
+
+COPY scripts/entrypoint.sh /scripts/
+
+ENTRYPOINT [ "/scripts/entrypoint.sh" ]
+CMD ["nginx", "-g", "daemon off;"]
