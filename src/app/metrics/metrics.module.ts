@@ -10,12 +10,16 @@ import { SenderComponent } from './sender/sender.component';
 import { MonitorComponent } from './monitor/monitor.component';
 import { ControllerComponent } from './controller/controller.component';
 
-
 @NgModule({
-  declarations: [MetricsComponent, DispatcherComponent, CombinerComponent, IngesterComponent, SenderComponent, MonitorComponent, ControllerComponent],
-  imports: [
-    CommonModule,
-    MetricsRoutingModule
-  ]
+    declarations: [
+        MetricsComponent,
+        DispatcherComponent,
+        CombinerComponent,
+        IngesterComponent,
+        SenderComponent,
+        MonitorComponent,
+        ControllerComponent,
+    ],
+    imports: [CommonModule, MetricsRoutingModule],
 })
-export class MetricsModule { }
+export class MetricsModule {}

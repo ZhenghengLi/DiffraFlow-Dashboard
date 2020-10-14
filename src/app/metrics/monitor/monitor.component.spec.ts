@@ -3,23 +3,22 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MonitorComponent } from './monitor.component';
 
 describe('MonitorComponent', () => {
-  let component: MonitorComponent;
-  let fixture: ComponentFixture<MonitorComponent>;
+    let component: MonitorComponent;
+    let fixture: ComponentFixture<MonitorComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ MonitorComponent ]
-    })
-    .compileComponents();
-  });
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            declarations: [MonitorComponent],
+        }).compileComponents();
+    });
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(MonitorComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    beforeEach(() => {
+        fixture = TestBed.createComponent(MonitorComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
 });
