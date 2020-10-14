@@ -36,6 +36,7 @@ LABEL description="Dashboard for DiffraFlow project" \
 ENV AGGREGATOR_ADDRESS=10.15.86.19:27711 \
     CONTROLLER_ADDRESS=10.15.86.19:27511
 
+COPY scripts/30-serve-index-when-not-found.sh /docker-entrypoint.d
 COPY scripts/entrypoint.sh /scripts/
 
 ENTRYPOINT [ "/scripts/entrypoint.sh" ]
