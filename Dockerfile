@@ -33,8 +33,8 @@ LABEL description="Dashboard for DiffraFlow project" \
     build_time="$BUILD_TIME"
 
 # set runtime environment variables
-ENV AGGREGATOR_ADDRESS=10.10.10.10:1000 \
-    CONTROLLER_ADDRESS=10.10.10.10:1010
+ENV AGGREGATOR_ADDRESS=10.15.86.19:27711 \
+    CONTROLLER_ADDRESS=10.15.86.19:27511
 
 COPY scripts/entrypoint.sh /scripts/
 
