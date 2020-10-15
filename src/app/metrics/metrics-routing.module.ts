@@ -20,10 +20,6 @@ const routes: Routes = [
                 component: OverviewComponent
             },
             {
-                path: 'overview',
-                component: OverviewComponent
-            },
-            {
                 path: 'sender',
                 component: SenderComponent,
             },
