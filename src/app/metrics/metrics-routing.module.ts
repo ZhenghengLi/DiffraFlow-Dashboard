@@ -17,11 +17,11 @@ const routes: Routes = [
         children: [
             {
                 path: '',
-                component: OverviewComponent
+                component: OverviewComponent,
             },
             {
                 path: 'overview',
-                component: OverviewComponent
+                component: OverviewComponent,
             },
             {
                 path: 'sender',
