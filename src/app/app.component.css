@@ -11,6 +11,7 @@
     display: inline-block;
     vertical-align: middle;
     margin-left: 10px;
+    width: 500px;
 }
 
 .top-nav img {
@@ -50,8 +51,9 @@
     margin: 0;
     padding: 0;
     margin-right: 20px;
-    display: inline-block;
-    vertical-align: middle;
+    display: flex;
+    justify-content: flex-end;
+    width: 300px;
 }
 
 .top-nav li {
