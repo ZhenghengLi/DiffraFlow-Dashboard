@@ -1,12 +1,15 @@
 <h2>Metrics data</h2>
 <nav>
     <ul>
-        <li><a routerLink="sender">sender</a></li>
-        <li><a routerLink="dispatcher">dispatcher</a></li>
-        <li><a routerLink="combiner">combiner</a></li>
-        <li><a routerLink="ingester">ingester</a></li>
-        <li><a routerLink="monitor">monitor</a></li>
-        <li><a routerLink="controller">combiner</a></li>
+        <li><a routerLink="overview" routerLinkActive="active">overview</a></li>
+        <li><a routerLink="sender" routerLinkActive="active">sender</a></li>
+        <li><a routerLink="dispatcher" routerLinkActive="active">dispatcher</a></li>
+        <li><a routerLink="combiner" routerLinkActive="active">combiner</a></li>
+        <li><a routerLink="ingester" routerLinkActive="active">ingester</a></li>
+        <li><a routerLink="monitor" routerLinkActive="active">monitor</a></li>
+        <li><a routerLink="controller" routerLinkActive="active">combiner</a></li>
     </ul>
 </nav>
-<router-outlet></router-outlet>
+<div>
+    <router-outlet></router-outlet>
+</div>

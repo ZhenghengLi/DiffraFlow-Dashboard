@@ -9,6 +9,7 @@ import { IngesterComponent } from './ingester/ingester.component';
 import { SenderComponent } from './sender/sender.component';
 import { MonitorComponent } from './monitor/monitor.component';
 import { ControllerComponent } from './controller/controller.component';
+import { OverviewComponent } from './overview/overview.component';
 
 @NgModule({
     declarations: [
@@ -19,6 +20,7 @@ import { ControllerComponent } from './controller/controller.component';
         SenderComponent,
         MonitorComponent,
         ControllerComponent,
+        OverviewComponent,
     ],
     imports: [CommonModule, MetricsRoutingModule],
 })
