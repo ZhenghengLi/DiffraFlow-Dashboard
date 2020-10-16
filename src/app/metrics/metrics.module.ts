@@ -10,6 +10,7 @@ import { SenderComponent } from './sender/sender.component';
 import { MonitorComponent } from './monitor/monitor.component';
 import { ControllerComponent } from './controller/controller.component';
 import { OverviewComponent } from './overview/overview.component';
+import { MetricsDataService } from './metrics-data.service';
 
 @NgModule({
     declarations: [
@@ -23,5 +24,6 @@ import { OverviewComponent } from './overview/overview.component';
         OverviewComponent,
     ],
     imports: [CommonModule, MetricsRoutingModule],
+    providers: [MetricsDataService],
 })
 export class MetricsModule {}
