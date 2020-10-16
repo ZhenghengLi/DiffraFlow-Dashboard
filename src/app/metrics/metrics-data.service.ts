@@ -29,8 +29,8 @@ export class MetricsDataService {
 
     private _updateMetrics(count: number): void {
         // debug
-        // console.log(count);
-        // return;
+        console.log(count);
+        return;
 
         this._http.get('http://' + this._aggregatorAddress).subscribe((data) => {
             let update_time = data['update_timestamp'];
