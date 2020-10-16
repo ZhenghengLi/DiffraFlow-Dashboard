@@ -16,7 +16,9 @@ export class TimeLineChartComponent implements OnInit {
     set dataId(aId: number) {
         console.log('time-line-chart: got value ', aId);
         this._dataIdVal = aId;
-        this._graphArea.nativeElement.innerHTML = `<p>current id is ${aId}</p>`;
+        if (this._graphArea) {
+            this._graphArea.nativeElement.innerHTML = `<p>current id is ${aId}</p>`;
+        }
     }
 
     get dataId(): number {
