@@ -13,12 +13,14 @@ export class SenderComponent implements OnInit, OnDestroy {
     private _metricsSubscription: Subscription;
 
     public currentMetricsStr: string;
+    public currentId: number;
 
     ngOnInit(): void {
         console.log('init sender');
         this._metricsSubscription = this._metricsData.senderMetrics.subscribe((data) => {
             console.log(data);
             this.currentMetricsStr = JSON.stringify(data);
+            this.currentId = data.data;
         });
     }
 

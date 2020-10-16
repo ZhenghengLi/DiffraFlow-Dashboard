@@ -30,6 +30,8 @@ export class MetricsDataService {
     private _updateMetrics(count: number): void {
         // debug
         console.log(count);
+        this.senderMetrics.emit({ data: count });
+
         return;
 
         this._http.get('http://' + this._aggregatorAddress).subscribe((data) => {

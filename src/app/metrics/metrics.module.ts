@@ -11,6 +11,7 @@ import { MonitorComponent } from './monitor/monitor.component';
 import { ControllerComponent } from './controller/controller.component';
 import { OverviewComponent } from './overview/overview.component';
 import { MetricsDataService } from './metrics-data.service';
+import { TimeLineChartComponent } from './common/time-line-chart/time-line-chart.component';
 
 @NgModule({
     declarations: [
@@ -22,6 +23,7 @@ import { MetricsDataService } from './metrics-data.service';
         MonitorComponent,
         ControllerComponent,
         OverviewComponent,
+        TimeLineChartComponent,
     ],
     imports: [CommonModule, MetricsRoutingModule],
     providers: [MetricsDataService],
