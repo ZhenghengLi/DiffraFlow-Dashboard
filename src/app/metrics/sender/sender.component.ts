@@ -7,10 +7,10 @@ import { MetricsDataService } from '../metrics-data.service';
     styleUrls: ['./sender.component.scss'],
 })
 export class SenderComponent implements OnInit, OnDestroy {
-    constructor(private metrics_data: MetricsDataService) {}
+    constructor(private _metricsData: MetricsDataService) {}
 
     ngOnInit(): void {
-        console.log('init sender: metrics_data: ', this.metrics_data.myId);
+        console.log('init sender');
     }
 
     ngOnDestroy(): void {

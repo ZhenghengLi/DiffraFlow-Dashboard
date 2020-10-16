@@ -7,10 +7,10 @@ import { MetricsDataService } from '../metrics-data.service';
     styleUrls: ['./combiner.component.scss'],
 })
 export class CombinerComponent implements OnInit, OnDestroy {
-    constructor(private metrics_data: MetricsDataService) {}
+    constructor(private _metricsData: MetricsDataService) {}
 
     ngOnInit(): void {
-        console.log('init combiner: metrics_data: ', this.metrics_data.myId);
+        console.log('init combiner');
     }
 
     ngOnDestroy(): void {

@@ -7,10 +7,10 @@ import { MetricsDataService } from '../metrics-data.service';
     styleUrls: ['./monitor.component.scss'],
 })
 export class MonitorComponent implements OnInit, OnDestroy {
-    constructor(private metrics_data: MetricsDataService) {}
+    constructor(private _metricsData: MetricsDataService) {}
 
     ngOnInit(): void {
-        console.log('init monitor: metrics_data: ', this.metrics_data.myId);
+        console.log('init monitor');
     }
 
     ngOnDestroy(): void {

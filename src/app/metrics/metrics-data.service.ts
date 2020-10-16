@@ -4,32 +4,33 @@ import { interval, Subscription } from 'rxjs';
 
 @Injectable()
 export class MetricsDataService {
-    constructor(private http: HttpClient) {}
-
     private _configUrl: string = 'assets/config.json';
-    private _myIdVal: number = 0;
     private _aggregatorAddress: string = null;
 
     private _intervalSubscription: Subscription = null;
+    private _intervalTime: number = 1000;
 
-    log(msg: string): void {
-        console.log('metrics-data: ', msg);
-    }
+    constructor(private _http: HttpClient) {}
 
-    get myId(): number {
-        return this._myIdVal;
+    private _updateMetrics(count: number): void {
+        console.log(count);
     }
 
     start(): void {
-        this._myIdVal = Math.random();
-        console.log('start metrics-data service:', this._myIdVal);
-        this.http.get(this._configUrl).subscribe((data) => {
+        if (this._intervalSubscription) {
+            // already started.
+            return;
+        }
+        console.log('start metrics-data service');
+        this._http.get(this._configUrl).subscribe((data) => {
             if ('aggregator_address' in data) {
                 this._aggregatorAddress = data['aggregator_address'];
                 console.log('aggregator_address = ', this._aggregatorAddress);
-                this._intervalSubscription = interval(1000).subscribe((count) => this._updateMetrics(count));
+                this._intervalSubscription = interval(this._intervalTime).subscribe((count) =>
+                    this._updateMetrics(count)
+                );
             } else {
-                console.log('no aggregator_address in config file');
+                console.error('no aggregator_address in config file');
             }
         });
     }
@@ -37,9 +38,18 @@ export class MetricsDataService {
     stop(): void {
         console.log('stop metrics-data service');
         this._intervalSubscription?.unsubscribe();
+        this._intervalSubscription = null;
     }
 
-    private _updateMetrics(count: number): void {
-        console.log(count);
+    get running(): boolean {
+        return this._intervalSubscription ? true : false;
+    }
+
+    setIntervalTime(time: number): void {
+        this._intervalTime = time > 500 ? time : 500;
+        if (this._intervalSubscription) {
+            this._intervalSubscription?.unsubscribe();
+            this._intervalSubscription = interval(this._intervalTime).subscribe((count) => this._updateMetrics(count));
+        }
     }
 }

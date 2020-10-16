@@ -7,13 +7,13 @@ import { MetricsDataService } from './metrics-data.service';
     styleUrls: ['./metrics.component.scss'],
 })
 export class MetricsComponent implements OnInit, OnDestroy {
-    constructor(private metrics_data: MetricsDataService) {}
+    constructor(private _metricsData: MetricsDataService) {}
 
     ngOnInit(): void {
-        this.metrics_data.start();
+        this._metricsData.start();
     }
 
     ngOnDestroy(): void {
-        this.metrics_data.stop();
+        this._metricsData.stop();
     }
 }

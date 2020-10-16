@@ -7,10 +7,10 @@ import { MetricsDataService } from '../metrics-data.service';
     styleUrls: ['./ingester.component.scss'],
 })
 export class IngesterComponent implements OnInit, OnDestroy {
-    constructor(private metrics_data: MetricsDataService) {}
+    constructor(private _metricsData: MetricsDataService) {}
 
     ngOnInit(): void {
-        console.log('init ingester: metrics_data: ', this.metrics_data.myId);
+        console.log('init ingester');
     }
 
     ngOnDestroy(): void {
