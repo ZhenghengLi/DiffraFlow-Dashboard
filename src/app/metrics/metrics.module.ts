@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
+import { NgxEchartsModule } from 'ngx-echarts';
+
 import { MetricsRoutingModule } from './metrics-routing.module';
 import { MetricsComponent } from './metrics.component';
 import { DispatcherComponent } from './dispatcher/dispatcher.component';
@@ -25,7 +27,13 @@ import { TimeLineChartComponent } from './common/time-line-chart/time-line-chart
         OverviewComponent,
         TimeLineChartComponent,
     ],
-    imports: [CommonModule, MetricsRoutingModule],
+    imports: [
+        CommonModule,
+        MetricsRoutingModule,
+        NgxEchartsModule.forRoot({
+            echarts: () => import('echarts'),
+        }),
+    ],
     providers: [MetricsDataService],
 })
 export class MetricsModule {}
