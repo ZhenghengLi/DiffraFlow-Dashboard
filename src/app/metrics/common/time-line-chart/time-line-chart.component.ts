@@ -13,6 +13,13 @@ export class TimeLineChartComponent implements OnInit {
     private _dataIdVal: number;
 
     public options: any;
+    public initOpts: any = {
+        renderer: 'svg',
+    };
+    @Input()
+    title: string = 'title';
+    @Input()
+    yLabel: string = 'ylabel';
 
     @Input()
     set dataId(anId: number) {
@@ -26,26 +33,47 @@ export class TimeLineChartComponent implements OnInit {
     }
 
     private _updateOptions(): void {
-        const xAxisData = [];
         const data1 = [];
 
-        for (let i = 0; i < 60; i++) {
-            xAxisData.push(i);
-            data1.push(
-                100 +
-                    (Math.sin((i - this._dataIdVal * 0.5) / 5) * ((i - this._dataIdVal * 0.5) / 5 - 10) +
-                        (i - this._dataIdVal * 0.5) / 6) *
-                        5
-            );
+        let currentTime = new Date().getTime() + 0;
+        for (let i = 0; i <= 60; i++) {
+            data1.push([currentTime - i * 1000, 1.5 + Math.sin((i - this._dataIdVal * 0.5) / 5)]);
         }
 
         this.options = {
-            tooltip: {},
-            xAxis: {
-                data: xAxisData,
-                boundaryGap: false,
+            title: {
+                text: this.title,
+                left: 'center',
+                textStyle: {
+                    fontWeight: 'normal',
+                    fontSize: 20,
+                },
             },
-            yAxis: {},
+            grid: {
+                left: 30,
+                bottom: 30,
+                right: 70,
+                top: 35,
+            },
+            xAxis: {
+                boundaryGap: false,
+                type: 'time',
+                interval: 10000,
+                axisLabel: {
+                    formatter: (value) => {
+                        return new Date(value).toLocaleTimeString('en-US', { hour12: false });
+                    },
+                },
+            },
+            yAxis: {
+                position: 'right',
+                name: this.yLabel,
+                nameTextStyle: {
+                    fontSize: 14,
+                    padding: 35,
+                },
+                nameLocation: 'center',
+            },
             series: [
                 {
                     type: 'line',
@@ -55,7 +83,7 @@ export class TimeLineChartComponent implements OnInit {
                     },
                     data: data1,
                     areaStyle: {
-                        color: 'green',
+                        color: 'lightgreen',
                     },
                     animationDelay: (idx) => idx * 10,
                 },
