@@ -28,40 +28,36 @@ export class TimeLineChartComponent implements OnInit {
     private _updateOptions(): void {
         const xAxisData = [];
         const data1 = [];
-        const data2 = [];
 
-        for (let i = 0; i < 100; i++) {
-            xAxisData.push('category' + i);
-            data1.push((Math.sin(i / 5 + this._dataIdVal) * (i / 5 - 10) + i / 6) * 5);
-            data2.push((Math.cos(i / 5 + this._dataIdVal) * (i / 5 - 10) + i / 6) * 5);
+        for (let i = 0; i < 60; i++) {
+            xAxisData.push(i);
+            data1.push(
+                100 +
+                    (Math.sin((i - this._dataIdVal * 0.5) / 5) * ((i - this._dataIdVal * 0.5) / 5 - 10) +
+                        (i - this._dataIdVal * 0.5) / 6) *
+                        5
+            );
         }
 
         this.options = {
-            legend: {
-                data: ['bar', 'bar2'],
-                align: 'left',
-            },
             tooltip: {},
             xAxis: {
                 data: xAxisData,
-                silent: false,
-                splitLine: {
-                    show: false,
-                },
+                boundaryGap: false,
             },
             yAxis: {},
             series: [
                 {
-                    name: 'bar',
-                    type: 'bar',
+                    type: 'line',
+                    symbol: 'none',
+                    lineStyle: {
+                        color: 'green',
+                    },
                     data: data1,
+                    areaStyle: {
+                        color: 'green',
+                    },
                     animationDelay: (idx) => idx * 10,
-                },
-                {
-                    name: 'bar2',
-                    type: 'bar',
-                    data: data2,
-                    animationDelay: (idx) => idx * 10 + 100,
                 },
             ],
             animationEasing: 'elasticOut',
