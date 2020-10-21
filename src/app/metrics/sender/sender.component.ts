@@ -14,6 +14,7 @@ export class SenderComponent implements OnInit, OnDestroy {
 
     public currentMetricsStr: string;
     public currentId: number;
+    public dataset: [number, number][];
 
     ngOnInit(): void {
         console.log('init sender');
@@ -21,6 +22,12 @@ export class SenderComponent implements OnInit, OnDestroy {
             console.log(data);
             this.currentMetricsStr = JSON.stringify(data);
             this.currentId = data.data;
+
+            this.dataset = [];
+            let currentTime = new Date().getTime();
+            for (let i = 0; i <= 60; i++) {
+                this.dataset.push([currentTime - i * 1000, 1.5 + Math.sin((i - this.currentId * 0.5) / 5)]);
+            }
         });
     }
 

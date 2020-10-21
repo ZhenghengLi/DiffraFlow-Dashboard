@@ -10,36 +10,24 @@ export class TimeLineChartComponent implements OnInit {
 
     ngOnInit(): void {}
 
-    private _dataIdVal: number;
+    private _dataVal: [number, number][];
 
     public options: any;
     public initOpts: any = {
         renderer: 'svg',
     };
+
     @Input()
     title: string = 'title';
     @Input()
     yLabel: string = 'ylabel';
-
     @Input()
-    set dataId(anId: number) {
-        console.log('time-line-chart: got value ', anId);
-        this._dataIdVal = anId;
+    set data(dataVal: [number, number][]) {
+        this._dataVal = dataVal;
         this._updateOptions();
     }
 
-    get dataId(): number {
-        return this._dataIdVal;
-    }
-
     private _updateOptions(): void {
-        const data1 = [];
-
-        let currentTime = new Date().getTime() + 0;
-        for (let i = 0; i <= 60; i++) {
-            data1.push([currentTime - i * 1000, 1.5 + Math.sin((i - this._dataIdVal * 0.5) / 5)]);
-        }
-
         this.options = {
             title: {
                 text: this.title,
@@ -77,11 +65,12 @@ export class TimeLineChartComponent implements OnInit {
             series: [
                 {
                     type: 'line',
+                    smooth: true,
                     symbol: 'none',
                     lineStyle: {
                         color: 'green',
                     },
-                    data: data1,
+                    data: this._dataVal,
                     areaStyle: {
                         color: 'lightgreen',
                     },
