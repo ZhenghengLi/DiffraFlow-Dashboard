@@ -13,6 +13,9 @@ p {
     height: 40px;
     margin: 12px 12px 0 12px;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .body-wrapper {
@@ -27,4 +30,15 @@ p {
     display: flex;
     flex-wrap: wrap;
     width: 100%;
+}
+
+button {
+    margin-left: 10px;
+    padding: 5px;
+}
+
+.update-time {
+    text-align: center;
+    color: red;
+    margin-right: 15px;
 }

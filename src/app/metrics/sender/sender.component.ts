@@ -10,30 +10,44 @@ import { MetricsDataService } from '../metrics-data.service';
 export class SenderComponent implements OnInit, OnDestroy {
     constructor(private _metricsData: MetricsDataService) {}
 
-    private _metricsSubscription: Subscription;
-
+    public metricsSubscription: Subscription;
     public currentMetricsStr: string;
     public currentId: number;
     public dataset: [number, number][];
+    public updateTime: Date;
 
     ngOnInit(): void {
         console.log('init sender');
-        this._metricsSubscription = this._metricsData.senderMetrics.subscribe((data) => {
-            console.log(data);
-            this.currentMetricsStr = JSON.stringify(data);
-            this.currentId = data.data;
-
-            this.dataset = [];
-            let currentTime = new Date().getTime();
-            for (let i = 0; i <= 60; i++) {
-                this.dataset.push([currentTime - i * 1000, 1.5 + Math.sin((i - this.currentId * 0.5) / 5)]);
-            }
-        });
+        this.start();
     }
 
     ngOnDestroy(): void {
         console.log('destroy sender');
-        this._metricsSubscription.unsubscribe();
-        this._metricsSubscription = undefined;
+        this.pause();
+    }
+
+    start(): void {
+        if (!this.metricsSubscription) {
+            this.metricsSubscription = this._metricsData.senderMetrics.subscribe((data) => {
+                console.log(data);
+                this.currentMetricsStr = JSON.stringify(data);
+                this.currentId = data.data;
+
+                this.dataset = [];
+                let currentTime = new Date().getTime();
+                for (let i = 0; i <= 60; i++) {
+                    this.dataset.push([currentTime - i * 1000, 1.5 + Math.sin((i - this.currentId * 0.5) / 5)]);
+                }
+
+                this.updateTime = new Date();
+            });
+        }
+    }
+
+    pause(): void {
+        if (this.metricsSubscription) {
+            this.metricsSubscription.unsubscribe();
+            this.metricsSubscription = undefined;
+        }
     }
 }
