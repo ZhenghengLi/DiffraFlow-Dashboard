@@ -1,6 +1,6 @@
 <div class="head-wrapper">
     <div class="button-group">
-        <button (click)="start()" [disabled]="metricsSubscription">start</button>
+        <button (click)="resume()" [disabled]="metricsSubscription">resume</button>
         <button (click)="pause()" [disabled]="!metricsSubscription">pause</button>
     </div>
     <p *ngIf="updateTime" class="update-time">

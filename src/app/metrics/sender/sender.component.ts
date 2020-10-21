@@ -18,7 +18,7 @@ export class SenderComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         console.log('init sender');
-        this.start();
+        this.resume();
     }
 
     ngOnDestroy(): void {
@@ -26,7 +26,7 @@ export class SenderComponent implements OnInit, OnDestroy {
         this.pause();
     }
 
-    start(): void {
+    resume(): void {
         if (!this.metricsSubscription) {
             this.metricsSubscription = this._metricsData.senderMetrics.subscribe((data) => {
                 console.log(data);
