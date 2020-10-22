@@ -1,8 +1,6 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { MetricsType } from './metrics-type.enum';
-import { MetricsCommand } from './metrics-command.enum';
-import { MetricsData } from './metrics-data.type';
+import { MetricsType, MetricsCommand, MetricsData } from './metrics.common';
 
 @Injectable()
 export class MetricsDataService {

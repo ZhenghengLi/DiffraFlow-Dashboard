@@ -15,10 +15,10 @@
 <div class="body-wrapper" [ngSwitch]="selectedView">
     <div class="graph-group" *ngSwitchCase="'dataRate'">
         <app-time-line-chart
-            *ngFor="let item of metricsData.selected.dataRate | keyvalue"
-            [title]="item.key"
-            [data]="item.value"
-            yLabel="Rate"
+            *ngFor="let idx of dataRateIndexes"
+            [title]="dataRateDataArr[idx][0]"
+            [data]="dataRateDataArr[idx][1]"
+            [yLabel]="dataRateYLabel"
         >
         </app-time-line-chart>
     </div>

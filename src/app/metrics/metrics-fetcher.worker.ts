@@ -1,9 +1,7 @@
 /// <reference lib="webworker" />
 
 import { interval, Subscription } from 'rxjs';
-import { MetricsType } from './metrics-type.enum';
-import { MetricsCommand } from './metrics-command.enum';
-import { MetricsData } from './metrics-data.type';
+import { MetricsType, MetricsCommand, MetricsData } from './metrics.common';
 
 const configUrl: string = 'assets/config.json';
 let selectedComponent: MetricsType;
@@ -36,16 +34,24 @@ function setIntervalTime(time: number): void {
         .catch((err) => console.log(err));
 }
 
+let globalInstanceNum = 2;
+
 function update(count: number): void {
     console.log('update: ', count);
 
     // fetch and update
     senderMetrics.selected.dataRate.instance1 = [];
     senderMetrics.selected.dataRate.instance2 = [];
+    if (count % 10 === 0 && globalInstanceNum < 16) {
+        globalInstanceNum++;
+        senderMetrics.selected.dataRate['instance' + globalInstanceNum] = [];
+    }
     let currentTime = new Date().getTime();
-    for (let i = 0; i <= 60; i++) {
-        senderMetrics.selected.dataRate.instance1.push([currentTime - i * 1000, 1.5 + Math.sin((i - count * 0.5) / 5)]);
-        senderMetrics.selected.dataRate.instance2.push([currentTime - i * 1000, 1.5 + Math.cos((i - count * 0.5) / 5)]);
+    for (let key in senderMetrics.selected.dataRate) {
+        senderMetrics.selected.dataRate[key] = [];
+        for (let i = 0; i <= 60; i++) {
+            senderMetrics.selected.dataRate[key].push([currentTime - i * 1000, 1.5 + Math.sin((i - count * 0.5) / 5)]);
+        }
     }
 
     // post message
