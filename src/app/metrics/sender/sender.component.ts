@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MetricsDataService } from '../metrics-data.service';
+import { MetricsType } from '../metrics-type.enum';
 
 @Component({
     selector: 'app-sender',
@@ -19,18 +20,19 @@ export class SenderComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         console.log('init sender');
+        this._metricsService.select(MetricsType.sender);
         this.resume();
     }
 
     ngOnDestroy(): void {
         console.log('destroy sender');
-        this.pause();
+        this._metricsService.unselect();
     }
 
     resume(): void {
         if (!this.metricsSubscription) {
-            this.metricsSubscription = this._metricsService.senderMetrics.subscribe((data) => {
-                this.metricsData = JSON.parse(JSON.stringify(data));
+            this.metricsSubscription = this._metricsService.metricsNotifier.subscribe((data) => {
+                this.metricsData = data;
                 this.updateTime = new Date();
             });
         }

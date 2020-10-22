@@ -15,7 +15,7 @@
 <div class="body-wrapper" [ngSwitch]="selectedView">
     <div class="graph-group" *ngSwitchCase="'dataRate'">
         <app-time-line-chart
-            *ngFor="let item of metricsData.selectedParameters | keyvalue"
+            *ngFor="let item of metricsData.selected | keyvalue"
             [title]="item.key"
             [data]="item.value"
             yLabel="Rate"
