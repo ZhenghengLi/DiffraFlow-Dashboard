@@ -11,11 +11,25 @@
     width: 200px;
     height: 100%;
     border-right: solid rgb(175, 175, 175) 1px;
+    display: flex;
+    flex-direction: column;
 }
 
 .left-nav h2 {
     font-family: Roboto, "Helvetica Neue", sans-serif;
     text-align: center;
+}
+
+.left-nav hr {
+    width: 100%;
+    margin-top: 0px;
+    margin-bottom: 10px;
+}
+
+.left-nav nav {
+    display: block;
+    overflow-y: auto;
+    height: 100%;
 }
 
 .left-nav nav ul {
