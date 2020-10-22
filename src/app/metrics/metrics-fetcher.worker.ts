@@ -10,7 +10,11 @@ let selectedComponent: MetricsType;
 let intervalSubscription: Subscription;
 let intervalTime: number = 1000;
 
-let senderMetrics: MetricsData = { type: MetricsType.sender, metrics: {}, selected: { rate1: [], rate2: [] } };
+let senderMetrics: MetricsData = {
+    type: MetricsType.sender,
+    metrics: {},
+    selected: { dataRate: { instance1: [], instance2: [] } },
+};
 
 function setIntervalTime(time: number): void {
     let intervalTime = time > 500 ? time : 500;
@@ -36,12 +40,12 @@ function update(count: number): void {
     console.log('update: ', count);
 
     // fetch and update
-    senderMetrics.selected.rate1 = [];
-    senderMetrics.selected.rate2 = [];
+    senderMetrics.selected.dataRate.instance1 = [];
+    senderMetrics.selected.dataRate.instance2 = [];
     let currentTime = new Date().getTime();
     for (let i = 0; i <= 60; i++) {
-        senderMetrics.selected.rate1.push([currentTime - i * 1000, 1.5 + Math.sin((i - count * 0.5) / 5)]);
-        senderMetrics.selected.rate2.push([currentTime - i * 1000, 1.5 + Math.cos((i - count * 0.5) / 5)]);
+        senderMetrics.selected.dataRate.instance1.push([currentTime - i * 1000, 1.5 + Math.sin((i - count * 0.5) / 5)]);
+        senderMetrics.selected.dataRate.instance2.push([currentTime - i * 1000, 1.5 + Math.cos((i - count * 0.5) / 5)]);
     }
 
     // post message
