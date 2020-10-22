@@ -11,7 +11,7 @@ let intervalTime: number = 1000;
 let senderMetrics: MetricsData = {
     type: MetricsType.sender,
     metrics: {},
-    selected: { dataRate: { instance1: [], instance2: [] } },
+    selected: { dataRate: { unit: 'Rate (MiB/s)', data: { instance1: [], instance2: [] } } },
 };
 
 function setIntervalTime(time: number): void {
@@ -40,17 +40,20 @@ function update(count: number): void {
     console.log('update: ', count);
 
     // fetch and update
-    senderMetrics.selected.dataRate.instance1 = [];
-    senderMetrics.selected.dataRate.instance2 = [];
+    senderMetrics.selected.dataRate.data.instance1 = [];
+    senderMetrics.selected.dataRate.data.instance2 = [];
     if (count % 10 === 0 && globalInstanceNum < 16) {
         globalInstanceNum++;
-        senderMetrics.selected.dataRate['instance' + globalInstanceNum] = [];
+        senderMetrics.selected.dataRate.data['instance' + globalInstanceNum] = [];
     }
     let currentTime = new Date().getTime();
-    for (let key in senderMetrics.selected.dataRate) {
-        senderMetrics.selected.dataRate[key] = [];
+    for (let key in senderMetrics.selected.dataRate.data) {
+        senderMetrics.selected.dataRate.data[key] = [];
         for (let i = 0; i <= 60; i++) {
-            senderMetrics.selected.dataRate[key].push([currentTime - i * 1000, 1.5 + Math.sin((i - count * 0.5) / 5)]);
+            senderMetrics.selected.dataRate.data[key].push([
+                currentTime - i * 1000,
+                1.5 + Math.sin((i - count * 0.5) / 5),
+            ]);
         }
     }
 

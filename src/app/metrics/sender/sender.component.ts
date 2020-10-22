@@ -21,7 +21,7 @@ export class SenderComponent implements OnInit, OnDestroy {
     // dataRate
     public dataRateIndexes: number[] = [];
     public dataRateDataArr: [string, any][] = [];
-    public dataRateYLabel: string = 'Rate';
+    public dataRateUnit: string = '';
     public dataRateObject: any;
 
     // otherParameter
@@ -45,7 +45,8 @@ export class SenderComponent implements OnInit, OnDestroy {
                 this.metricsObject = data.metrics;
 
                 // dataRate
-                this.dataRateObject = data.selected.dataRate;
+                this.dataRateUnit = data.selected.dataRate.unit;
+                this.dataRateObject = data.selected.dataRate.data;
                 let nKeys = Object.keys(this.dataRateObject).length;
                 this.dataRateIndexes = [...new Array(nKeys).keys()];
                 this.dataRateDataArr = [];

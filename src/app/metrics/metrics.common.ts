@@ -13,7 +13,12 @@ export enum MetricsType {
 export type MetricsData = {
     type: MetricsType;
     metrics: any;
-    selected: { [parameter: string]: { [instance: string]: [number, number][] } };
+    selected: {
+        [parameter: string]: {
+            unit: string;
+            data: { [instance: string]: [number, number][] };
+        };
+    };
 };
 
 export enum MetricsCommand {
