@@ -1,7 +1,7 @@
 <div class="head-wrapper">
     <div class="button-group">
-        <button (click)="resume()" [disabled]="metricsSubscription">resume</button>
-        <button (click)="pause()" [disabled]="!metricsSubscription">pause</button>
+        <button (click)="resume()" [disabled]="metricsSubscription">Resume</button>
+        <button (click)="pause()" [disabled]="!metricsSubscription">Pause</button>
     </div>
     <p *ngIf="updateTime" class="update-time">
         Update Time: {{ updateTime.toLocaleString("en-US", { hour12: false }) }}
