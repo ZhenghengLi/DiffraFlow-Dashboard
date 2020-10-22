@@ -8,13 +8,14 @@ import { MetricsDataService } from '../metrics-data.service';
     styleUrls: ['./sender.component.scss'],
 })
 export class SenderComponent implements OnInit, OnDestroy {
-    constructor(private _metricsData: MetricsDataService) {}
+    constructor(private _metricsService: MetricsDataService) {}
 
     public metricsSubscription: Subscription;
-    public currentMetricsStr: string;
-    public currentId: number;
-    public dataset: [number, number][];
+    public metricsData: any;
     public updateTime: Date;
+    public selectedView: string;
+
+    public packetRate = ['Packet1', 'Packet2'];
 
     ngOnInit(): void {
         console.log('init sender');
@@ -28,17 +29,8 @@ export class SenderComponent implements OnInit, OnDestroy {
 
     resume(): void {
         if (!this.metricsSubscription) {
-            this.metricsSubscription = this._metricsData.senderMetrics.subscribe((data) => {
-                console.log(data);
-                this.currentMetricsStr = JSON.stringify(data);
-                this.currentId = data.data;
-
-                this.dataset = [];
-                let currentTime = new Date().getTime();
-                for (let i = 0; i <= 60; i++) {
-                    this.dataset.push([currentTime - i * 1000, 1.5 + Math.sin((i - this.currentId * 0.5) / 5)]);
-                }
-
+            this.metricsSubscription = this._metricsService.senderMetrics.subscribe((data) => {
+                this.metricsData = JSON.parse(JSON.stringify(data));
                 this.updateTime = new Date();
             });
         }
@@ -49,5 +41,10 @@ export class SenderComponent implements OnInit, OnDestroy {
             this.metricsSubscription.unsubscribe();
             this.metricsSubscription = undefined;
         }
+    }
+
+    select(event: any): void {
+        this.selectedView = event.target.value;
+        console.log(event.target.value);
     }
 }

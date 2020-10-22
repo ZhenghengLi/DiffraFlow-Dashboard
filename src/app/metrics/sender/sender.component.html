@@ -2,28 +2,24 @@
     <div class="button-group">
         <button (click)="resume()" [disabled]="metricsSubscription">Resume</button>
         <button (click)="pause()" [disabled]="!metricsSubscription">Pause</button>
+        <select (change)="select($event)">
+            <option value="currentMetrics">Current Metrics</option>
+            <option value="dataRate">Date Rate History</option>
+            <option value="packetRate">Packet Rate History</option>
+        </select>
     </div>
     <p *ngIf="updateTime" class="update-time">
         Update Time: {{ updateTime.toLocaleString("en-US", { hour12: false }) }}
     </p>
 </div>
-<div class="body-wrapper">
-    <div class="graph-group">
-        <app-time-line-chart [data]="dataset" title="demo line" yLabel="Rate"> </app-time-line-chart>
-        <app-time-line-chart [data]="dataset" title="demo line" yLabel="Rate"> </app-time-line-chart>
-        <app-time-line-chart [data]="dataset" title="demo line" yLabel="Rate"> </app-time-line-chart>
-        <app-time-line-chart [data]="dataset" title="demo line" yLabel="Rate"> </app-time-line-chart>
-        <app-time-line-chart [data]="dataset" title="demo line" yLabel="Rate"> </app-time-line-chart>
-        <app-time-line-chart [data]="dataset" title="demo line" yLabel="Rate"> </app-time-line-chart>
-        <app-time-line-chart [data]="dataset" title="demo line" yLabel="Rate"> </app-time-line-chart>
-        <app-time-line-chart [data]="dataset" title="demo line" yLabel="Rate"> </app-time-line-chart>
-        <app-time-line-chart [data]="dataset" title="demo line" yLabel="Rate"> </app-time-line-chart>
-        <app-time-line-chart [data]="dataset" title="demo line" yLabel="Rate"> </app-time-line-chart>
-        <app-time-line-chart [data]="dataset" title="demo line" yLabel="Rate"> </app-time-line-chart>
-        <app-time-line-chart [data]="dataset" title="demo line" yLabel="Rate"> </app-time-line-chart>
-        <app-time-line-chart [data]="dataset" title="demo line" yLabel="Rate"> </app-time-line-chart>
-        <app-time-line-chart [data]="dataset" title="demo line" yLabel="Rate"> </app-time-line-chart>
-        <app-time-line-chart [data]="dataset" title="demo line" yLabel="Rate"> </app-time-line-chart>
-        <app-time-line-chart [data]="dataset" title="demo line" yLabel="Rate"> </app-time-line-chart>
+<div class="body-wrapper" [ngSwitch]="selectedView">
+    <div class="graph-group" *ngSwitchCase="'dataRate'">
+        <app-time-line-chart
+            *ngFor="let item of metricsData.selectedParameters | keyvalue"
+            [title]="item.key"
+            [data]="item.value"
+            yLabel="Rate"
+        >
+        </app-time-line-chart>
     </div>
 </div>

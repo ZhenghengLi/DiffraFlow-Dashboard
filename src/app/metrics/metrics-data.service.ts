@@ -10,7 +10,7 @@ export class MetricsDataService {
     private _intervalSubscription: Subscription = null;
     private _intervalTime: number = 1000;
 
-    private _senderCurrentMetrics: object;
+    private _senderCurrentMetrics: any = { fullMetrics: {}, selectedParameters: { rate1: [], rate2: [] } };
     private _dispatcherCurrentMetrics: object;
     private _combinerCurrentMetrics: object;
     private _ingesterCurrentMetrics: object;
@@ -30,7 +30,23 @@ export class MetricsDataService {
     private _updateMetrics(count: number): void {
         // debug
         console.log(count);
-        this.senderMetrics.emit({ data: count });
+
+        this._senderCurrentMetrics.fullMetrics = { value: Math.random() };
+        this._senderCurrentMetrics.selectedParameters.rate1 = [];
+        this._senderCurrentMetrics.selectedParameters.rate2 = [];
+        let currentTime = new Date().getTime();
+        for (let i = 0; i <= 60; i++) {
+            this._senderCurrentMetrics.selectedParameters.rate1.push([
+                currentTime - i * 1000,
+                1.5 + Math.sin((i - count * 0.5) / 5),
+            ]);
+            this._senderCurrentMetrics.selectedParameters.rate2.push([
+                currentTime - i * 1000,
+                1.5 + Math.cos((i - count * 0.5) / 5),
+            ]);
+        }
+
+        this.senderMetrics.emit(this._senderCurrentMetrics);
 
         return;
 
