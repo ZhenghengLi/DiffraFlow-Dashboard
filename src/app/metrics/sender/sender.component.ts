@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MetricsDataService } from '../metrics-data.service';
 import { MetricsType } from '../metrics-type.enum';
+import { MetricsData } from '../metrics-data.type';
 
 @Component({
     selector: 'app-sender',
@@ -12,11 +13,9 @@ export class SenderComponent implements OnInit, OnDestroy {
     constructor(private _metricsService: MetricsDataService) {}
 
     public metricsSubscription: Subscription;
-    public metricsData: any;
+    public metricsData: MetricsData;
     public updateTime: Date;
     public selectedView: string;
-
-    public packetRate = ['Packet1', 'Packet2'];
 
     ngOnInit(): void {
         console.log('init sender');
@@ -43,10 +42,5 @@ export class SenderComponent implements OnInit, OnDestroy {
             this.metricsSubscription.unsubscribe();
             this.metricsSubscription = undefined;
         }
-    }
-
-    select(event: any): void {
-        this.selectedView = event.target.value;
-        console.log(event.target.value);
     }
 }

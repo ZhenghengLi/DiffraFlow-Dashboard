@@ -2,7 +2,7 @@
     <div class="button-group">
         <button (click)="resume()" [disabled]="metricsSubscription">Resume</button>
         <button (click)="pause()" [disabled]="!metricsSubscription">Pause</button>
-        <select (change)="select($event)">
+        <select (change)="selectedView = $event.target.value">
             <option value="currentMetrics">Current Metrics</option>
             <option value="dataRate">Date Rate History</option>
             <option value="packetRate">Packet Rate History</option>
