@@ -3,21 +3,84 @@
 import { interval, Subscription } from 'rxjs';
 import { MetricsType, MetricsCommand, MetricsData } from './metrics.common';
 
+//=============================================================================
+// metrics data processing logics
+
+// ---- global metrics data ---------------------------------------------------
+
+let senderMetrics: MetricsData = {
+    type: MetricsType.sender,
+    metrics: {},
+    selected: { dataRate: { unit: 'Rate (MiB/s)', data: { instance1: [], instance2: [] } } },
+    // selected: { dataRate: null },
+};
+
+let dispatcherMetrics: MetricsData = {
+    type: MetricsType.dispatcher,
+    metrics: {},
+    selected: { dataRate: { unit: 'Rate (MiB/s)', data: { instance1: [], instance2: [] } } },
+    // selected: { dataRate: null },
+};
+
+// ---- metrics processing functions ------------------------------------------
+
+function processSenderMetrics(count: number, data: any): void {
+    senderMetrics.metrics = data;
+
+    // extract selected parameters
+}
+
+function processDispatcherMetrics(count: number, data: any): void {
+    dispatcherMetrics.metrics = data;
+
+    // extract selected parameters
+}
+
+// ----------------------------------------------------------------------------
+
+function update(count: number, data: any): void {
+    console.log('update: ', count);
+
+    processSenderMetrics(count, data[MetricsType.sender]);
+    processDispatcherMetrics(count, data[MetricsType.dispatcher]);
+
+    // post message
+    switch (selectedComponent) {
+        case MetricsType.sender:
+            console.log('post to:', MetricsType.sender);
+            postMessage(senderMetrics);
+            break;
+        case MetricsType.dispatcher:
+            console.log('post to:', MetricsType.dispatcher);
+            postMessage(dispatcherMetrics);
+            break;
+    }
+}
+
+//=============================================================================
+// common functions
+
+//=============================================================================
+// management functions
+
 const configUrl: string = 'assets/config.json';
 let selectedComponent: MetricsType;
 let intervalSubscription: Subscription;
 
-let senderMetrics: MetricsData = {
-    type: MetricsType.sender,
-    metrics: {
-        config: { par1: 123, par2: 456 },
-        network: {
-            host: 'localhost',
-            port: 27000,
-        },
-        count: 0,
-    },
-    selected: { dataRate: { unit: 'Rate (MiB/s)', data: { instance1: [], instance2: [] } } },
+onmessage = ({ data }) => {
+    console.log('received message: ', data);
+    switch (data.command) {
+        case MetricsCommand.select:
+            selectedComponent = data.payload;
+            console.log('selectedComponent = ', selectedComponent);
+            break;
+        case MetricsCommand.setinterval:
+            setIntervalTime(data.payload);
+            console.log('setIntervalTime: ', data.payload);
+            break;
+        default:
+            break;
+    }
 };
 
 function setIntervalTime(time: number): void {
@@ -52,55 +115,5 @@ function setIntervalTime(time: number): void {
         })
         .catch((err) => console.error(err));
 }
-
-let globalInstanceNum = 2;
-
-function update(count: number, data: any): void {
-    console.log('update: ', count);
-
-    senderMetrics.metrics = data[MetricsType.sender];
-
-    // fetch and update
-    senderMetrics.selected.dataRate.data.instance1 = [];
-    senderMetrics.selected.dataRate.data.instance2 = [];
-    if (count % 10 === 0 && globalInstanceNum < 16) {
-        globalInstanceNum++;
-        senderMetrics.selected.dataRate.data['instance' + globalInstanceNum] = [];
-    }
-    let currentTime = new Date().getTime();
-    for (let key in senderMetrics.selected.dataRate.data) {
-        senderMetrics.selected.dataRate.data[key] = [];
-        for (let i = 0; i <= 60; i++) {
-            senderMetrics.selected.dataRate.data[key].push([
-                currentTime - i * 1000,
-                1.5 + Math.sin((i - count * 0.5) / 5),
-            ]);
-        }
-    }
-
-    // post message
-    switch (selectedComponent) {
-        case MetricsType.sender:
-            console.log('post to:', MetricsType.sender);
-            postMessage(senderMetrics);
-            break;
-    }
-}
-
-onmessage = ({ data }) => {
-    console.log('received message: ', data);
-    switch (data.command) {
-        case MetricsCommand.select:
-            selectedComponent = data.payload;
-            console.log('selectedComponent = ', selectedComponent);
-            break;
-        case MetricsCommand.setinterval:
-            setIntervalTime(data.payload);
-            console.log('setIntervalTime: ', data.payload);
-            break;
-        default:
-            break;
-    }
-};
 
 setIntervalTime(1000);

@@ -19,10 +19,10 @@ export class SenderComponent implements OnInit, OnDestroy {
     public metricsObject: any;
 
     // dataRate
-    public dataRateIndexes: number[] = [];
-    public dataRateDataArr: [string, any][] = [];
-    public dataRateUnit: string = '';
-    public dataRateObject: any;
+    public dataRate_Indexes: number[] = [];
+    public dataRate_DataArr: [string, any][] = [];
+    public dataRate_Unit: string = '';
+    public dataRate_Object: any;
 
     // otherParameter
 
@@ -35,13 +35,16 @@ export class SenderComponent implements OnInit, OnDestroy {
         this.metricsObject = data.metrics;
 
         // dataRate
-        this.dataRateUnit = data.selected.dataRate.unit;
-        this.dataRateObject = data.selected.dataRate.data;
-        this.dataRateDataArr = [];
-        for (let key in this.dataRateObject) {
-            this.dataRateDataArr.push([key, this.dataRateObject[key]]);
+        this.dataRate_DataArr = [];
+        this.dataRate_Indexes = [];
+        if (data.selected.dataRate) {
+            this.dataRate_Unit = data.selected.dataRate.unit;
+            this.dataRate_Object = data.selected.dataRate.data;
+            for (let key in this.dataRate_Object) {
+                this.dataRate_DataArr.push([key, this.dataRate_Object[key]]);
+            }
+            this.dataRate_Indexes = [...this.dataRate_DataArr.keys()];
         }
-        this.dataRateIndexes = [...this.dataRateDataArr.keys()];
 
         // otherParameter
     }

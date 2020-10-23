@@ -20,10 +20,10 @@
     </div>
     <div class="graph-group" *ngSwitchCase="'dataRate'">
         <app-time-line-chart
-            *ngFor="let idx of dataRateIndexes"
-            [title]="dataRateDataArr[idx][0]"
-            [data]="dataRateDataArr[idx][1]"
-            [yLabel]="dataRateUnit"
+            *ngFor="let idx of dataRate_Indexes"
+            [title]="dataRate_DataArr[idx][0]"
+            [data]="dataRate_DataArr[idx][1]"
+            [yLabel]="dataRate_Unit"
         >
         </app-time-line-chart>
     </div>
