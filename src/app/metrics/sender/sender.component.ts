@@ -37,12 +37,11 @@ export class SenderComponent implements OnInit, OnDestroy {
         // dataRate
         this.dataRateUnit = data.selected.dataRate.unit;
         this.dataRateObject = data.selected.dataRate.data;
-        let nKeys = Object.keys(this.dataRateObject).length;
-        this.dataRateIndexes = [...new Array(nKeys).keys()];
         this.dataRateDataArr = [];
         for (let key in this.dataRateObject) {
             this.dataRateDataArr.push([key, this.dataRateObject[key]]);
         }
+        this.dataRateIndexes = [...this.dataRateDataArr.keys()];
 
         // otherParameter
     }
