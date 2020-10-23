@@ -40,6 +40,9 @@ export class SenderComponent implements OnInit, OnDestroy {
     resume(): void {
         if (!this.metricsSubscription) {
             this.metricsSubscription = this._metricsService.metricsNotifier.subscribe((data) => {
+                // check type
+                if (data.type !== MetricsType.sender) return;
+
                 this.updateTime = new Date();
 
                 this.metricsObject = data.metrics;
