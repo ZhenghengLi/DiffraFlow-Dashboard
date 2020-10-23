@@ -96,8 +96,11 @@ function setIntervalTime(time: number): void {
             }
         })
         .then((data) => {
-            let aggregatorAddress = data?.aggregator_address;
+            let aggregatorAddress = data.aggregator_address;
             console.log(aggregatorAddress);
+            if (!aggregatorAddress) {
+                throw new Error('there is no aggregator_address in config');
+            }
             intervalSubscription?.unsubscribe();
             intervalSubscription = undefined;
             intervalSubscription = interval(intervalTime).subscribe((count) => {
