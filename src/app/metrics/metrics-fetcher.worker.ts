@@ -10,7 +10,15 @@ let intervalTime: number = 1000;
 
 let senderMetrics: MetricsData = {
     type: MetricsType.sender,
-    metrics: {},
+    metrics: {
+        config: { par1: 123, par2: 456 },
+        network: {
+            host:
+                'localhost===========================================================================================================',
+            port: 27000,
+        },
+        count: 0,
+    },
     selected: { dataRate: { unit: 'Rate (MiB/s)', data: { instance1: [], instance2: [] } } },
 };
 
@@ -38,6 +46,8 @@ let globalInstanceNum = 2;
 
 function update(count: number): void {
     console.log('update: ', count);
+
+    senderMetrics.metrics.count = count;
 
     // fetch and update
     senderMetrics.selected.dataRate.data.instance1 = [];

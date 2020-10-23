@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { NgxEchartsModule } from 'ngx-echarts';
+import { NgxJsonViewerModule } from 'ngx-json-viewer';
 
 import { MetricsRoutingModule } from './metrics-routing.module';
 import { MetricsComponent } from './metrics.component';
@@ -33,6 +34,7 @@ import { TimeLineChartComponent } from './common/time-line-chart/time-line-chart
         NgxEchartsModule.forRoot({
             echarts: () => import('echarts'),
         }),
+        NgxJsonViewerModule,
     ],
     providers: [MetricsDataService],
 })

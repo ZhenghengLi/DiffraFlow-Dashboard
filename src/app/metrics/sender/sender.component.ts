@@ -12,7 +12,7 @@ export class SenderComponent implements OnInit, OnDestroy {
     constructor(private _metricsService: MetricsDataService) {}
 
     public metricsSubscription: Subscription;
-    public selectedView: string;
+    public selectedView: string = 'currentMetrics';
 
     public updateTime: Date;
 

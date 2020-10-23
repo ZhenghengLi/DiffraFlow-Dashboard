@@ -3,7 +3,7 @@
         <button (click)="resume()" [disabled]="metricsSubscription">Resume</button>
         <button (click)="pause()" [disabled]="!metricsSubscription">Pause</button>
         <select (change)="selectedView = $event.target.value">
-            <option value="currentMetrics">Current Metrics</option>
+            <option value="currentMetrics" selected>Current Metrics</option>
             <option value="dataRate">Date Rate History</option>
             <option value="packetRate">Packet Rate History</option>
         </select>
@@ -13,6 +13,11 @@
     </p>
 </div>
 <div class="body-wrapper" [ngSwitch]="selectedView">
+    <div class="graph-group" *ngSwitchCase="'currentMetrics'">
+        <div *ngIf="metricsObject">
+            <ngx-json-viewer [json]="metricsObject"></ngx-json-viewer>
+        </div>
+    </div>
     <div class="graph-group" *ngSwitchCase="'dataRate'">
         <app-time-line-chart
             *ngFor="let idx of dataRateIndexes"
@@ -21,5 +26,8 @@
             [yLabel]="dataRateUnit"
         >
         </app-time-line-chart>
+    </div>
+    <div *ngSwitchDefault>
+        <p>default</p>
     </div>
 </div>
