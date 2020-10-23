@@ -1,0 +1,59 @@
+:host {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+p {
+    word-break: break-word;
+}
+
+.head-wrapper {
+    background-color: beige;
+    height: 45px;
+    margin: 12px 12px 0 12px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.body-wrapper {
+    height: 100%;
+    flex: 1;
+    overflow: auto;
+    margin: 12px;
+    border: solid gainsboro 1px;
+}
+
+.body-wrapper .graph-group {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.body-wrapper .graph-group div {
+    margin: 10px;
+    padding: 10px;
+    background-color: white;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12);
+    height: 100%;
+    overflow: hidden;
+}
+
+.button-group button {
+    margin-left: 10px;
+    padding: 5px;
+}
+
+.button-group select {
+    margin-left: 30px;
+    padding: 5px;
+    width: 300px;
+}
+
+.update-time {
+    text-align: center;
+    color: red;
+    margin-right: 15px;
+}
