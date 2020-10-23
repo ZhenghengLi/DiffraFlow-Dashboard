@@ -17,7 +17,7 @@ export type MetricsData = {
         [parameter: string]: {
             unit: string;
             data: { [instance: string]: [number, number][] };
-        };
+        } | null;
     };
 };
 

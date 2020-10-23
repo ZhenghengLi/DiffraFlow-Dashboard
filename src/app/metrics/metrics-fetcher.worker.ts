@@ -6,15 +6,13 @@ import { MetricsType, MetricsCommand, MetricsData } from './metrics.common';
 const configUrl: string = 'assets/config.json';
 let selectedComponent: MetricsType;
 let intervalSubscription: Subscription;
-let intervalTime: number = 1000;
 
 let senderMetrics: MetricsData = {
     type: MetricsType.sender,
     metrics: {
         config: { par1: 123, par2: 456 },
         network: {
-            host:
-                'localhost===========================================================================================================',
+            host: 'localhost',
             port: 27000,
         },
         count: 0,
@@ -37,17 +35,30 @@ function setIntervalTime(time: number): void {
             console.log(aggregatorAddress);
             intervalSubscription?.unsubscribe();
             intervalSubscription = undefined;
-            intervalSubscription = interval(intervalTime).subscribe((count) => update(count));
+            intervalSubscription = interval(intervalTime).subscribe((count) => {
+                fetch('http://' + aggregatorAddress)
+                    .then((response) => {
+                        if (response.ok) {
+                            return response.json();
+                        } else {
+                            throw new Error(`cannot fetch metrics from ${configUrl}`);
+                        }
+                    })
+                    .then((data) => {
+                        update(count, data);
+                    })
+                    .catch((err) => console.error(err));
+            });
         })
-        .catch((err) => console.log(err));
+        .catch((err) => console.error(err));
 }
 
 let globalInstanceNum = 2;
 
-function update(count: number): void {
+function update(count: number, data: any): void {
     console.log('update: ', count);
 
-    senderMetrics.metrics.count = count;
+    senderMetrics.metrics = data[MetricsType.sender];
 
     // fetch and update
     senderMetrics.selected.dataRate.data.instance1 = [];
@@ -70,7 +81,7 @@ function update(count: number): void {
     // post message
     switch (selectedComponent) {
         case MetricsType.sender:
-            console.log(MetricsType.sender);
+            console.log('post to:', MetricsType.sender);
             postMessage(senderMetrics);
             break;
     }
