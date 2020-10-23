@@ -58,6 +58,15 @@
     color: rgb(50, 109, 230);
 }
 
+.left-nav nav ul li a.active:hover {
+    background-color: #d8d8d8;
+    color: rgb(50, 109, 230);
+}
+
+.left-nav nav ul li a:hover {
+    background-color: #e7e7e7;
+}
+
 .right-content {
     width: 100%;
     height: 100%;
