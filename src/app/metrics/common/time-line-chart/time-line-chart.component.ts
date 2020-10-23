@@ -18,9 +18,9 @@ export class TimeLineChartComponent implements OnInit {
     };
 
     @Input()
-    title: string = 'title';
+    title: string = '';
     @Input()
-    yLabel: string = 'ylabel';
+    yLabel: string = '';
     @Input()
     set data(dataVal: [number, number][]) {
         this._dataVal = dataVal;
