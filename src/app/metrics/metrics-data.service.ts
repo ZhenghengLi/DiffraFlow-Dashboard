@@ -11,6 +11,7 @@ export class MetricsDataService {
     private _metricsFetcher: Worker;
 
     start(): void {
+        console.log('start metrics fetching worker');
         if (!this._metricsFetcher) {
             this._metricsFetcher = new Worker('./metrics-fetcher.worker', { type: 'module' });
         }
@@ -39,6 +40,7 @@ export class MetricsDataService {
     }
 
     stop(): void {
+        console.log('stop metrics fetching worker');
         this._metricsFetcher?.terminate();
         this._metricsFetcher = undefined;
     }

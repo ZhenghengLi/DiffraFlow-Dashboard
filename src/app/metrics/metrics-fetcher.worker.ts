@@ -47,13 +47,15 @@ function update(count: number, data: any): void {
     // post message
     switch (selectedComponent) {
         case MetricsType.sender:
-            console.log('post to:', MetricsType.sender);
+            console.log('post:', MetricsType.sender);
             postMessage(senderMetrics);
             break;
         case MetricsType.dispatcher:
-            console.log('post to:', MetricsType.dispatcher);
+            console.log('post:', MetricsType.dispatcher);
             postMessage(dispatcherMetrics);
             break;
+        default:
+            console.log('post:', MetricsType.none);
     }
 }
 
