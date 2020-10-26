@@ -7,6 +7,7 @@ export enum MetricsType {
     ingester = 'ingester',
     monitor = 'monitor',
     controller = 'controller',
+    overview = 'overview',
     none = 'none',
 }
 

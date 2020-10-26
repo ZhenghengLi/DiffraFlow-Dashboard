@@ -1,1 +1,35 @@
-<p>ingester works!</p>
+<div class="head-wrapper">
+    <div class="button-group">
+        <button (click)="resume()" [disabled]="metricsSubscription">Resume</button>
+        <button (click)="pause()" [disabled]="!metricsSubscription">Pause</button>
+        <select (change)="selectedView = $event.target.value">
+            <option value="currentMetrics" selected>Current Metrics</option>
+            <option value="dataRate">Date Rate History</option>
+            <option value="packetRate">Packet Rate History</option>
+        </select>
+    </div>
+    <p *ngIf="updateTime" class="update-time">
+        Update Time: {{ updateTime.toLocaleString("en-US", { hour12: false }) }}
+    </p>
+</div>
+<div class="body-wrapper" [ngSwitch]="selectedView">
+    <div class="card-group" *ngSwitchCase="'currentMetrics'">
+        <app-metrics-card
+            *ngFor="let idx of metrics_Indexes"
+            [title]="metrics_DataArr[idx][0]"
+            [data]="metrics_DataArr[idx][1]"
+        ></app-metrics-card>
+    </div>
+    <div class="card-group" *ngSwitchCase="'dataRate'">
+        <app-time-line-chart
+            *ngFor="let idx of dataRate_Indexes"
+            [title]="dataRate_DataArr[idx][0]"
+            [data]="dataRate_DataArr[idx][1]"
+            [yLabel]="dataRate_Unit"
+        >
+        </app-time-line-chart>
+    </div>
+    <div class="card-group" *ngSwitchDefault>
+        <app-metrics-card> </app-metrics-card>
+    </div>
+</div>

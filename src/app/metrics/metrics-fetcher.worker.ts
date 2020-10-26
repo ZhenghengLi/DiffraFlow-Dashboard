@@ -8,7 +8,7 @@ import { MetricsType, MetricsCommand, MetricsData } from './metrics.common';
 
 // ---- global metrics data ---------------------------------------------------
 
-let overviewMetrics: any = {};
+let overviewMetrics: any = { type: MetricsType.overview, metrics: { count: 123 } };
 
 let senderMetrics: MetricsData = {
     type: MetricsType.sender,
@@ -32,21 +32,21 @@ let combinerMetrics: MetricsData = {
 };
 
 let ingesterMetrics: MetricsData = {
-    type: MetricsType.combiner,
+    type: MetricsType.ingester,
     metrics: {},
     selected: { dataRate: { unit: 'Rate (MiB/s)', data: { instance1: [], instance2: [] } } },
     // selected: { dataRate: null },
 };
 
 let monitorMetrics: MetricsData = {
-    type: MetricsType.combiner,
+    type: MetricsType.monitor,
     metrics: {},
     selected: { dataRate: { unit: 'Rate (MiB/s)', data: { instance1: [], instance2: [] } } },
     // selected: { dataRate: null },
 };
 
 let controllerMetrics: MetricsData = {
-    type: MetricsType.combiner,
+    type: MetricsType.controller,
     metrics: {},
     selected: { dataRate: { unit: 'Rate (MiB/s)', data: { instance1: [], instance2: [] } } },
     // selected: { dataRate: null },
@@ -97,10 +97,10 @@ function update(count: number, data: any): void {
 
     processSenderMetrics(count, data[MetricsType.sender]);
     processDispatcherMetrics(count, data[MetricsType.dispatcher]);
-    processCombinerMetrics(count, data[MetricsType.dispatcher]);
-    processIngesterMetrics(count, data[MetricsType.dispatcher]);
-    processMonitorMetrics(count, data[MetricsType.dispatcher]);
-    processControllerMetrics(count, data[MetricsType.dispatcher]);
+    processCombinerMetrics(count, data[MetricsType.combiner]);
+    processIngesterMetrics(count, data[MetricsType.ingester]);
+    processMonitorMetrics(count, data[MetricsType.monitor]);
+    processControllerMetrics(count, data[MetricsType.controller]);
 
     // post message
     switch (selectedComponent) {
@@ -127,6 +127,10 @@ function update(count: number, data: any): void {
         case MetricsType.controller:
             console.log('post:', MetricsType.controller);
             postMessage(controllerMetrics);
+            break;
+        case MetricsType.overview:
+            console.log('post:', MetricsType.overview);
+            postMessage(overviewMetrics);
             break;
         default:
             console.log('post:', MetricsType.none);
