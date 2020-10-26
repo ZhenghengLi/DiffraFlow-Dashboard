@@ -21,11 +21,11 @@ export class SenderComponent implements OnInit, OnDestroy {
     public metrics_DataArr: [string, any][] = [];
     public metrics_Object: any;
 
-    // dataRate
-    public dataRate_Indexes: number[] = [];
-    public dataRate_DataArr: [string, any][] = [];
-    public dataRate_Unit: string = '';
-    public dataRate_Object: any;
+    // sendFrameRate
+    public sendFrameRate_Indexes: number[] = [];
+    public sendFrameRate_DataArr: [string, any][] = [];
+    public sendFrameRate_Unit: string = '';
+    public sendFrameRate_Object: any;
 
     // otherParameter
 
@@ -44,16 +44,16 @@ export class SenderComponent implements OnInit, OnDestroy {
         }
         this.metrics_Indexes = [...this.metrics_DataArr.keys()];
 
-        // dataRate
-        this.dataRate_DataArr = [];
-        this.dataRate_Indexes = [];
-        if (data.selected.dataRate) {
-            this.dataRate_Unit = data.selected.dataRate.unit;
-            this.dataRate_Object = data.selected.dataRate.data;
-            for (let key in this.dataRate_Object) {
-                this.dataRate_DataArr.push([key, this.dataRate_Object[key]]);
+        // sendFrameRate
+        this.sendFrameRate_DataArr = [];
+        this.sendFrameRate_Indexes = [];
+        if (data.selected.sendFrameRate) {
+            this.sendFrameRate_Unit = data.selected.sendFrameRate.unit;
+            this.sendFrameRate_Object = data.selected.sendFrameRate.data;
+            for (let key in this.sendFrameRate_Object) {
+                this.sendFrameRate_DataArr.push([key, this.sendFrameRate_Object[key]]);
             }
-            this.dataRate_Indexes = [...this.dataRate_DataArr.keys()];
+            this.sendFrameRate_Indexes = [...this.sendFrameRate_DataArr.keys()];
         }
 
         // otherParameter

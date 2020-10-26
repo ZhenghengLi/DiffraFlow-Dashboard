@@ -4,7 +4,7 @@
         <button (click)="pause()" [disabled]="!metricsSubscription">Pause</button>
         <select (change)="selectedView = $event.target.value">
             <option value="currentMetrics" selected>Current Metrics</option>
-            <option value="dataRate">Date Rate History</option>
+            <option value="sendFrameRate">Sending Frame Rate</option>
             <option value="packetRate">Packet Rate History</option>
         </select>
     </div>
@@ -20,12 +20,12 @@
             [data]="metrics_DataArr[idx][1]"
         ></app-metrics-card>
     </div>
-    <div class="card-group" *ngSwitchCase="'dataRate'">
+    <div class="card-group" *ngSwitchCase="'sendFrameRate'">
         <app-time-line-chart
-            *ngFor="let idx of dataRate_Indexes"
-            [title]="dataRate_DataArr[idx][0]"
-            [data]="dataRate_DataArr[idx][1]"
-            [yLabel]="dataRate_Unit"
+            *ngFor="let idx of sendFrameRate_Indexes"
+            [title]="sendFrameRate_DataArr[idx][0]"
+            [data]="sendFrameRate_DataArr[idx][1]"
+            [yLabel]="sendFrameRate_Unit"
         >
         </app-time-line-chart>
     </div>

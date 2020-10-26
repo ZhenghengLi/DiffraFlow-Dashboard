@@ -3,6 +3,8 @@
 import { interval, Subscription } from 'rxjs';
 import { MetricsType, MetricsCommand, MetricsData } from './metrics.common';
 
+const maxArrLen = 63;
+
 //=============================================================================
 // metrics data processing logics
 
@@ -23,14 +25,54 @@ function processOverviewMetrics(count: number, data: any): void {
 let senderMetrics: MetricsData = {
     type: MetricsType.sender,
     metrics: {},
-    selected: { dataRate: { unit: 'Rate (MiB/s)', data: { instance1: [], instance2: [] } } },
-    // selected: { dataRate: null },
+    selected: {
+        sendFrameRate: { unit: 'Frame Rate (fps)', data: {} },
+        tcpPacketRate: { unit: 'Packet Rate (pps)', data: {} },
+        tcpDataRate: { unit: 'Data Rate (MiB/s)', data: {} },
+        udpPacketRate: { unit: 'Packet Rate (pps)', data: {} },
+        udpDataRate: { unit: 'Data Rate (MiB/s)', data: {} },
+    },
+};
+
+let senderMetricsHistory: any = {
+    sendFrameTotal: {},
+    tcpPacketTotal: {},
+    tcpDataTotal: {},
+    udpPacketTotal: {},
+    udpDataTotal: {},
 };
 
 function processSenderMetrics(count: number, data: any): void {
     senderMetrics.metrics = data;
 
-    // extract selected parameters
+    for (let instance in data) {
+        let timestamp = data[instance].timestamp;
+        let transfer_stat = data[instance].data_transfer?.transfer_stat;
+        // frame rate
+        if (transfer_stat) {
+            let currentHist = senderMetricsHistory.sendFrameTotal[instance]
+                ? senderMetricsHistory.sendFrameTotal[instance]
+                : (senderMetricsHistory.sendFrameTotal[instance] = { timestamp, data: [] });
+            if (timestamp > currentHist.timestamp) {
+                currentHist.timestamp = timestamp;
+                currentHist.data.push([timestamp, transfer_stat.send_succ_counts]);
+                if (currentHist.data.length > maxArrLen) {
+                    currentHist.data.shift();
+                }
+                senderMetrics.selected.sendFrameRate.data[instance] = calculate_rate(currentHist.data);
+            }
+        }
+        // tcp
+        let tcp_network_stats = data[instance].data_transfer?.tcp_sender_stat?.network_stats;
+        if (tcp_network_stats) {
+            //
+        }
+        // udp
+        let udp_dgram_stats = data[instance].data_transfer?.udp_sender_stat?.dgram_stats;
+        if (udp_dgram_stats) {
+            //
+        }
+    }
 }
 
 // ---- dispatcher ------------------------------------------------------------
@@ -158,6 +200,16 @@ function update(count: number, data: any): void {
 
 //=============================================================================
 // common functions
+function calculate_rate(data: [number, number][]): [number, number][] {
+    let rateList = [];
+    if (data.length > 2) {
+        for (let i = 0; i < data.length - 2; i++) {
+            let [t1, d1, t2, d2] = [data[i][0], data[i][1], data[i + 2][0], data[i + 2][1]];
+            rateList.push([(t1 + t2) / 2, ((d2 - d1) * 1000) / (t2 - t1)]);
+        }
+    }
+    return rateList;
+}
 
 //=============================================================================
 // management functions
