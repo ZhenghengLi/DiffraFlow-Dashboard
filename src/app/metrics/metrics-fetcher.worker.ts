@@ -6,13 +6,19 @@ import { MetricsType, MetricsCommand, MetricsData } from './metrics.common';
 //=============================================================================
 // metrics data processing logics
 
-// ---- global metrics data ---------------------------------------------------
+// ---- overview --------------------------------------------------------------
 
 let overviewMetrics: MetricsData = {
     type: MetricsType.overview,
-    metrics: { count: 123 },
+    metrics: { count: 0 },
     selected: { dataRate: { unit: 'Rate (MiB/s)', data: { instance1: [], instance2: [] } } },
 };
+
+function processOverviewMetrics(count: number, data: any): void {
+    overviewMetrics.metrics.count = count;
+}
+
+// ---- sender ----------------------------------------------------------------
 
 let senderMetrics: MetricsData = {
     type: MetricsType.sender,
@@ -21,12 +27,28 @@ let senderMetrics: MetricsData = {
     // selected: { dataRate: null },
 };
 
+function processSenderMetrics(count: number, data: any): void {
+    senderMetrics.metrics = data;
+
+    // extract selected parameters
+}
+
+// ---- dispatcher ------------------------------------------------------------
+
 let dispatcherMetrics: MetricsData = {
     type: MetricsType.dispatcher,
     metrics: {},
     selected: { dataRate: { unit: 'Rate (MiB/s)', data: { instance1: [], instance2: [] } } },
     // selected: { dataRate: null },
 };
+
+function processDispatcherMetrics(count: number, data: any): void {
+    dispatcherMetrics.metrics = data;
+
+    // extract selected parameters
+}
+
+// ---- combiner --------------------------------------------------------------
 
 let combinerMetrics: MetricsData = {
     type: MetricsType.combiner,
@@ -35,12 +57,28 @@ let combinerMetrics: MetricsData = {
     // selected: { dataRate: null },
 };
 
+function processCombinerMetrics(count: number, data: any): void {
+    combinerMetrics.metrics = data;
+
+    // extract selected parameters
+}
+
+// ---- ingester --------------------------------------------------------------
+
 let ingesterMetrics: MetricsData = {
     type: MetricsType.ingester,
     metrics: {},
     selected: { dataRate: { unit: 'Rate (MiB/s)', data: { instance1: [], instance2: [] } } },
     // selected: { dataRate: null },
 };
+
+function processIngesterMetrics(count: number, data: any): void {
+    ingesterMetrics.metrics = data;
+
+    // extract selected parameters
+}
+
+// ---- monitor ---------------------------------------------------------------
 
 let monitorMetrics: MetricsData = {
     type: MetricsType.monitor,
@@ -49,6 +87,14 @@ let monitorMetrics: MetricsData = {
     // selected: { dataRate: null },
 };
 
+function processMonitorMetrics(count: number, data: any): void {
+    monitorMetrics.metrics = data;
+
+    // extract selected parameters
+}
+
+// ---- controller ------------------------------------------------------------
+
 let controllerMetrics: MetricsData = {
     type: MetricsType.controller,
     metrics: {},
@@ -56,49 +102,18 @@ let controllerMetrics: MetricsData = {
     // selected: { dataRate: null },
 };
 
-// ---- metrics processing functions ------------------------------------------
-
-function processSenderMetrics(count: number, data: any): void {
-    senderMetrics.metrics = data;
-
-    // extract selected parameters
-}
-
-function processDispatcherMetrics(count: number, data: any): void {
-    dispatcherMetrics.metrics = data;
-
-    // extract selected parameters
-}
-
-function processCombinerMetrics(count: number, data: any): void {
-    combinerMetrics.metrics = data;
-
-    // extract selected parameters
-}
-
-function processIngesterMetrics(count: number, data: any): void {
-    ingesterMetrics.metrics = data;
-
-    // extract selected parameters
-}
-
-function processMonitorMetrics(count: number, data: any): void {
-    monitorMetrics.metrics = data;
-
-    // extract selected parameters
-}
-
 function processControllerMetrics(count: number, data: any): void {
     controllerMetrics.metrics = data;
 
     // extract selected parameters
 }
 
-// ----------------------------------------------------------------------------
+// ============================================================================
 
 function update(count: number, data: any): void {
     console.log('update: ', count);
 
+    processOverviewMetrics(count, data);
     processSenderMetrics(count, data[MetricsType.sender]);
     processDispatcherMetrics(count, data[MetricsType.dispatcher]);
     processCombinerMetrics(count, data[MetricsType.combiner]);
@@ -108,6 +123,10 @@ function update(count: number, data: any): void {
 
     // post message
     switch (selectedComponent) {
+        case MetricsType.overview:
+            console.log('post:', MetricsType.overview);
+            postMessage(overviewMetrics);
+            break;
         case MetricsType.sender:
             console.log('post:', MetricsType.sender);
             postMessage(senderMetrics);
@@ -131,10 +150,6 @@ function update(count: number, data: any): void {
         case MetricsType.controller:
             console.log('post:', MetricsType.controller);
             postMessage(controllerMetrics);
-            break;
-        case MetricsType.overview:
-            console.log('post:', MetricsType.overview);
-            postMessage(overviewMetrics);
             break;
         default:
             console.log('post:', MetricsType.none);
