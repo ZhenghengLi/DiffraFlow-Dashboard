@@ -5,7 +5,7 @@
         <select (change)="selectedView = $event.target.value">
             <option value="currentMetrics" selected>Current Metrics</option>
             <option value="sendFrameRate">Sending Frame Rate</option>
-            <option value="packetRate">Packet Rate History</option>
+            <option value="tcpPacketRate">TCP Packet Rate</option>
         </select>
     </div>
     <p *ngIf="updateTime" class="update-time">
@@ -29,7 +29,13 @@
         >
         </app-time-line-chart>
     </div>
-    <div class="card-group" *ngSwitchDefault>
-        <app-metrics-card> </app-metrics-card>
+    <div class="card-group" *ngSwitchCase="'tcpPacketRate'">
+        <app-time-line-chart
+            *ngFor="let idx of tcpPacketRate_Indexes"
+            [title]="tcpPacketRate_DataArr[idx][0]"
+            [data]="tcpPacketRate_DataArr[idx][1]"
+            [yLabel]="tcpPacketRate_Unit"
+        >
+        </app-time-line-chart>
     </div>
 </div>

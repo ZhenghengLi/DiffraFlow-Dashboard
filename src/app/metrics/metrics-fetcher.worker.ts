@@ -36,6 +36,7 @@ let senderMetrics: MetricsData = {
 };
 
 let senderMetricsHistory: any = {
+    lastTimestamp: {},
     sendFrameTotal: {},
     tcpPacketTotal: {},
     tcpDataTotal: {},
@@ -47,27 +48,39 @@ function processSenderMetrics(count: number, data: any): void {
     senderMetrics.metrics = data;
 
     for (let instance in data) {
-        let timestamp = data[instance].timestamp;
-        let transfer_stat = data[instance].data_transfer?.transfer_stat;
-        // frame rate
-        if (transfer_stat) {
-            let currentHist = senderMetricsHistory.sendFrameTotal[instance]
-                ? senderMetricsHistory.sendFrameTotal[instance]
-                : (senderMetricsHistory.sendFrameTotal[instance] = { timestamp, data: [] });
-            if (timestamp > currentHist.timestamp) {
-                currentHist.timestamp = timestamp;
-                currentHist.data.push([timestamp, transfer_stat.send_succ_counts]);
-                if (currentHist.data.length > maxArrLen) {
-                    currentHist.data.shift();
-                }
-                senderMetrics.selected.sendFrameRate.data[instance] = calculate_rate(currentHist.data);
-            }
+        // check timestamp
+        let currentTimestamp = data[instance].timestamp;
+        let lastTimestamp = senderMetricsHistory.lastTimestamp[instance]
+            ? senderMetricsHistory.lastTimestamp[instance]
+            : (senderMetricsHistory.lastTimestamp[instance] = 1);
+        if (currentTimestamp > lastTimestamp) {
+            senderMetricsHistory.lastTimestamp[instance] = currentTimestamp;
+        } else {
+            continue;
         }
+
+        // frame rate
+        let transfer_stat = data[instance].data_transfer?.transfer_stat;
+        if (transfer_stat) {
+            let currentFrmHist = senderMetricsHistory.sendFrameTotal[instance]
+                ? senderMetricsHistory.sendFrameTotal[instance]
+                : (senderMetricsHistory.sendFrameTotal[instance] = []);
+            currentFrmHist.push([currentTimestamp, transfer_stat.send_succ_counts]);
+            if (currentFrmHist.length > maxArrLen) currentFrmHist.shift();
+            senderMetrics.selected.sendFrameRate.data[instance] = calculate_rate(currentFrmHist);
+        }
+
         // tcp
         let tcp_network_stats = data[instance].data_transfer?.tcp_sender_stat?.network_stats;
         if (tcp_network_stats) {
-            //
+            let currentPktHist = senderMetricsHistory.tcpPacketTotal[instance]
+                ? senderMetricsHistory.tcpPacketTotal[instance]
+                : (senderMetricsHistory.tcpPacketTotal[instance] = []);
+            currentPktHist.push([currentTimestamp, tcp_network_stats.total_sent_counts]);
+            if (currentPktHist.length > maxArrLen) currentPktHist.shift();
+            senderMetrics.selected.tcpPacketRate.data[instance] = calculate_rate(currentPktHist);
         }
+
         // udp
         let udp_dgram_stats = data[instance].data_transfer?.udp_sender_stat?.dgram_stats;
         if (udp_dgram_stats) {

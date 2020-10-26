@@ -27,6 +27,12 @@ export class SenderComponent implements OnInit, OnDestroy {
     public sendFrameRate_Unit: string = '';
     public sendFrameRate_Object: any;
 
+    // tcpPacketRate
+    public tcpPacketRate_Indexes: number[] = [];
+    public tcpPacketRate_DataArr: [string, any][] = [];
+    public tcpPacketRate_Unit: string = '';
+    public tcpPacketRate_Object: any;
+
     // otherParameter
 
     private _update(data: MetricsData) {
@@ -56,7 +62,17 @@ export class SenderComponent implements OnInit, OnDestroy {
             this.sendFrameRate_Indexes = [...this.sendFrameRate_DataArr.keys()];
         }
 
-        // otherParameter
+        // tcpPacketRate
+        this.tcpPacketRate_DataArr = [];
+        this.tcpPacketRate_Indexes = [];
+        if (data.selected.tcpPacketRate) {
+            this.tcpPacketRate_Unit = data.selected.tcpPacketRate.unit;
+            this.tcpPacketRate_Object = data.selected.tcpPacketRate.data;
+            for (let key in this.tcpPacketRate_Object) {
+                this.tcpPacketRate_DataArr.push([key, this.tcpPacketRate_Object[key]]);
+            }
+            this.tcpPacketRate_Indexes = [...this.tcpPacketRate_DataArr.keys()];
+        }
     }
 
     ngOnInit(): void {
