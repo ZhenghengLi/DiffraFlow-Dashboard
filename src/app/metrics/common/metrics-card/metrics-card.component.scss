@@ -1,0 +1,25 @@
+:host {
+    width: 48%;
+    margin: 1%;
+    min-width: 600px;
+    max-width: 800px;
+}
+
+div.title {
+    background-color: gainsboro;
+    height: 20px;
+    padding: 10px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12);
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    text-align: center;
+}
+
+div.title:hover {
+    cursor: pointer;
+}
+
+div.content {
+    background-color: white;
+    padding: 10px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12);
+}

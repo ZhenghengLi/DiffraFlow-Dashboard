@@ -14,9 +14,11 @@
 </div>
 <div class="body-wrapper" [ngSwitch]="selectedView">
     <div class="graph-group" *ngSwitchCase="'currentMetrics'">
-        <div *ngIf="metricsObject">
-            <ngx-json-viewer [json]="metricsObject"></ngx-json-viewer>
-        </div>
+        <app-metrics-card
+            *ngFor="let idx of metrics_Indexes"
+            [title]="metrics_DataArr[idx][0]"
+            [data]="metrics_DataArr[idx][1]"
+        ></app-metrics-card>
     </div>
     <div class="graph-group" *ngSwitchCase="'dataRate'">
         <app-time-line-chart
@@ -27,7 +29,7 @@
         >
         </app-time-line-chart>
     </div>
-    <div *ngSwitchDefault>
-        <p>default</p>
+    <div class="graph-group" *ngSwitchDefault>
+        <app-metrics-card> </app-metrics-card>
     </div>
 </div>

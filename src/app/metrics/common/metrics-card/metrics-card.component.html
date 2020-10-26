@@ -1,0 +1,6 @@
+<div class="title" (click)="showContent = !showContent">
+    {{ title }}
+</div>
+<div class="content" [hidden]="!showContent">
+    <ngx-json-viewer [json]="data"></ngx-json-viewer>
+</div>

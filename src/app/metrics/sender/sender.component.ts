@@ -16,7 +16,10 @@ export class SenderComponent implements OnInit, OnDestroy {
 
     public updateTime: Date;
 
-    public metricsObject: any;
+    // metrics
+    public metrics_Indexes: number[] = [];
+    public metrics_DataArr: [string, any][] = [];
+    public metrics_Object: any;
 
     // dataRate
     public dataRate_Indexes: number[] = [];
@@ -32,7 +35,14 @@ export class SenderComponent implements OnInit, OnDestroy {
 
         this.updateTime = new Date();
 
-        this.metricsObject = data.metrics;
+        // metrics
+        this.metrics_Object = data.metrics;
+        this.metrics_DataArr = [];
+        this.metrics_Indexes = [];
+        for (let key in this.metrics_Object) {
+            this.metrics_DataArr.push([key, this.metrics_Object[key]]);
+        }
+        this.metrics_Indexes = [...this.metrics_DataArr.keys()];
 
         // dataRate
         this.dataRate_DataArr = [];
