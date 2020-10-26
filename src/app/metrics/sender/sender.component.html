@@ -13,14 +13,14 @@
     </p>
 </div>
 <div class="body-wrapper" [ngSwitch]="selectedView">
-    <div class="graph-group" *ngSwitchCase="'currentMetrics'">
+    <div class="card-group" *ngSwitchCase="'currentMetrics'">
         <app-metrics-card
             *ngFor="let idx of metrics_Indexes"
             [title]="metrics_DataArr[idx][0]"
             [data]="metrics_DataArr[idx][1]"
         ></app-metrics-card>
     </div>
-    <div class="graph-group" *ngSwitchCase="'dataRate'">
+    <div class="card-group" *ngSwitchCase="'dataRate'">
         <app-time-line-chart
             *ngFor="let idx of dataRate_Indexes"
             [title]="dataRate_DataArr[idx][0]"
@@ -29,7 +29,7 @@
         >
         </app-time-line-chart>
     </div>
-    <div class="graph-group" *ngSwitchDefault>
+    <div class="card-group" *ngSwitchDefault>
         <app-metrics-card> </app-metrics-card>
     </div>
 </div>
