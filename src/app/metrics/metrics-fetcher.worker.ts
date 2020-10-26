@@ -3,7 +3,8 @@
 import { interval, Subscription } from 'rxjs';
 import { MetricsType, MetricsCommand, MetricsData } from './metrics.common';
 
-const maxArrLen = 63;
+const rateStep = 1;
+const maxArrLen = 61 + rateStep;
 
 //=============================================================================
 // metrics data processing logics
@@ -202,9 +203,9 @@ function update(count: number, data: any): void {
 // common functions
 function calculate_rate(data: [number, number][]): [number, number][] {
     let rateList = [];
-    if (data.length > 2) {
-        for (let i = 0; i < data.length - 2; i++) {
-            let [t1, d1, t2, d2] = [data[i][0], data[i][1], data[i + 2][0], data[i + 2][1]];
+    if (data.length > rateStep) {
+        for (let i = 0; i < data.length - rateStep; i++) {
+            let [t1, d1, t2, d2] = [data[i][0], data[i][1], data[i + rateStep][0], data[i + rateStep][1]];
             rateList.push([(t1 + t2) / 2, ((d2 - d1) * 1000) / (t2 - t1)]);
         }
     }
