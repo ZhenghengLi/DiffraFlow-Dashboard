@@ -8,7 +8,11 @@ import { MetricsType, MetricsCommand, MetricsData } from './metrics.common';
 
 // ---- global metrics data ---------------------------------------------------
 
-let overviewMetrics: any = { type: MetricsType.overview, metrics: { count: 123 } };
+let overviewMetrics: MetricsData = {
+    type: MetricsType.overview,
+    metrics: { count: 123 },
+    selected: { dataRate: { unit: 'Rate (MiB/s)', data: { instance1: [], instance2: [] } } },
+};
 
 let senderMetrics: MetricsData = {
     type: MetricsType.sender,
