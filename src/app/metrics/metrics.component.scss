@@ -6,7 +6,8 @@
 }
 
 .left-nav {
-    width: 200px;
+    width: 180px;
+    min-width: 180px;
     height: 100%;
     border-right: solid rgb(175, 175, 175) 1px;
     display: flex;
