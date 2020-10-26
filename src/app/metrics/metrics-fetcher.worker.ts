@@ -73,12 +73,20 @@ function processSenderMetrics(count: number, data: any): void {
         // tcp
         let tcp_network_stats = data[instance].data_transfer?.tcp_sender_stat?.network_stats;
         if (tcp_network_stats) {
+            // packet rate
             let currentPktHist = senderMetricsHistory.tcpPacketTotal[instance]
                 ? senderMetricsHistory.tcpPacketTotal[instance]
                 : (senderMetricsHistory.tcpPacketTotal[instance] = []);
             currentPktHist.push([currentTimestamp, tcp_network_stats.total_sent_counts]);
             if (currentPktHist.length > maxArrLen) currentPktHist.shift();
             senderMetrics.selected.tcpPacketRate.data[instance] = calculate_rate(currentPktHist);
+            // data rate
+            let currentDatHist = senderMetricsHistory.tcpDataTotal[instance]
+                ? senderMetricsHistory.tcpDataTotal[instance]
+                : (senderMetricsHistory.tcpDataTotal[instance] = []);
+            currentDatHist.push([currentTimestamp, tcp_network_stats.total_sent_size / 1024 / 1024]);
+            if (currentDatHist.length > maxArrLen) currentDatHist.shift();
+            senderMetrics.selected.tcpDataRate.data[instance] = calculate_rate(currentDatHist);
         }
 
         // udp

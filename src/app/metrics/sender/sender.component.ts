@@ -33,7 +33,11 @@ export class SenderComponent implements OnInit, OnDestroy {
     public tcpPacketRate_Unit: string = '';
     public tcpPacketRate_Object: any;
 
-    // otherParameter
+    // tcpDataRate
+    public tcpDataRate_Indexes: number[] = [];
+    public tcpDataRate_DataArr: [string, any][] = [];
+    public tcpDataRate_Unit: string = '';
+    public tcpDataRate_Object: any;
 
     private _update(data: MetricsData) {
         // check type
@@ -72,6 +76,18 @@ export class SenderComponent implements OnInit, OnDestroy {
                 this.tcpPacketRate_DataArr.push([key, this.tcpPacketRate_Object[key]]);
             }
             this.tcpPacketRate_Indexes = [...this.tcpPacketRate_DataArr.keys()];
+        }
+
+        // tcpDataRate
+        this.tcpDataRate_DataArr = [];
+        this.tcpDataRate_Indexes = [];
+        if (data.selected.tcpDataRate) {
+            this.tcpDataRate_Unit = data.selected.tcpDataRate.unit;
+            this.tcpDataRate_Object = data.selected.tcpDataRate.data;
+            for (let key in this.tcpDataRate_Object) {
+                this.tcpDataRate_DataArr.push([key, this.tcpDataRate_Object[key]]);
+            }
+            this.tcpDataRate_Indexes = [...this.tcpDataRate_DataArr.keys()];
         }
     }
 
