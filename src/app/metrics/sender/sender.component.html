@@ -5,8 +5,10 @@
         <select (change)="selectedView = $event.target.value">
             <option value="currentMetrics" selected>Current Metrics</option>
             <option value="sendFrameRate">Sending Frame Rate</option>
-            <option value="tcpPacketRate">TCP Packet Rate</option>
-            <option value="tcpDataRate">TCP Data Rate</option>
+            <option value="tcpPacketRate">Sending TCP Packet Rate</option>
+            <option value="tcpDataRate">Sending TCP Data Rate</option>
+            <option value="udpPacketRate">Sending UDP Packet Rate</option>
+            <option value="udpDataRate">Sending UDP Data Rate</option>
         </select>
     </div>
     <p *ngIf="updateTime" class="update-time">
@@ -45,6 +47,24 @@
             [title]="tcpDataRate_DataArr[idx][0]"
             [data]="tcpDataRate_DataArr[idx][1]"
             [yLabel]="tcpDataRate_Unit"
+        >
+        </app-time-line-chart>
+    </div>
+    <div class="card-group" *ngSwitchCase="'udpPacketRate'">
+        <app-time-line-chart
+            *ngFor="let idx of udpPacketRate_Indexes"
+            [title]="udpPacketRate_DataArr[idx][0]"
+            [data]="udpPacketRate_DataArr[idx][1]"
+            [yLabel]="udpPacketRate_Unit"
+        >
+        </app-time-line-chart>
+    </div>
+    <div class="card-group" *ngSwitchCase="'udpDataRate'">
+        <app-time-line-chart
+            *ngFor="let idx of udpDataRate_Indexes"
+            [title]="udpDataRate_DataArr[idx][0]"
+            [data]="udpDataRate_DataArr[idx][1]"
+            [yLabel]="udpDataRate_Unit"
         >
         </app-time-line-chart>
     </div>

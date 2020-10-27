@@ -92,7 +92,20 @@ function processSenderMetrics(count: number, data: any): void {
         // udp
         let udp_dgram_stats = data[instance].data_transfer?.udp_sender_stat?.dgram_stats;
         if (udp_dgram_stats) {
-            //
+            // packet rate
+            let currentPktHist = senderMetricsHistory.udpPacketTotal[instance]
+                ? senderMetricsHistory.udpPacketTotal[instance]
+                : (senderMetricsHistory.udpPacketTotal[instance] = []);
+            currentPktHist.push([currentTimestamp, udp_dgram_stats.total_succ_count]);
+            if (currentPktHist.length > maxArrLen) currentPktHist.shift();
+            senderMetrics.selected.udpPacketRate.data[instance] = calculate_rate(currentPktHist);
+            // data rate
+            let currentDatHist = senderMetricsHistory.udpDataTotal[instance]
+                ? senderMetricsHistory.udpDataTotal[instance]
+                : (senderMetricsHistory.udpDataTotal[instance] = []);
+            currentDatHist.push([currentTimestamp, udp_dgram_stats.total_succ_size / 1024 / 1024]);
+            if (currentDatHist.length > maxArrLen) currentDatHist.shift();
+            senderMetrics.selected.udpDataRate.data[instance] = calculate_rate(currentDatHist);
         }
     }
 }

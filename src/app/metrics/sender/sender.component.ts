@@ -39,6 +39,18 @@ export class SenderComponent implements OnInit, OnDestroy {
     public tcpDataRate_Unit: string = '';
     public tcpDataRate_Object: any;
 
+    // udpPacketRate
+    public udpPacketRate_Indexes: number[] = [];
+    public udpPacketRate_DataArr: [string, any][] = [];
+    public udpPacketRate_Unit: string = '';
+    public udpPacketRate_Object: any;
+
+    // udpDataRate
+    public udpDataRate_Indexes: number[] = [];
+    public udpDataRate_DataArr: [string, any][] = [];
+    public udpDataRate_Unit: string = '';
+    public udpDataRate_Object: any;
+
     private _update(data: MetricsData) {
         // check type
         if (data.type !== MetricsType.sender) return;
@@ -88,6 +100,30 @@ export class SenderComponent implements OnInit, OnDestroy {
                 this.tcpDataRate_DataArr.push([key, this.tcpDataRate_Object[key]]);
             }
             this.tcpDataRate_Indexes = [...this.tcpDataRate_DataArr.keys()];
+        }
+
+        // udpPacketRate
+        this.udpPacketRate_DataArr = [];
+        this.udpPacketRate_Indexes = [];
+        if (data.selected.udpPacketRate) {
+            this.udpPacketRate_Unit = data.selected.udpPacketRate.unit;
+            this.udpPacketRate_Object = data.selected.udpPacketRate.data;
+            for (let key in this.udpPacketRate_Object) {
+                this.udpPacketRate_DataArr.push([key, this.udpPacketRate_Object[key]]);
+            }
+            this.udpPacketRate_Indexes = [...this.udpPacketRate_DataArr.keys()];
+        }
+
+        // udpDataRate
+        this.udpDataRate_DataArr = [];
+        this.udpDataRate_Indexes = [];
+        if (data.selected.udpDataRate) {
+            this.udpDataRate_Unit = data.selected.udpDataRate.unit;
+            this.udpDataRate_Object = data.selected.udpDataRate.data;
+            for (let key in this.udpDataRate_Object) {
+                this.udpDataRate_DataArr.push([key, this.udpDataRate_Object[key]]);
+            }
+            this.udpDataRate_Indexes = [...this.udpDataRate_DataArr.keys()];
         }
     }
 
