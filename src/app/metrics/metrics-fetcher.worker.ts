@@ -145,9 +145,9 @@ function processDispatcherMetrics(count: number, data: any): void {
     for (let instance in data) {
         // check timestamp
         let currentTimestamp = data[instance].timestamp;
-        let lastTimestamp = senderMetricsHistory.lastTimestamp[instance]
-            ? senderMetricsHistory.lastTimestamp[instance]
-            : (senderMetricsHistory.lastTimestamp[instance] = 1);
+        let lastTimestamp = dispatcherMetricsHistory.lastTimestamp[instance]
+            ? dispatcherMetricsHistory.lastTimestamp[instance]
+            : (dispatcherMetricsHistory.lastTimestamp[instance] = 1);
         if (currentTimestamp > lastTimestamp) {
             senderMetricsHistory.lastTimestamp[instance] = currentTimestamp;
         } else {
@@ -281,9 +281,9 @@ function processCombinerMetrics(count: number, data: any): void {
     for (let instance in data) {
         // check timestamp
         let currentTimestamp = data[instance].timestamp;
-        let lastTimestamp = senderMetricsHistory.lastTimestamp[instance]
-            ? senderMetricsHistory.lastTimestamp[instance]
-            : (senderMetricsHistory.lastTimestamp[instance] = 1);
+        let lastTimestamp = combinerMetricsHistory.lastTimestamp[instance]
+            ? combinerMetricsHistory.lastTimestamp[instance]
+            : (combinerMetricsHistory.lastTimestamp[instance] = 1);
         if (currentTimestamp > lastTimestamp) {
             senderMetricsHistory.lastTimestamp[instance] = currentTimestamp;
         } else {
@@ -379,14 +379,47 @@ function processCombinerMetrics(count: number, data: any): void {
 let ingesterMetrics: MetricsData = {
     type: MetricsType.ingester,
     metrics: {},
-    selected: { dataRate: { unit: 'Rate (MiB/s)', data: { instance1: [], instance2: [] } } },
-    // selected: { dataRate: null },
+    selected: {
+        recvImageRate: { unit: 'Frame Rate (fps)', data: {} },
+        recvDataRate: { unit: 'Data Rate (MiB/s)', data: {} },
+        processedImageRate: { unit: 'Frame Rate (fps)', data: {} },
+        monitoringImageRate: { unit: 'Frame Rate (fps)', data: {} },
+        savingImageRate: { unit: 'Frame Rate (fps)', data: {} },
+        savedImageRate: { unit: 'Frame Rate (fps)', data: {} },
+        imageRequestRate: { unit: 'Request Rate (rps)', data: {} },
+        imageSendRate: { unit: 'Frame Rate (fps)', data: {} },
+    },
+};
+
+let ingesterMetricsHistory: any = {
+    lastTimestamp: {},
+    recvImageTotal: {},
+    recvDataTotal: {},
+    processedImageTotal: {},
+    monitoringImageTotal: {},
+    savingImageTotal: {},
+    savedImageTotal: {},
+    imageRequestTotal: {},
+    imageSendTotal: {},
 };
 
 function processIngesterMetrics(count: number, data: any): void {
     ingesterMetrics.metrics = data;
 
-    // extract selected parameters
+    for (let instance in data) {
+        // check timestamp
+        let currentTimestamp = data[instance].timestamp;
+        let lastTimestamp = ingesterMetricsHistory.lastTimestamp[instance]
+            ? ingesterMetricsHistory.lastTimestamp[instance]
+            : (ingesterMetricsHistory.lastTimestamp[instance] = 1);
+        if (currentTimestamp > lastTimestamp) {
+            senderMetricsHistory.lastTimestamp[instance] = currentTimestamp;
+        } else {
+            continue;
+        }
+
+        // frame_server
+    }
 }
 
 // ---- monitor ---------------------------------------------------------------
