@@ -57,6 +57,18 @@ export class DispatcherComponent implements OnInit, OnDestroy {
     public tcpDataRate_Unit: string = '';
     public tcpDataRate_Object: any;
 
+    // sendPacketRate
+    public sendPacketRate_Indexes: number[] = [];
+    public sendPacketRate_DataArr: [string, any][] = [];
+    public sendPacketRate_Unit: string = '';
+    public sendPacketRate_Object: any;
+
+    // sendDataRate
+    public sendDataRate_Indexes: number[] = [];
+    public sendDataRate_DataArr: [string, any][] = [];
+    public sendDataRate_Unit: string = '';
+    public sendDataRate_Object: any;
+
     private _update(data: MetricsData) {
         // check type
         if (data.type !== MetricsType.dispatcher) return;
@@ -142,6 +154,30 @@ export class DispatcherComponent implements OnInit, OnDestroy {
                 this.tcpDataRate_DataArr.push([key, this.tcpDataRate_Object[key]]);
             }
             this.tcpDataRate_Indexes = [...this.tcpDataRate_DataArr.keys()];
+        }
+
+        // sendPacketRate
+        this.sendPacketRate_DataArr = [];
+        this.sendPacketRate_Indexes = [];
+        if (data.selected.sendPacketRate) {
+            this.sendPacketRate_Unit = data.selected.sendPacketRate.unit;
+            this.sendPacketRate_Object = data.selected.sendPacketRate.data;
+            for (let key in this.sendPacketRate_Object) {
+                this.sendPacketRate_DataArr.push([key, this.sendPacketRate_Object[key]]);
+            }
+            this.sendPacketRate_Indexes = [...this.sendPacketRate_DataArr.keys()];
+        }
+
+        // tcpDataRate
+        this.sendDataRate_DataArr = [];
+        this.sendDataRate_Indexes = [];
+        if (data.selected.sendDataRate) {
+            this.sendDataRate_Unit = data.selected.sendDataRate.unit;
+            this.sendDataRate_Object = data.selected.sendDataRate.data;
+            for (let key in this.sendDataRate_Object) {
+                this.sendDataRate_DataArr.push([key, this.sendDataRate_Object[key]]);
+            }
+            this.sendDataRate_Indexes = [...this.sendDataRate_DataArr.keys()];
         }
     }
 

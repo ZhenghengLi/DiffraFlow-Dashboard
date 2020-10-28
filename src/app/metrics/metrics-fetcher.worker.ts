@@ -122,8 +122,8 @@ let dispatcherMetrics: MetricsData = {
         udpDataRate: { unit: 'Data Rate (MiB/s)', data: {} },
         udpFrameRateChecked: { unit: 'Frame Rate (fps)', data: {} },
         udpFrameRateAll: { unit: 'Frame Rate (fps)', data: {} },
-        sendFrameRate: { unit: 'Frame Rate (fps)', data: {} },
-        sendDataRate: { unit: 'Data Rate (fps)', data: {} },
+        sendPacketRate: { unit: 'Packet Rate (pps)', data: {} },
+        sendDataRate: { unit: 'Data Rate (MiB/s)', data: {} },
     },
 };
 
@@ -135,7 +135,7 @@ let dispatcherMetricsHistory: any = {
     udpDataTotal: {},
     udpFrameTotalChecked: {},
     udpFrameTotalAll: {},
-    sendFrameTotal: {},
+    sendPacketTotal: {},
     sendDataTotal: {},
 };
 
@@ -217,6 +217,33 @@ function processDispatcherMetrics(count: number, data: any): void {
             currentDatHist.push([currentTimestamp, dat_size_sum / 1024 / 1024]);
             if (currentDatHist.length > maxArrLen) currentDatHist.shift();
             dispatcherMetrics.selected.tcpDataRate.data[instance] = calculate_rate(currentDatHist);
+        }
+
+        // sender
+        let frame_senders = data[instance].image_frame_senders;
+        if (frame_senders) {
+            // packet
+            let currentPktHist = dispatcherMetricsHistory.sendPacketTotal[instance]
+                ? dispatcherMetricsHistory.sendPacketTotal[instance]
+                : (dispatcherMetricsHistory.sendPacketTotal[instance] = []);
+            let pkt_count_sum = 0;
+            for (let conn of frame_senders) {
+                pkt_count_sum += conn.network_stats.total_sent_counts;
+            }
+            currentPktHist.push([currentTimestamp, pkt_count_sum]);
+            if (currentPktHist.length > maxArrLen) currentPktHist.shift();
+            dispatcherMetrics.selected.sendPacketRate.data[instance] = calculate_rate(currentPktHist);
+            // data
+            let currentDatHist = dispatcherMetricsHistory.sendDataTotal[instance]
+                ? dispatcherMetricsHistory.sendDataTotal[instance]
+                : (dispatcherMetricsHistory.sendDataTotal[instance] = []);
+            let dat_size_sum = 0;
+            for (let conn of frame_senders) {
+                dat_size_sum += conn.network_stats.total_sent_size;
+            }
+            currentDatHist.push([currentTimestamp, dat_size_sum / 1024 / 1024]);
+            if (currentDatHist.length > maxArrLen) currentDatHist.shift();
+            dispatcherMetrics.selected.sendDataRate.data[instance] = calculate_rate(currentDatHist);
         }
     }
 }

@@ -10,6 +10,8 @@
             <option value="udpDataRate">Receiving UDP Data Rate</option>
             <option value="udpFrameRateChecked">Receiving UDP Frame Rate (checked)</option>
             <option value="udpFrameRateAll">Receiving UDP Frame Rate (all)</option>
+            <option value="sendPacketRate">Sending Packet Rate</option>
+            <option value="sendDataRate">Sending Data Rate</option>
         </select>
     </div>
     <p *ngIf="updateTime" class="update-time">
@@ -75,6 +77,24 @@
             [title]="udpFrameRateAll_DataArr[idx][0]"
             [data]="udpFrameRateAll_DataArr[idx][1]"
             [yLabel]="udpFrameRateAll_Unit"
+        >
+        </app-time-line-chart>
+    </div>
+    <div class="card-group" *ngSwitchCase="'sendPacketRate'">
+        <app-time-line-chart
+            *ngFor="let idx of sendPacketRate_Indexes"
+            [title]="sendPacketRate_DataArr[idx][0]"
+            [data]="sendPacketRate_DataArr[idx][1]"
+            [yLabel]="sendPacketRate_Unit"
+        >
+        </app-time-line-chart>
+    </div>
+    <div class="card-group" *ngSwitchCase="'sendDataRate'">
+        <app-time-line-chart
+            *ngFor="let idx of sendDataRate_Indexes"
+            [title]="sendDataRate_DataArr[idx][0]"
+            [data]="sendDataRate_DataArr[idx][1]"
+            [yLabel]="sendDataRate_Unit"
         >
         </app-time-line-chart>
     </div>
