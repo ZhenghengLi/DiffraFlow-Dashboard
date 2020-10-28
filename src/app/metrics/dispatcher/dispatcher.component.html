@@ -4,12 +4,15 @@
         <button (click)="pause()" [disabled]="!metricsSubscription">Pause</button>
         <select (change)="selectedView = $event.target.value">
             <option value="currentMetrics" selected>Current Metrics</option>
+            <option disabled>──────────────────────</option>
             <option value="tcpPacketRate">Receiving TCP Packet Rate</option>
             <option value="tcpDataRate">Receiving TCP Data Rate</option>
+            <option disabled>──────────────────────</option>
             <option value="udpPacketRate">Receiving UDP Packet Rate</option>
             <option value="udpDataRate">Receiving UDP Data Rate</option>
             <option value="udpFrameRateChecked">Receiving UDP Frame Rate (checked)</option>
             <option value="udpFrameRateAll">Receiving UDP Frame Rate (all)</option>
+            <option disabled>──────────────────────</option>
             <option value="sendPacketRate">Sending Packet Rate</option>
             <option value="sendDataRate">Sending Data Rate</option>
         </select>
