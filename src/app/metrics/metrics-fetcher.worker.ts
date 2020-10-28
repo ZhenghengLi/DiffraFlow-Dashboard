@@ -115,14 +115,83 @@ function processSenderMetrics(count: number, data: any): void {
 let dispatcherMetrics: MetricsData = {
     type: MetricsType.dispatcher,
     metrics: {},
-    selected: { dataRate: { unit: 'Rate (MiB/s)', data: { instance1: [], instance2: [] } } },
-    // selected: { dataRate: null },
+    selected: {
+        tcpPacketRate: { unit: 'Packet Rate (pps)', data: {} },
+        tcpDataRate: { unit: 'Data Rate (MiB/s)', data: {} },
+        udpPacketRate: { unit: 'Packet Rate (pps)', data: {} },
+        udpDataRate: { unit: 'Data Rate (MiB/s)', data: {} },
+        udpFrameRateChecked: { unit: 'Frame Rate (fps)', data: {} },
+        udpFrameRateAll: { unit: 'Frame Rate (fps)', data: {} },
+        sendFrameRate: { unit: 'Frame Rate (fps)', data: {} },
+        sendDataRate: { unit: 'Data Rate (fps)', data: {} },
+    },
+};
+
+let dispatcherMetricsHistory: any = {
+    lastTimestamp: {},
+    tcpPacketTotal: {},
+    tcpDataTotal: {},
+    udpPacketTotal: {},
+    udpDataTotal: {},
+    udpFrameTotalChecked: {},
+    udpFrameTotalAll: {},
+    sendFrameTotal: {},
+    sendDataTotal: {},
 };
 
 function processDispatcherMetrics(count: number, data: any): void {
     dispatcherMetrics.metrics = data;
 
-    // extract selected parameters
+    for (let instance in data) {
+        // check timestamp
+        let currentTimestamp = data[instance].timestamp;
+        let lastTimestamp = senderMetricsHistory.lastTimestamp[instance]
+            ? senderMetricsHistory.lastTimestamp[instance]
+            : (senderMetricsHistory.lastTimestamp[instance] = 1);
+        if (currentTimestamp > lastTimestamp) {
+            senderMetricsHistory.lastTimestamp[instance] = currentTimestamp;
+        } else {
+            continue;
+        }
+
+        // dgram
+        let dgram_stats = data[instance].image_frame_udp_receiver?.dgram_stats;
+        if (dgram_stats) {
+            // packet
+            let currentPktHist = dispatcherMetricsHistory.udpPacketTotal[instance]
+                ? dispatcherMetricsHistory.udpPacketTotal[instance]
+                : (dispatcherMetricsHistory.udpPacketTotal[instance] = []);
+            currentPktHist.push([currentTimestamp, dgram_stats.total_recv_count]);
+            if (currentPktHist.length > maxArrLen) currentPktHist.shift();
+            dispatcherMetrics.selected.udpPacketRate.data[instance] = calculate_rate(currentPktHist);
+            // data
+            let currentDatHist = dispatcherMetricsHistory.udpDataTotal[instance]
+                ? dispatcherMetricsHistory.udpDataTotal[instance]
+                : (dispatcherMetricsHistory.udpDataTotal[instance] = []);
+            currentDatHist.push([currentTimestamp, dgram_stats.total_recv_size / 1024 / 1024]);
+            if (currentDatHist.length > maxArrLen) currentDatHist.shift();
+            dispatcherMetrics.selected.udpDataRate.data[instance] = calculate_rate(currentDatHist);
+        }
+
+        // udp frame
+        let frame_stats = data[instance].image_frame_udp_receiver?.frame_stats;
+        if (frame_stats) {
+            // checked
+            let currentFrmChkHist = dispatcherMetricsHistory.udpFrameTotalChecked[instance]
+                ? dispatcherMetricsHistory.udpFrameTotalChecked[instance]
+                : (dispatcherMetricsHistory.udpFrameTotalChecked[instance] = []);
+            currentFrmChkHist.push([currentTimestamp, frame_stats.total_checked_count]);
+            if (currentFrmChkHist.length > maxArrLen) currentFrmChkHist.shift();
+            dispatcherMetrics.selected.udpFrameRateChecked.data[instance] = calculate_rate(currentFrmChkHist);
+            // all
+            let currentFrmAllHist = dispatcherMetricsHistory.udpFrameTotalAll[instance]
+                ? dispatcherMetricsHistory.udpFrameTotalAll[instance]
+                : (dispatcherMetricsHistory.udpFrameTotalAll[instance] = []);
+            currentFrmAllHist.push([currentTimestamp, frame_stats.total_received_count]);
+            if (currentFrmAllHist.length > maxArrLen) currentFrmAllHist.shift();
+            dispatcherMetrics.selected.udpFrameRateAll.data[instance] = calculate_rate(currentFrmAllHist);
+        }
+    }
 }
 
 // ---- combiner --------------------------------------------------------------

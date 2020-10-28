@@ -21,13 +21,29 @@ export class DispatcherComponent implements OnInit, OnDestroy {
     public metrics_DataArr: [string, any][] = [];
     public metrics_Object: any;
 
-    // dataRate
-    public dataRate_Indexes: number[] = [];
-    public dataRate_DataArr: [string, any][] = [];
-    public dataRate_Unit: string = '';
-    public dataRate_Object: any;
+    // udpPacketRate
+    public udpPacketRate_Indexes: number[] = [];
+    public udpPacketRate_DataArr: [string, any][] = [];
+    public udpPacketRate_Unit: string = '';
+    public udpPacketRate_Object: any;
 
-    // otherParameter
+    // udpDataRate
+    public udpDataRate_Indexes: number[] = [];
+    public udpDataRate_DataArr: [string, any][] = [];
+    public udpDataRate_Unit: string = '';
+    public udpDataRate_Object: any;
+
+    // udpFrameRateChecked
+    public udpFrameRateChecked_Indexes: number[] = [];
+    public udpFrameRateChecked_DataArr: [string, any][] = [];
+    public udpFrameRateChecked_Unit: string = '';
+    public udpFrameRateChecked_Object: any;
+
+    // udpFrameRateAll
+    public udpFrameRateAll_Indexes: number[] = [];
+    public udpFrameRateAll_DataArr: [string, any][] = [];
+    public udpFrameRateAll_Unit: string = '';
+    public udpFrameRateAll_Object: any;
 
     private _update(data: MetricsData) {
         // check type
@@ -44,19 +60,53 @@ export class DispatcherComponent implements OnInit, OnDestroy {
         }
         this.metrics_Indexes = [...this.metrics_DataArr.keys()];
 
-        // dataRate
-        this.dataRate_DataArr = [];
-        this.dataRate_Indexes = [];
-        if (data.selected.dataRate) {
-            this.dataRate_Unit = data.selected.dataRate.unit;
-            this.dataRate_Object = data.selected.dataRate.data;
-            for (let key in this.dataRate_Object) {
-                this.dataRate_DataArr.push([key, this.dataRate_Object[key]]);
+        // udpPacketRate
+        this.udpPacketRate_DataArr = [];
+        this.udpPacketRate_Indexes = [];
+        if (data.selected.udpPacketRate) {
+            this.udpPacketRate_Unit = data.selected.udpPacketRate.unit;
+            this.udpPacketRate_Object = data.selected.udpPacketRate.data;
+            for (let key in this.udpPacketRate_Object) {
+                this.udpPacketRate_DataArr.push([key, this.udpPacketRate_Object[key]]);
             }
-            this.dataRate_Indexes = [...this.dataRate_DataArr.keys()];
+            this.udpPacketRate_Indexes = [...this.udpPacketRate_DataArr.keys()];
         }
 
-        // otherParameter
+        // udpDataRate
+        this.udpDataRate_DataArr = [];
+        this.udpDataRate_Indexes = [];
+        if (data.selected.udpDataRate) {
+            this.udpDataRate_Unit = data.selected.udpDataRate.unit;
+            this.udpDataRate_Object = data.selected.udpDataRate.data;
+            for (let key in this.udpDataRate_Object) {
+                this.udpDataRate_DataArr.push([key, this.udpDataRate_Object[key]]);
+            }
+            this.udpDataRate_Indexes = [...this.udpDataRate_DataArr.keys()];
+        }
+
+        // udpFrameRateChecked
+        this.udpFrameRateChecked_DataArr = [];
+        this.udpFrameRateChecked_Indexes = [];
+        if (data.selected.udpFrameRateChecked) {
+            this.udpFrameRateChecked_Unit = data.selected.udpFrameRateChecked.unit;
+            this.udpFrameRateChecked_Object = data.selected.udpFrameRateChecked.data;
+            for (let key in this.udpFrameRateChecked_Object) {
+                this.udpFrameRateChecked_DataArr.push([key, this.udpFrameRateChecked_Object[key]]);
+            }
+            this.udpFrameRateChecked_Indexes = [...this.udpFrameRateChecked_DataArr.keys()];
+        }
+
+        // udpFrameRateAll
+        this.udpFrameRateAll_DataArr = [];
+        this.udpFrameRateAll_Indexes = [];
+        if (data.selected.udpFrameRateAll) {
+            this.udpFrameRateAll_Unit = data.selected.udpFrameRateAll.unit;
+            this.udpFrameRateAll_Object = data.selected.udpFrameRateAll.data;
+            for (let key in this.udpFrameRateAll_Object) {
+                this.udpFrameRateAll_DataArr.push([key, this.udpFrameRateAll_Object[key]]);
+            }
+            this.udpFrameRateAll_Indexes = [...this.udpFrameRateAll_DataArr.keys()];
+        }
     }
 
     ngOnInit(): void {

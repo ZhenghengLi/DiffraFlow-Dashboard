@@ -4,8 +4,10 @@
         <button (click)="pause()" [disabled]="!metricsSubscription">Pause</button>
         <select (change)="selectedView = $event.target.value">
             <option value="currentMetrics" selected>Current Metrics</option>
-            <option value="dataRate">Date Rate History</option>
-            <option value="packetRate">Packet Rate History</option>
+            <option value="udpPacketRate">Receiving UDP Packet Rate</option>
+            <option value="udpDataRate">Receiving UDP Data Rate</option>
+            <option value="udpFrameRateChecked">Receiving UDP Frame Rate (checked)</option>
+            <option value="udpFrameRateAll">Receiving UDP Frame Rate (all)</option>
         </select>
     </div>
     <p *ngIf="updateTime" class="update-time">
@@ -20,16 +22,40 @@
             [data]="metrics_DataArr[idx][1]"
         ></app-metrics-card>
     </div>
-    <div class="card-group" *ngSwitchCase="'dataRate'">
+    <div class="card-group" *ngSwitchCase="'udpPacketRate'">
         <app-time-line-chart
-            *ngFor="let idx of dataRate_Indexes"
-            [title]="dataRate_DataArr[idx][0]"
-            [data]="dataRate_DataArr[idx][1]"
-            [yLabel]="dataRate_Unit"
+            *ngFor="let idx of udpPacketRate_Indexes"
+            [title]="udpPacketRate_DataArr[idx][0]"
+            [data]="udpPacketRate_DataArr[idx][1]"
+            [yLabel]="udpPacketRate_Unit"
         >
         </app-time-line-chart>
     </div>
-    <div class="card-group" *ngSwitchDefault>
-        <app-metrics-card> </app-metrics-card>
+    <div class="card-group" *ngSwitchCase="'udpDataRate'">
+        <app-time-line-chart
+            *ngFor="let idx of udpDataRate_Indexes"
+            [title]="udpDataRate_DataArr[idx][0]"
+            [data]="udpDataRate_DataArr[idx][1]"
+            [yLabel]="udpDataRate_Unit"
+        >
+        </app-time-line-chart>
+    </div>
+    <div class="card-group" *ngSwitchCase="'udpFrameRateChecked'">
+        <app-time-line-chart
+            *ngFor="let idx of udpFrameRateChecked_Indexes"
+            [title]="udpFrameRateChecked_DataArr[idx][0]"
+            [data]="udpFrameRateChecked_DataArr[idx][1]"
+            [yLabel]="udpFrameRateChecked_Unit"
+        >
+        </app-time-line-chart>
+    </div>
+    <div class="card-group" *ngSwitchCase="'udpFrameRateAll'">
+        <app-time-line-chart
+            *ngFor="let idx of udpFrameRateAll_Indexes"
+            [title]="udpFrameRateAll_DataArr[idx][0]"
+            [data]="udpFrameRateAll_DataArr[idx][1]"
+            [yLabel]="udpFrameRateAll_Unit"
+        >
+        </app-time-line-chart>
     </div>
 </div>
