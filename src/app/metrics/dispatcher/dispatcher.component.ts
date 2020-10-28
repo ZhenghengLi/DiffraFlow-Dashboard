@@ -45,6 +45,18 @@ export class DispatcherComponent implements OnInit, OnDestroy {
     public udpFrameRateAll_Unit: string = '';
     public udpFrameRateAll_Object: any;
 
+    // tcpPacketRate
+    public tcpPacketRate_Indexes: number[] = [];
+    public tcpPacketRate_DataArr: [string, any][] = [];
+    public tcpPacketRate_Unit: string = '';
+    public tcpPacketRate_Object: any;
+
+    // tcpDataRate
+    public tcpDataRate_Indexes: number[] = [];
+    public tcpDataRate_DataArr: [string, any][] = [];
+    public tcpDataRate_Unit: string = '';
+    public tcpDataRate_Object: any;
+
     private _update(data: MetricsData) {
         // check type
         if (data.type !== MetricsType.dispatcher) return;
@@ -106,6 +118,30 @@ export class DispatcherComponent implements OnInit, OnDestroy {
                 this.udpFrameRateAll_DataArr.push([key, this.udpFrameRateAll_Object[key]]);
             }
             this.udpFrameRateAll_Indexes = [...this.udpFrameRateAll_DataArr.keys()];
+        }
+
+        // tcpPacketRate
+        this.tcpPacketRate_DataArr = [];
+        this.tcpPacketRate_Indexes = [];
+        if (data.selected.tcpPacketRate) {
+            this.tcpPacketRate_Unit = data.selected.tcpPacketRate.unit;
+            this.tcpPacketRate_Object = data.selected.tcpPacketRate.data;
+            for (let key in this.tcpPacketRate_Object) {
+                this.tcpPacketRate_DataArr.push([key, this.tcpPacketRate_Object[key]]);
+            }
+            this.tcpPacketRate_Indexes = [...this.tcpPacketRate_DataArr.keys()];
+        }
+
+        // tcpDataRate
+        this.tcpDataRate_DataArr = [];
+        this.tcpDataRate_Indexes = [];
+        if (data.selected.udpDataRate) {
+            this.tcpDataRate_Unit = data.selected.tcpDataRate.unit;
+            this.tcpDataRate_Object = data.selected.tcpDataRate.data;
+            for (let key in this.tcpDataRate_Object) {
+                this.tcpDataRate_DataArr.push([key, this.tcpDataRate_Object[key]]);
+            }
+            this.tcpDataRate_Indexes = [...this.tcpDataRate_DataArr.keys()];
         }
     }
 

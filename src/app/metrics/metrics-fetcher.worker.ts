@@ -191,6 +191,33 @@ function processDispatcherMetrics(count: number, data: any): void {
             if (currentFrmAllHist.length > maxArrLen) currentFrmAllHist.shift();
             dispatcherMetrics.selected.udpFrameRateAll.data[instance] = calculate_rate(currentFrmAllHist);
         }
+
+        // tcp
+        let tcp_receiver = data[instance].image_frame_tcp_receiver;
+        if (tcp_receiver) {
+            // packet
+            let currentPktHist = dispatcherMetricsHistory.tcpPacketTotal[instance]
+                ? dispatcherMetricsHistory.tcpPacketTotal[instance]
+                : (dispatcherMetricsHistory.tcpPacketTotal[instance] = []);
+            let pkt_count_sum = 0;
+            for (let conn of tcp_receiver) {
+                pkt_count_sum += conn.network_stats.total_received_counts;
+            }
+            currentPktHist.push([currentTimestamp, pkt_count_sum]);
+            if (currentPktHist.length > maxArrLen) currentPktHist.shift();
+            dispatcherMetrics.selected.tcpPacketRate.data[instance] = calculate_rate(currentPktHist);
+            // data
+            let currentDatHist = dispatcherMetricsHistory.tcpDataTotal[instance]
+                ? dispatcherMetricsHistory.tcpDataTotal[instance]
+                : (dispatcherMetricsHistory.tcpDataTotal[instance] = []);
+            let dat_size_sum = 0;
+            for (let conn of tcp_receiver) {
+                dat_size_sum += conn.network_stats.total_received_size;
+            }
+            currentDatHist.push([currentTimestamp, dat_size_sum / 1024 / 1024]);
+            if (currentDatHist.length > maxArrLen) currentDatHist.shift();
+            dispatcherMetrics.selected.tcpDataRate.data[instance] = calculate_rate(currentDatHist);
+        }
     }
 }
 
