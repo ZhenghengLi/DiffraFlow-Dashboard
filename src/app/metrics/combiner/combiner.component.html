@@ -4,8 +4,16 @@
         <button (click)="pause()" [disabled]="!metricsSubscription">Pause</button>
         <select (change)="selectedView = $event.target.value">
             <option value="currentMetrics" selected>Current Metrics</option>
-            <option value="dataRate">Date Rate History</option>
-            <option value="packetRate">Packet Rate History</option>
+            <option disabled>──────────────────────</option>
+            <option value="recvPacketRate">Receiving Packet Rate</option>
+            <option value="recvDataRate">Receiving Data Rate</option>
+            <option disabled>──────────────────────</option>
+            <option value="imageAlignmentRate">Image Alignment Rate</option>
+            <option value="lateArrivingRate">Late Arriving Rate</option>
+            <option value="partialImageRate">Partial Image Rate</option>
+            <option disabled>──────────────────────</option>
+            <option value="imageTakingRate">Image Taking Rate</option>
+            <option value="imageSendingRate">Image Sending Rate</option>
         </select>
     </div>
     <p *ngIf="updateTime" class="update-time">
@@ -20,16 +28,67 @@
             [data]="metrics_DataArr[idx][1]"
         ></app-metrics-card>
     </div>
-    <div class="card-group" *ngSwitchCase="'dataRate'">
+    <div class="card-group" *ngSwitchCase="'recvPacketRate'">
         <app-time-line-chart
-            *ngFor="let idx of dataRate_Indexes"
-            [title]="dataRate_DataArr[idx][0]"
-            [data]="dataRate_DataArr[idx][1]"
-            [yLabel]="dataRate_Unit"
+            *ngFor="let idx of recvPacketRate_Indexes"
+            [title]="recvPacketRate_DataArr[idx][0]"
+            [data]="recvPacketRate_DataArr[idx][1]"
+            [yLabel]="recvPacketRate_Unit"
         >
         </app-time-line-chart>
     </div>
-    <div class="card-group" *ngSwitchDefault>
-        <app-metrics-card> </app-metrics-card>
+    <div class="card-group" *ngSwitchCase="'recvDataRate'">
+        <app-time-line-chart
+            *ngFor="let idx of recvDataRate_Indexes"
+            [title]="recvDataRate_DataArr[idx][0]"
+            [data]="recvDataRate_DataArr[idx][1]"
+            [yLabel]="recvDataRate_Unit"
+        >
+        </app-time-line-chart>
+    </div>
+    <div class="card-group" *ngSwitchCase="'imageAlignmentRate'">
+        <app-time-line-chart
+            *ngFor="let idx of imageAlignmentRate_Indexes"
+            [title]="imageAlignmentRate_DataArr[idx][0]"
+            [data]="imageAlignmentRate_DataArr[idx][1]"
+            [yLabel]="imageAlignmentRate_Unit"
+        >
+        </app-time-line-chart>
+    </div>
+    <div class="card-group" *ngSwitchCase="'lateArrivingRate'">
+        <app-time-line-chart
+            *ngFor="let idx of lateArrivingRate_Indexes"
+            [title]="lateArrivingRate_DataArr[idx][0]"
+            [data]="lateArrivingRate_DataArr[idx][1]"
+            [yLabel]="lateArrivingRate_Unit"
+        >
+        </app-time-line-chart>
+    </div>
+    <div class="card-group" *ngSwitchCase="'partialImageRate'">
+        <app-time-line-chart
+            *ngFor="let idx of partialImageRate_Indexes"
+            [title]="partialImageRate_DataArr[idx][0]"
+            [data]="partialImageRate_DataArr[idx][1]"
+            [yLabel]="partialImageRate_Unit"
+        >
+        </app-time-line-chart>
+    </div>
+    <div class="card-group" *ngSwitchCase="'imageTakingRate'">
+        <app-time-line-chart
+            *ngFor="let idx of imageTakingRate_Indexes"
+            [title]="imageTakingRate_DataArr[idx][0]"
+            [data]="imageTakingRate_DataArr[idx][1]"
+            [yLabel]="imageTakingRate_Unit"
+        >
+        </app-time-line-chart>
+    </div>
+    <div class="card-group" *ngSwitchCase="'imageSendingRate'">
+        <app-time-line-chart
+            *ngFor="let idx of imageSendingRate_Indexes"
+            [title]="imageSendingRate_DataArr[idx][0]"
+            [data]="imageSendingRate_DataArr[idx][1]"
+            [yLabel]="imageSendingRate_Unit"
+        >
+        </app-time-line-chart>
     </div>
 </div>

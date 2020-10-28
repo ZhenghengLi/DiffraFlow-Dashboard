@@ -253,14 +253,125 @@ function processDispatcherMetrics(count: number, data: any): void {
 let combinerMetrics: MetricsData = {
     type: MetricsType.combiner,
     metrics: {},
-    selected: { dataRate: { unit: 'Rate (MiB/s)', data: { instance1: [], instance2: [] } } },
-    // selected: { dataRate: null },
+    selected: {
+        recvPacketRate: { unit: 'Packet Rate (pps)', data: {} },
+        recvDataRate: { unit: 'Data Rate (MiB/s)', data: {} },
+        imageAlignmentRate: { unit: 'Frame Rate (fps)', data: {} },
+        lateArrivingRate: { unit: 'Frame Rate (fps)', data: {} },
+        partialImageRate: { unit: 'Frame Rate (fps)', data: {} },
+        imageTakingRate: { unit: 'Frame Rate (fps)', data: {} },
+        imageSendingRate: { unit: 'Frame Rate (fps)', data: {} },
+    },
+};
+
+let combinerMetricsHistory: any = {
+    lastTimestamp: {},
+    recvPacketTotal: {},
+    recvDataTotal: {},
+    imageAlignmentTotal: {},
+    lateArrivingTotal: {},
+    partialImageTotal: {},
+    imageTakingTotal: {},
+    imageSendingTotal: {},
 };
 
 function processCombinerMetrics(count: number, data: any): void {
     combinerMetrics.metrics = data;
 
-    // extract selected parameters
+    for (let instance in data) {
+        // check timestamp
+        let currentTimestamp = data[instance].timestamp;
+        let lastTimestamp = senderMetricsHistory.lastTimestamp[instance]
+            ? senderMetricsHistory.lastTimestamp[instance]
+            : (senderMetricsHistory.lastTimestamp[instance] = 1);
+        if (currentTimestamp > lastTimestamp) {
+            senderMetricsHistory.lastTimestamp[instance] = currentTimestamp;
+        } else {
+            continue;
+        }
+
+        // frame_server
+        let frame_server = data[instance].image_frame_server;
+        if (frame_server) {
+            // packet
+            let currentPktHist = combinerMetricsHistory.recvPacketTotal[instance]
+                ? combinerMetricsHistory.recvPacketTotal[instance]
+                : (combinerMetricsHistory.recvPacketTotal[instance] = []);
+            let pkt_count_sum = 0;
+            for (let conn of frame_server) {
+                pkt_count_sum += conn.network_stats.total_received_counts;
+            }
+            currentPktHist.push([currentTimestamp, pkt_count_sum]);
+            if (currentPktHist.length > maxArrLen) currentPktHist.shift();
+            combinerMetrics.selected.recvPacketRate.data[instance] = calculate_rate(currentPktHist);
+
+            // data
+            let currentDatHist = combinerMetricsHistory.recvDataTotal[instance]
+                ? combinerMetricsHistory.recvDataTotal[instance]
+                : (combinerMetricsHistory.recvDataTotal[instance] = []);
+            let dat_size_sum = 0;
+            for (let conn of frame_server) {
+                dat_size_sum += conn.network_stats.total_received_size;
+            }
+            currentDatHist.push([currentTimestamp, dat_size_sum / 1024 / 1024]);
+            if (currentDatHist.length > maxArrLen) currentDatHist.shift();
+            combinerMetrics.selected.recvDataRate.data[instance] = calculate_rate(currentDatHist);
+        }
+
+        // alignment
+        let alignment_stats = data[instance].image_cache?.alignment_stats;
+        if (alignment_stats) {
+            // total_aligned_images
+            let currentAlignHist = combinerMetricsHistory.imageAlignmentTotal[instance]
+                ? combinerMetricsHistory.imageAlignmentTotal[instance]
+                : (combinerMetricsHistory.imageAlignmentTotal[instance] = []);
+            currentAlignHist.push([currentTimestamp, alignment_stats.total_aligned_images]);
+            if (currentAlignHist.length > maxArrLen) currentAlignHist.shift();
+            combinerMetrics.selected.imageAlignmentRate.data[instance] = calculate_rate(currentAlignHist);
+
+            // total_late_arrived
+            let currentLateHist = combinerMetricsHistory.lateArrivingTotal[instance]
+                ? combinerMetricsHistory.lateArrivingTotal[instance]
+                : (combinerMetricsHistory.lateArrivingTotal[instance] = []);
+            currentLateHist.push([currentTimestamp, alignment_stats.total_late_arrived]);
+            if (currentLateHist.length > maxArrLen) currentLateHist.shift();
+            combinerMetrics.selected.lateArrivingRate.data[instance] = calculate_rate(currentLateHist);
+
+            // total_partial_images
+            let currentPartHist = combinerMetricsHistory.partialImageTotal[instance]
+                ? combinerMetricsHistory.partialImageTotal[instance]
+                : (combinerMetricsHistory.partialImageTotal[instance] = []);
+            currentPartHist.push([currentTimestamp, alignment_stats.total_partial_images]);
+            if (currentPartHist.length > maxArrLen) currentPartHist.shift();
+            combinerMetrics.selected.partialImageRate.data[instance] = calculate_rate(currentPartHist);
+        }
+
+        // image takine
+        let queue_stats = data[instance].image_cache?.queue_stats;
+        if (queue_stats) {
+            let currentCntHist = combinerMetricsHistory.imageTakingTotal[instance]
+                ? combinerMetricsHistory.imageTakingTotal[instance]
+                : (combinerMetricsHistory.imageTakingTotal[instance] = []);
+            currentCntHist.push([currentTimestamp, queue_stats.image_data_queue_take_counts]);
+            if (currentCntHist.length > maxArrLen) currentCntHist.shift();
+            combinerMetrics.selected.imageTakingRate.data[instance] = calculate_rate(currentCntHist);
+        }
+
+        // image sending
+        let image_data_server = data[instance].image_data_server;
+        if (image_data_server) {
+            let currentCntHist = combinerMetricsHistory.imageSendingTotal[instance]
+                ? combinerMetricsHistory.imageSendingTotal[instance]
+                : (combinerMetricsHistory.imageSendingTotal[instance] = []);
+            let img_count_sum = 0;
+            for (let conn of image_data_server) {
+                img_count_sum += conn.image_stats.total_sent_images;
+            }
+            currentCntHist.push([currentTimestamp, img_count_sum]);
+            if (currentCntHist.length > maxArrLen) currentCntHist.shift();
+            combinerMetrics.selected.imageSendingRate.data[instance] = calculate_rate(currentCntHist);
+        }
+    }
 }
 
 // ---- ingester --------------------------------------------------------------
