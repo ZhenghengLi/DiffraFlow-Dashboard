@@ -240,6 +240,7 @@ let combinerMetrics: MetricsData = {
     selected: {
         recvPacketRate: { unit: 'Packet Rate (pps)', data: {} },
         recvDataRate: { unit: 'Data Rate (MiB/s)', data: {} },
+        maxFrameQueueSize: { unit: 'Queue Size', data: {} },
         imageAlignmentRate: { unit: 'Frame Rate (fps)', data: {} },
         lateArrivingRate: { unit: 'Frame Rate (fps)', data: {} },
         partialImageRate: { unit: 'Frame Rate (fps)', data: {} },
@@ -298,6 +299,16 @@ function processCombinerMetrics(count: number, data: any): void {
             }
             update_hist(currentDatHist, [currentTimestamp, dat_size_sum / 1024 / 1024]);
             combinerMetrics.selected.recvDataRate.data[instance] = calculate_rate(currentDatHist);
+        }
+
+        // maxFrameQueueSize
+        let image_frame_queue_sizes = data[instance].image_cache?.queue_stats?.image_frame_queue_sizes;
+        if (image_frame_queue_sizes) {
+            let currentQueueSizeHist = combinerMetrics.selected.maxFrameQueueSize.data[instance]
+                ? combinerMetrics.selected.maxFrameQueueSize.data[instance]
+                : (combinerMetrics.selected.maxFrameQueueSize.data[instance] = []);
+            let maxQueueSize = Math.max(...image_frame_queue_sizes);
+            update_hist(currentQueueSizeHist, [currentTimestamp, maxQueueSize], defaultMaxArrLen - defaultRateStep);
         }
 
         // alignment
@@ -618,17 +629,16 @@ function update(count: number, data: any): void {
 //=============================================================================
 // common functions
 
-const rateStep = 1;
-const maxTimeGap = (61 + rateStep) * 1200; // us
-const maxArrLen = 61 + rateStep;
+var defaultRateStep = 1;
+var defaultMaxArrLen = 61 + defaultRateStep;
 
-function update_hist(hist: [number, number][], item: [number, number]): void {
+function update_hist(hist: [number, number][], item: [number, number], maxArrLen: number = defaultMaxArrLen): void {
     hist.push(item);
     while (hist.length > maxArrLen) hist.shift();
-    while (hist.slice(-1)[0][0] - hist[0][0] > maxTimeGap) hist.shift();
+    while (hist.slice(-1)[0][0] - hist[0][0] > maxArrLen * 1200) hist.shift();
 }
 
-function calculate_rate(data: [number, number][]): [number, number][] {
+function calculate_rate(data: [number, number][], rateStep: number = defaultRateStep): [number, number][] {
     let rateList = [];
     if (data.length > rateStep) {
         for (let i = 0; i < data.length - rateStep; i++) {

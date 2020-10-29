@@ -8,6 +8,7 @@
             <option value="recvPacketRate">Receiving Packet Rate</option>
             <option value="recvDataRate">Receiving Data Rate</option>
             <option disabled>──────────────────────</option>
+            <option value="maxFrameQueueSize">Maximum Frame Queue Size</option>
             <option value="imageAlignmentRate">Image Alignment Rate</option>
             <option value="lateArrivingRate">Late Arriving Rate</option>
             <option value="partialImageRate">Partial Image Rate</option>
@@ -43,6 +44,15 @@
             [title]="recvDataRate_DataArr[idx][0]"
             [data]="recvDataRate_DataArr[idx][1]"
             [yLabel]="recvDataRate_Unit"
+        >
+        </app-time-line-chart>
+    </div>
+    <div class="card-group" *ngSwitchCase="'maxFrameQueueSize'">
+        <app-time-line-chart
+            *ngFor="let idx of maxFrameQueueSize_Indexes"
+            [title]="maxFrameQueueSize_DataArr[idx][0]"
+            [data]="maxFrameQueueSize_DataArr[idx][1]"
+            [yLabel]="maxFrameQueueSize_Unit"
         >
         </app-time-line-chart>
     </div>

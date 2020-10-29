@@ -33,6 +33,12 @@ export class CombinerComponent implements OnInit, OnDestroy {
     public recvDataRate_Unit: string = '';
     public recvDataRate_Object: any;
 
+    // maxFrameQueueSize
+    public maxFrameQueueSize_Indexes: number[] = [];
+    public maxFrameQueueSize_DataArr: [string, any][] = [];
+    public maxFrameQueueSize_Unit: string = '';
+    public maxFrameQueueSize_Object: any;
+
     // imageAlignmentRate
     public imageAlignmentRate_Indexes: number[] = [];
     public imageAlignmentRate_DataArr: [string, any][] = [];
@@ -100,6 +106,18 @@ export class CombinerComponent implements OnInit, OnDestroy {
                 this.recvDataRate_DataArr.push([key, this.recvDataRate_Object[key]]);
             }
             this.recvDataRate_Indexes = [...this.recvDataRate_DataArr.keys()];
+        }
+
+        // maxFrameQueueSize
+        this.maxFrameQueueSize_DataArr = [];
+        this.maxFrameQueueSize_Indexes = [];
+        if (data.selected.maxFrameQueueSize) {
+            this.maxFrameQueueSize_Unit = data.selected.maxFrameQueueSize.unit;
+            this.maxFrameQueueSize_Object = data.selected.maxFrameQueueSize.data;
+            for (let key in this.maxFrameQueueSize_Object) {
+                this.maxFrameQueueSize_DataArr.push([key, this.maxFrameQueueSize_Object[key]]);
+            }
+            this.maxFrameQueueSize_Indexes = [...this.maxFrameQueueSize_DataArr.keys()];
         }
 
         // imageAlignmentRate
