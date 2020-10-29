@@ -141,7 +141,7 @@ function processDispatcherMetrics(count: number, data: any): void {
             ? dispatcherMetricsHistory.lastTimestamp[instance]
             : (dispatcherMetricsHistory.lastTimestamp[instance] = 1);
         if (currentTimestamp > lastTimestamp) {
-            senderMetricsHistory.lastTimestamp[instance] = currentTimestamp;
+            dispatcherMetricsHistory.lastTimestamp[instance] = currentTimestamp;
         } else {
             continue;
         }
@@ -269,7 +269,7 @@ function processCombinerMetrics(count: number, data: any): void {
             ? combinerMetricsHistory.lastTimestamp[instance]
             : (combinerMetricsHistory.lastTimestamp[instance] = 1);
         if (currentTimestamp > lastTimestamp) {
-            senderMetricsHistory.lastTimestamp[instance] = currentTimestamp;
+            combinerMetricsHistory.lastTimestamp[instance] = currentTimestamp;
         } else {
             continue;
         }
@@ -390,7 +390,7 @@ function processIngesterMetrics(count: number, data: any): void {
             ? ingesterMetricsHistory.lastTimestamp[instance]
             : (ingesterMetricsHistory.lastTimestamp[instance] = 1);
         if (currentTimestamp > lastTimestamp) {
-            senderMetricsHistory.lastTimestamp[instance] = currentTimestamp;
+            ingesterMetricsHistory.lastTimestamp[instance] = currentTimestamp;
         } else {
             continue;
         }
@@ -470,14 +470,50 @@ function processIngesterMetrics(count: number, data: any): void {
 let monitorMetrics: MetricsData = {
     type: MetricsType.monitor,
     metrics: {},
-    selected: { dataRate: { unit: 'Rate (MiB/s)', data: { instance1: [], instance2: [] } } },
-    // selected: { dataRate: null },
+    selected: {
+        imageRequestRate: { unit: 'Request Rate (rps)', data: {} },
+        imageSendRate: { unit: 'Frame Rate (fps)', data: {} },
+    },
+};
+
+let monitorMetricsHistory: any = {
+    lastTimestamp: {},
+    imageRequestTotal: {},
+    imageSendTotal: {},
 };
 
 function processMonitorMetrics(count: number, data: any): void {
     monitorMetrics.metrics = data;
 
-    // extract selected parameters
+    for (let instance in data) {
+        // check timestamp
+        let currentTimestamp = data[instance].timestamp;
+        let lastTimestamp = monitorMetricsHistory.lastTimestamp[instance]
+            ? monitorMetricsHistory.lastTimestamp[instance]
+            : (monitorMetricsHistory.lastTimestamp[instance] = 1);
+        if (currentTimestamp > lastTimestamp) {
+            monitorMetricsHistory.lastTimestamp[instance] = currentTimestamp;
+        } else {
+            continue;
+        }
+
+        // image_http_server
+        let http_server = data[instance].image_http_server;
+        if (http_server) {
+            // imageRequest
+            let currentReqHist = monitorMetricsHistory.imageRequestTotal[instance]
+                ? monitorMetricsHistory.imageRequestTotal[instance]
+                : (monitorMetricsHistory.imageRequestTotal[instance] = []);
+            update_hist(currentReqHist, [currentTimestamp, http_server.total_request_counts]);
+            monitorMetrics.selected.imageRequestRate.data[instance] = calculate_rate(currentReqHist);
+            // imageSend
+            let currentSndHist = monitorMetricsHistory.imageSendTotal[instance]
+                ? monitorMetricsHistory.imageSendTotal[instance]
+                : (monitorMetricsHistory.imageSendTotal[instance] = []);
+            update_hist(currentSndHist, [currentTimestamp, http_server.total_sent_counts]);
+            monitorMetrics.selected.imageSendRate.data[instance] = calculate_rate(currentSndHist);
+        }
+    }
 }
 
 // ---- controller ------------------------------------------------------------
@@ -485,14 +521,50 @@ function processMonitorMetrics(count: number, data: any): void {
 let controllerMetrics: MetricsData = {
     type: MetricsType.controller,
     metrics: {},
-    selected: { dataRate: { unit: 'Rate (MiB/s)', data: { instance1: [], instance2: [] } } },
-    // selected: { dataRate: null },
+    selected: {
+        imageRequestRate: { unit: 'Request Rate (rps)', data: {} },
+        imageSendRate: { unit: 'Frame Rate (fps)', data: {} },
+    },
+};
+
+let controllerMetricsHistory: any = {
+    lastTimestamp: {},
+    imageRequestTotal: {},
+    imageSendTotal: {},
 };
 
 function processControllerMetrics(count: number, data: any): void {
     controllerMetrics.metrics = data;
 
-    // extract selected parameters
+    for (let instance in data) {
+        // check timestamp
+        let currentTimestamp = data[instance].timestamp;
+        let lastTimestamp = controllerMetricsHistory.lastTimestamp[instance]
+            ? controllerMetricsHistory.lastTimestamp[instance]
+            : (controllerMetricsHistory.lastTimestamp[instance] = 1);
+        if (currentTimestamp > lastTimestamp) {
+            controllerMetricsHistory.lastTimestamp[instance] = currentTimestamp;
+        } else {
+            continue;
+        }
+
+        // http_server
+        let http_server = data[instance].http_server;
+        if (http_server) {
+            // imageRequest
+            let currentReqHist = controllerMetricsHistory.imageRequestTotal[instance]
+                ? controllerMetricsHistory.imageRequestTotal[instance]
+                : (controllerMetricsHistory.imageRequestTotal[instance] = []);
+            update_hist(currentReqHist, [currentTimestamp, http_server.total_event_request_counts]);
+            controllerMetrics.selected.imageRequestRate.data[instance] = calculate_rate(currentReqHist);
+            // imageSend
+            let currentSndHist = controllerMetricsHistory.imageSendTotal[instance]
+                ? controllerMetricsHistory.imageSendTotal[instance]
+                : (controllerMetricsHistory.imageSendTotal[instance] = []);
+            update_hist(currentSndHist, [currentTimestamp, http_server.total_event_sent_counts]);
+            controllerMetrics.selected.imageSendRate.data[instance] = calculate_rate(currentSndHist);
+        }
+    }
 }
 
 // ============================================================================

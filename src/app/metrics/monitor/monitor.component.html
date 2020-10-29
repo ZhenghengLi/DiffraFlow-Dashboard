@@ -4,6 +4,9 @@
         <button (click)="pause()" [disabled]="!metricsSubscription">Pause</button>
         <select (change)="selectedView = $event.target.value">
             <option value="currentMetrics" selected>Current Metrics</option>
+            <option disabled>──────────────────────</option>
+            <option value="imageRequestRate">Image Request Rate</option>
+            <option value="imageSendRate">Image Send Rate</option>
         </select>
     </div>
     <p *ngIf="updateTime" class="update-time">
@@ -17,5 +20,23 @@
             [title]="metrics_DataArr[idx][0]"
             [data]="metrics_DataArr[idx][1]"
         ></app-metrics-card>
+    </div>
+    <div class="card-group" *ngSwitchCase="'imageRequestRate'">
+        <app-time-line-chart
+            *ngFor="let idx of imageRequestRate_Indexes"
+            [title]="imageRequestRate_DataArr[idx][0]"
+            [data]="imageRequestRate_DataArr[idx][1]"
+            [yLabel]="imageRequestRate_Unit"
+        >
+        </app-time-line-chart>
+    </div>
+    <div class="card-group" *ngSwitchCase="'imageSendRate'">
+        <app-time-line-chart
+            *ngFor="let idx of imageSendRate_Indexes"
+            [title]="imageSendRate_DataArr[idx][0]"
+            [data]="imageSendRate_DataArr[idx][1]"
+            [yLabel]="imageSendRate_Unit"
+        >
+        </app-time-line-chart>
     </div>
 </div>
