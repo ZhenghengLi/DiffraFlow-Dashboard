@@ -66,7 +66,7 @@ export class TimeLineChartComponent implements OnInit {
                 {
                     type: 'line',
                     smooth: true,
-                    symbol: 'none',
+                    showSymbol: false,
                     lineStyle: {
                         color: 'green',
                     },
@@ -74,11 +74,8 @@ export class TimeLineChartComponent implements OnInit {
                     areaStyle: {
                         color: 'lightgreen',
                     },
-                    animationDelay: (idx) => idx * 10,
                 },
             ],
-            animationEasing: 'elasticOut',
-            animationDelayUpdate: (idx) => idx * 5,
         };
     }
 }

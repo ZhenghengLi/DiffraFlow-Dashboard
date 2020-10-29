@@ -547,10 +547,12 @@ function update(count: number, data: any): void {
 // common functions
 
 const rateStep = 1;
-const maxTimeGap = (61 + rateStep) * 1000; // us
+const maxTimeGap = (61 + rateStep) * 1200; // us
+const maxArrLen = 61 + rateStep;
 
 function update_hist(hist: [number, number][], item: [number, number]): void {
     hist.push(item);
+    while (hist.length > maxArrLen) hist.shift();
     while (hist.slice(-1)[0][0] - hist[0][0] > maxTimeGap) hist.shift();
 }
 
