@@ -418,7 +418,81 @@ function processIngesterMetrics(count: number, data: any): void {
             continue;
         }
 
-        // frame_server
+        // network_stats
+        let network_stats = data[instance].image_data_fetcher?.network_stats;
+        if (network_stats) {
+            // packet rate
+            let currentPktHist = ingesterMetricsHistory.recvImageTotal[instance]
+                ? ingesterMetricsHistory.recvImageTotal[instance]
+                : (ingesterMetricsHistory.recvImageTotal[instance] = []);
+            currentPktHist.push([currentTimestamp, network_stats.total_received_counts]);
+            if (currentPktHist.length > maxArrLen) currentPktHist.shift();
+            ingesterMetrics.selected.recvImageRate.data[instance] = calculate_rate(currentPktHist);
+            // data rate
+            let currentDatHist = ingesterMetricsHistory.recvDataTotal[instance]
+                ? ingesterMetricsHistory.recvDataTotal[instance]
+                : (ingesterMetricsHistory.recvDataTotal[instance] = []);
+            currentDatHist.push([currentTimestamp, network_stats.total_received_size / 1024 / 1024]);
+            if (currentDatHist.length > maxArrLen) currentDatHist.shift();
+            ingesterMetrics.selected.recvDataRate.data[instance] = calculate_rate(currentDatHist);
+        }
+
+        // image filter
+        let image_filter = data[instance].image_filter;
+        if (image_filter) {
+            // processedImage
+            let currentProHist = ingesterMetricsHistory.processedImageTotal[instance]
+                ? ingesterMetricsHistory.processedImageTotal[instance]
+                : (ingesterMetricsHistory.processedImageTotal[instance] = []);
+            currentProHist.push([currentTimestamp, image_filter.total_processed_images]);
+            if (currentProHist.length > maxArrLen) currentProHist.shift();
+            ingesterMetrics.selected.processedImageRate.data[instance] = calculate_rate(currentProHist);
+            // monitoringImage
+            let currentMonHist = ingesterMetricsHistory.monitoringImageTotal[instance]
+                ? ingesterMetricsHistory.monitoringImageTotal[instance]
+                : (ingesterMetricsHistory.monitoringImageTotal[instance] = []);
+            currentMonHist.push([currentTimestamp, image_filter.total_images_for_monitor]);
+            if (currentMonHist.length > maxArrLen) currentMonHist.shift();
+            ingesterMetrics.selected.monitoringImageRate.data[instance] = calculate_rate(currentMonHist);
+            // savingImage
+            let currentSavHist = ingesterMetricsHistory.savingImageTotal[instance]
+                ? ingesterMetricsHistory.savingImageTotal[instance]
+                : (ingesterMetricsHistory.savingImageTotal[instance] = []);
+            currentSavHist.push([currentTimestamp, image_filter.total_images_for_save]);
+            if (currentSavHist.length > maxArrLen) currentSavHist.shift();
+            ingesterMetrics.selected.savingImageRate.data[instance] = calculate_rate(currentSavHist);
+        }
+
+        // image_writer
+        let image_writer = data[instance].image_writer;
+        if (image_writer) {
+            // savedImage
+            let currentCntHist = ingesterMetricsHistory.savedImageTotal[instance]
+                ? ingesterMetricsHistory.savedImageTotal[instance]
+                : (ingesterMetricsHistory.savedImageTotal[instance] = []);
+            currentCntHist.push([currentTimestamp, image_writer.total_saved_counts]);
+            if (currentCntHist.length > maxArrLen) currentCntHist.shift();
+            ingesterMetrics.selected.savedImageRate.data[instance] = calculate_rate(currentCntHist);
+        }
+
+        // image_http_server
+        let http_server = data[instance].image_http_server;
+        if (http_server) {
+            // imageRequest
+            let currentReqHist = ingesterMetricsHistory.imageRequestTotal[instance]
+                ? ingesterMetricsHistory.imageRequestTotal[instance]
+                : (ingesterMetricsHistory.imageRequestTotal[instance] = []);
+            currentReqHist.push([currentTimestamp, http_server.total_request_counts]);
+            if (currentReqHist.length > maxArrLen) currentReqHist.shift();
+            ingesterMetrics.selected.imageRequestRate.data[instance] = calculate_rate(currentReqHist);
+            // imageSend
+            let currentSndHist = ingesterMetricsHistory.imageSendTotal[instance]
+                ? ingesterMetricsHistory.imageSendTotal[instance]
+                : (ingesterMetricsHistory.imageSendTotal[instance] = []);
+            currentSndHist.push([currentTimestamp, http_server.total_sent_counts]);
+            if (currentSndHist.length > maxArrLen) currentSndHist.shift();
+            ingesterMetrics.selected.imageSendRate.data[instance] = calculate_rate(currentSndHist);
+        }
     }
 }
 

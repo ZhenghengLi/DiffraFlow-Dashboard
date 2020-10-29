@@ -4,8 +4,18 @@
         <button (click)="pause()" [disabled]="!metricsSubscription">Pause</button>
         <select (change)="selectedView = $event.target.value">
             <option value="currentMetrics" selected>Current Metrics</option>
-            <option value="dataRate">Date Rate History</option>
-            <option value="packetRate">Packet Rate History</option>
+            <option disabled>──────────────────────</option>
+            <option value="recvImageRate">Receiving Image Rate</option>
+            <option value="recvDataRate">Receiving Data Rate</option>
+            <option disabled>──────────────────────</option>
+            <option value="processedImageRate">Processed Image Rate</option>
+            <option value="monitoringImageRate">Monitoring Image Rate</option>
+            <option value="savingImageRate">Saving Image Rate</option>
+            <option disabled>──────────────────────</option>
+            <option value="savedImageRate">Saved Image Rate</option>
+            <option disabled>──────────────────────</option>
+            <option value="imageRequestRate">Image Request Rate</option>
+            <option value="imageSendRate">Image Send Rate</option>
         </select>
     </div>
     <p *ngIf="updateTime" class="update-time">
@@ -20,16 +30,76 @@
             [data]="metrics_DataArr[idx][1]"
         ></app-metrics-card>
     </div>
-    <div class="card-group" *ngSwitchCase="'dataRate'">
+    <div class="card-group" *ngSwitchCase="'recvImageRate'">
         <app-time-line-chart
-            *ngFor="let idx of dataRate_Indexes"
-            [title]="dataRate_DataArr[idx][0]"
-            [data]="dataRate_DataArr[idx][1]"
-            [yLabel]="dataRate_Unit"
+            *ngFor="let idx of recvImageRate_Indexes"
+            [title]="recvImageRate_DataArr[idx][0]"
+            [data]="recvImageRate_DataArr[idx][1]"
+            [yLabel]="recvImageRate_Unit"
         >
         </app-time-line-chart>
     </div>
-    <div class="card-group" *ngSwitchDefault>
-        <app-metrics-card> </app-metrics-card>
+    <div class="card-group" *ngSwitchCase="'recvDataRate'">
+        <app-time-line-chart
+            *ngFor="let idx of recvDataRate_Indexes"
+            [title]="recvDataRate_DataArr[idx][0]"
+            [data]="recvDataRate_DataArr[idx][1]"
+            [yLabel]="recvDataRate_Unit"
+        >
+        </app-time-line-chart>
+    </div>
+    <div class="card-group" *ngSwitchCase="'processedImageRate'">
+        <app-time-line-chart
+            *ngFor="let idx of processedImageRate_Indexes"
+            [title]="processedImageRate_DataArr[idx][0]"
+            [data]="processedImageRate_DataArr[idx][1]"
+            [yLabel]="processedImageRate_Unit"
+        >
+        </app-time-line-chart>
+    </div>
+    <div class="card-group" *ngSwitchCase="'monitoringImageRate'">
+        <app-time-line-chart
+            *ngFor="let idx of monitoringImageRate_Indexes"
+            [title]="monitoringImageRate_DataArr[idx][0]"
+            [data]="monitoringImageRate_DataArr[idx][1]"
+            [yLabel]="monitoringImageRate_Unit"
+        >
+        </app-time-line-chart>
+    </div>
+    <div class="card-group" *ngSwitchCase="'savingImageRate'">
+        <app-time-line-chart
+            *ngFor="let idx of savingImageRate_Indexes"
+            [title]="savingImageRate_DataArr[idx][0]"
+            [data]="savingImageRate_DataArr[idx][1]"
+            [yLabel]="savingImageRate_Unit"
+        >
+        </app-time-line-chart>
+    </div>
+    <div class="card-group" *ngSwitchCase="'savedImageRate'">
+        <app-time-line-chart
+            *ngFor="let idx of savedImageRate_Indexes"
+            [title]="savedImageRate_DataArr[idx][0]"
+            [data]="savedImageRate_DataArr[idx][1]"
+            [yLabel]="savedImageRate_Unit"
+        >
+        </app-time-line-chart>
+    </div>
+    <div class="card-group" *ngSwitchCase="'imageRequestRate'">
+        <app-time-line-chart
+            *ngFor="let idx of imageRequestRate_Indexes"
+            [title]="imageRequestRate_DataArr[idx][0]"
+            [data]="imageRequestRate_DataArr[idx][1]"
+            [yLabel]="imageRequestRate_Unit"
+        >
+        </app-time-line-chart>
+    </div>
+    <div class="card-group" *ngSwitchCase="'imageSendRate'">
+        <app-time-line-chart
+            *ngFor="let idx of imageSendRate_Indexes"
+            [title]="imageSendRate_DataArr[idx][0]"
+            [data]="imageSendRate_DataArr[idx][1]"
+            [yLabel]="imageSendRate_Unit"
+        >
+        </app-time-line-chart>
     </div>
 </div>
