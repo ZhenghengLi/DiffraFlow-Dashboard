@@ -3,9 +3,6 @@
 import { interval, Subscription } from 'rxjs';
 import { MetricsType, MetricsCommand, MetricsData } from './metrics.common';
 
-const rateStep = 1;
-const maxArrLen = 61 + rateStep;
-
 //=============================================================================
 // metrics data processing logics
 
@@ -65,8 +62,7 @@ function processSenderMetrics(count: number, data: any): void {
             let currentFrmHist = senderMetricsHistory.sendFrameTotal[instance]
                 ? senderMetricsHistory.sendFrameTotal[instance]
                 : (senderMetricsHistory.sendFrameTotal[instance] = []);
-            currentFrmHist.push([currentTimestamp, transfer_stat.send_succ_counts]);
-            if (currentFrmHist.length > maxArrLen) currentFrmHist.shift();
+            update_hist(currentFrmHist, [currentTimestamp, transfer_stat.send_succ_counts]);
             senderMetrics.selected.sendFrameRate.data[instance] = calculate_rate(currentFrmHist);
         }
 
@@ -77,15 +73,13 @@ function processSenderMetrics(count: number, data: any): void {
             let currentPktHist = senderMetricsHistory.tcpPacketTotal[instance]
                 ? senderMetricsHistory.tcpPacketTotal[instance]
                 : (senderMetricsHistory.tcpPacketTotal[instance] = []);
-            currentPktHist.push([currentTimestamp, tcp_network_stats.total_sent_counts]);
-            if (currentPktHist.length > maxArrLen) currentPktHist.shift();
+            update_hist(currentPktHist, [currentTimestamp, tcp_network_stats.total_sent_counts]);
             senderMetrics.selected.tcpPacketRate.data[instance] = calculate_rate(currentPktHist);
             // data rate
             let currentDatHist = senderMetricsHistory.tcpDataTotal[instance]
                 ? senderMetricsHistory.tcpDataTotal[instance]
                 : (senderMetricsHistory.tcpDataTotal[instance] = []);
-            currentDatHist.push([currentTimestamp, tcp_network_stats.total_sent_size / 1024 / 1024]);
-            if (currentDatHist.length > maxArrLen) currentDatHist.shift();
+            update_hist(currentDatHist, [currentTimestamp, tcp_network_stats.total_sent_size / 1024 / 1024]);
             senderMetrics.selected.tcpDataRate.data[instance] = calculate_rate(currentDatHist);
         }
 
@@ -96,15 +90,13 @@ function processSenderMetrics(count: number, data: any): void {
             let currentPktHist = senderMetricsHistory.udpPacketTotal[instance]
                 ? senderMetricsHistory.udpPacketTotal[instance]
                 : (senderMetricsHistory.udpPacketTotal[instance] = []);
-            currentPktHist.push([currentTimestamp, udp_dgram_stats.total_succ_count]);
-            if (currentPktHist.length > maxArrLen) currentPktHist.shift();
+            update_hist(currentPktHist, [currentTimestamp, udp_dgram_stats.total_succ_count]);
             senderMetrics.selected.udpPacketRate.data[instance] = calculate_rate(currentPktHist);
             // data rate
             let currentDatHist = senderMetricsHistory.udpDataTotal[instance]
                 ? senderMetricsHistory.udpDataTotal[instance]
                 : (senderMetricsHistory.udpDataTotal[instance] = []);
-            currentDatHist.push([currentTimestamp, udp_dgram_stats.total_succ_size / 1024 / 1024]);
-            if (currentDatHist.length > maxArrLen) currentDatHist.shift();
+            update_hist(currentDatHist, [currentTimestamp, udp_dgram_stats.total_succ_size / 1024 / 1024]);
             senderMetrics.selected.udpDataRate.data[instance] = calculate_rate(currentDatHist);
         }
     }
@@ -161,15 +153,13 @@ function processDispatcherMetrics(count: number, data: any): void {
             let currentPktHist = dispatcherMetricsHistory.udpPacketTotal[instance]
                 ? dispatcherMetricsHistory.udpPacketTotal[instance]
                 : (dispatcherMetricsHistory.udpPacketTotal[instance] = []);
-            currentPktHist.push([currentTimestamp, dgram_stats.total_recv_count]);
-            if (currentPktHist.length > maxArrLen) currentPktHist.shift();
+            update_hist(currentPktHist, [currentTimestamp, dgram_stats.total_recv_count]);
             dispatcherMetrics.selected.udpPacketRate.data[instance] = calculate_rate(currentPktHist);
             // data
             let currentDatHist = dispatcherMetricsHistory.udpDataTotal[instance]
                 ? dispatcherMetricsHistory.udpDataTotal[instance]
                 : (dispatcherMetricsHistory.udpDataTotal[instance] = []);
-            currentDatHist.push([currentTimestamp, dgram_stats.total_recv_size / 1024 / 1024]);
-            if (currentDatHist.length > maxArrLen) currentDatHist.shift();
+            update_hist(currentDatHist, [currentTimestamp, dgram_stats.total_recv_size / 1024 / 1024]);
             dispatcherMetrics.selected.udpDataRate.data[instance] = calculate_rate(currentDatHist);
         }
 
@@ -180,15 +170,13 @@ function processDispatcherMetrics(count: number, data: any): void {
             let currentFrmChkHist = dispatcherMetricsHistory.udpFrameTotalChecked[instance]
                 ? dispatcherMetricsHistory.udpFrameTotalChecked[instance]
                 : (dispatcherMetricsHistory.udpFrameTotalChecked[instance] = []);
-            currentFrmChkHist.push([currentTimestamp, frame_stats.total_checked_count]);
-            if (currentFrmChkHist.length > maxArrLen) currentFrmChkHist.shift();
+            update_hist(currentFrmChkHist, [currentTimestamp, frame_stats.total_checked_count]);
             dispatcherMetrics.selected.udpFrameRateChecked.data[instance] = calculate_rate(currentFrmChkHist);
             // all
             let currentFrmAllHist = dispatcherMetricsHistory.udpFrameTotalAll[instance]
                 ? dispatcherMetricsHistory.udpFrameTotalAll[instance]
                 : (dispatcherMetricsHistory.udpFrameTotalAll[instance] = []);
-            currentFrmAllHist.push([currentTimestamp, frame_stats.total_received_count]);
-            if (currentFrmAllHist.length > maxArrLen) currentFrmAllHist.shift();
+            update_hist(currentFrmAllHist, [currentTimestamp, frame_stats.total_received_count]);
             dispatcherMetrics.selected.udpFrameRateAll.data[instance] = calculate_rate(currentFrmAllHist);
         }
 
@@ -203,8 +191,7 @@ function processDispatcherMetrics(count: number, data: any): void {
             for (let conn of tcp_receiver) {
                 pkt_count_sum += conn.network_stats.total_received_counts;
             }
-            currentPktHist.push([currentTimestamp, pkt_count_sum]);
-            if (currentPktHist.length > maxArrLen) currentPktHist.shift();
+            update_hist(currentPktHist, [currentTimestamp, pkt_count_sum]);
             dispatcherMetrics.selected.tcpPacketRate.data[instance] = calculate_rate(currentPktHist);
             // data
             let currentDatHist = dispatcherMetricsHistory.tcpDataTotal[instance]
@@ -214,8 +201,7 @@ function processDispatcherMetrics(count: number, data: any): void {
             for (let conn of tcp_receiver) {
                 dat_size_sum += conn.network_stats.total_received_size;
             }
-            currentDatHist.push([currentTimestamp, dat_size_sum / 1024 / 1024]);
-            if (currentDatHist.length > maxArrLen) currentDatHist.shift();
+            update_hist(currentDatHist, [currentTimestamp, dat_size_sum / 1024 / 1024]);
             dispatcherMetrics.selected.tcpDataRate.data[instance] = calculate_rate(currentDatHist);
         }
 
@@ -230,8 +216,7 @@ function processDispatcherMetrics(count: number, data: any): void {
             for (let conn of frame_senders) {
                 pkt_count_sum += conn.network_stats.total_sent_counts;
             }
-            currentPktHist.push([currentTimestamp, pkt_count_sum]);
-            if (currentPktHist.length > maxArrLen) currentPktHist.shift();
+            update_hist(currentPktHist, [currentTimestamp, pkt_count_sum]);
             dispatcherMetrics.selected.sendPacketRate.data[instance] = calculate_rate(currentPktHist);
             // data
             let currentDatHist = dispatcherMetricsHistory.sendDataTotal[instance]
@@ -241,8 +226,7 @@ function processDispatcherMetrics(count: number, data: any): void {
             for (let conn of frame_senders) {
                 dat_size_sum += conn.network_stats.total_sent_size;
             }
-            currentDatHist.push([currentTimestamp, dat_size_sum / 1024 / 1024]);
-            if (currentDatHist.length > maxArrLen) currentDatHist.shift();
+            update_hist(currentDatHist, [currentTimestamp, dat_size_sum / 1024 / 1024]);
             dispatcherMetrics.selected.sendDataRate.data[instance] = calculate_rate(currentDatHist);
         }
     }
@@ -301,8 +285,7 @@ function processCombinerMetrics(count: number, data: any): void {
             for (let conn of frame_server) {
                 pkt_count_sum += conn.network_stats.total_received_counts;
             }
-            currentPktHist.push([currentTimestamp, pkt_count_sum]);
-            if (currentPktHist.length > maxArrLen) currentPktHist.shift();
+            update_hist(currentPktHist, [currentTimestamp, pkt_count_sum]);
             combinerMetrics.selected.recvPacketRate.data[instance] = calculate_rate(currentPktHist);
 
             // data
@@ -313,8 +296,7 @@ function processCombinerMetrics(count: number, data: any): void {
             for (let conn of frame_server) {
                 dat_size_sum += conn.network_stats.total_received_size;
             }
-            currentDatHist.push([currentTimestamp, dat_size_sum / 1024 / 1024]);
-            if (currentDatHist.length > maxArrLen) currentDatHist.shift();
+            update_hist(currentDatHist, [currentTimestamp, dat_size_sum / 1024 / 1024]);
             combinerMetrics.selected.recvDataRate.data[instance] = calculate_rate(currentDatHist);
         }
 
@@ -325,24 +307,21 @@ function processCombinerMetrics(count: number, data: any): void {
             let currentAlignHist = combinerMetricsHistory.imageAlignmentTotal[instance]
                 ? combinerMetricsHistory.imageAlignmentTotal[instance]
                 : (combinerMetricsHistory.imageAlignmentTotal[instance] = []);
-            currentAlignHist.push([currentTimestamp, alignment_stats.total_aligned_images]);
-            if (currentAlignHist.length > maxArrLen) currentAlignHist.shift();
+            update_hist(currentAlignHist, [currentTimestamp, alignment_stats.total_aligned_images]);
             combinerMetrics.selected.imageAlignmentRate.data[instance] = calculate_rate(currentAlignHist);
 
             // total_late_arrived
             let currentLateHist = combinerMetricsHistory.lateArrivingTotal[instance]
                 ? combinerMetricsHistory.lateArrivingTotal[instance]
                 : (combinerMetricsHistory.lateArrivingTotal[instance] = []);
-            currentLateHist.push([currentTimestamp, alignment_stats.total_late_arrived]);
-            if (currentLateHist.length > maxArrLen) currentLateHist.shift();
+            update_hist(currentLateHist, [currentTimestamp, alignment_stats.total_late_arrived]);
             combinerMetrics.selected.lateArrivingRate.data[instance] = calculate_rate(currentLateHist);
 
             // total_partial_images
             let currentPartHist = combinerMetricsHistory.partialImageTotal[instance]
                 ? combinerMetricsHistory.partialImageTotal[instance]
                 : (combinerMetricsHistory.partialImageTotal[instance] = []);
-            currentPartHist.push([currentTimestamp, alignment_stats.total_partial_images]);
-            if (currentPartHist.length > maxArrLen) currentPartHist.shift();
+            update_hist(currentPartHist, [currentTimestamp, alignment_stats.total_partial_images]);
             combinerMetrics.selected.partialImageRate.data[instance] = calculate_rate(currentPartHist);
         }
 
@@ -352,8 +331,7 @@ function processCombinerMetrics(count: number, data: any): void {
             let currentCntHist = combinerMetricsHistory.imageTakingTotal[instance]
                 ? combinerMetricsHistory.imageTakingTotal[instance]
                 : (combinerMetricsHistory.imageTakingTotal[instance] = []);
-            currentCntHist.push([currentTimestamp, queue_stats.image_data_queue_take_counts]);
-            if (currentCntHist.length > maxArrLen) currentCntHist.shift();
+            update_hist(currentCntHist, [currentTimestamp, queue_stats.image_data_queue_take_counts]);
             combinerMetrics.selected.imageTakingRate.data[instance] = calculate_rate(currentCntHist);
         }
 
@@ -367,8 +345,7 @@ function processCombinerMetrics(count: number, data: any): void {
             for (let conn of image_data_server) {
                 img_count_sum += conn.image_stats.total_sent_images;
             }
-            currentCntHist.push([currentTimestamp, img_count_sum]);
-            if (currentCntHist.length > maxArrLen) currentCntHist.shift();
+            update_hist(currentCntHist, [currentTimestamp, img_count_sum]);
             combinerMetrics.selected.imageSendingRate.data[instance] = calculate_rate(currentCntHist);
         }
     }
@@ -425,15 +402,13 @@ function processIngesterMetrics(count: number, data: any): void {
             let currentPktHist = ingesterMetricsHistory.recvImageTotal[instance]
                 ? ingesterMetricsHistory.recvImageTotal[instance]
                 : (ingesterMetricsHistory.recvImageTotal[instance] = []);
-            currentPktHist.push([currentTimestamp, network_stats.total_received_counts]);
-            if (currentPktHist.length > maxArrLen) currentPktHist.shift();
+            update_hist(currentPktHist, [currentTimestamp, network_stats.total_received_counts]);
             ingesterMetrics.selected.recvImageRate.data[instance] = calculate_rate(currentPktHist);
             // data rate
             let currentDatHist = ingesterMetricsHistory.recvDataTotal[instance]
                 ? ingesterMetricsHistory.recvDataTotal[instance]
                 : (ingesterMetricsHistory.recvDataTotal[instance] = []);
-            currentDatHist.push([currentTimestamp, network_stats.total_received_size / 1024 / 1024]);
-            if (currentDatHist.length > maxArrLen) currentDatHist.shift();
+            update_hist(currentDatHist, [currentTimestamp, network_stats.total_received_size / 1024 / 1024]);
             ingesterMetrics.selected.recvDataRate.data[instance] = calculate_rate(currentDatHist);
         }
 
@@ -444,22 +419,19 @@ function processIngesterMetrics(count: number, data: any): void {
             let currentProHist = ingesterMetricsHistory.processedImageTotal[instance]
                 ? ingesterMetricsHistory.processedImageTotal[instance]
                 : (ingesterMetricsHistory.processedImageTotal[instance] = []);
-            currentProHist.push([currentTimestamp, image_filter.total_processed_images]);
-            if (currentProHist.length > maxArrLen) currentProHist.shift();
+            update_hist(currentProHist, [currentTimestamp, image_filter.total_processed_images]);
             ingesterMetrics.selected.processedImageRate.data[instance] = calculate_rate(currentProHist);
             // monitoringImage
             let currentMonHist = ingesterMetricsHistory.monitoringImageTotal[instance]
                 ? ingesterMetricsHistory.monitoringImageTotal[instance]
                 : (ingesterMetricsHistory.monitoringImageTotal[instance] = []);
-            currentMonHist.push([currentTimestamp, image_filter.total_images_for_monitor]);
-            if (currentMonHist.length > maxArrLen) currentMonHist.shift();
+            update_hist(currentMonHist, [currentTimestamp, image_filter.total_images_for_monitor]);
             ingesterMetrics.selected.monitoringImageRate.data[instance] = calculate_rate(currentMonHist);
             // savingImage
             let currentSavHist = ingesterMetricsHistory.savingImageTotal[instance]
                 ? ingesterMetricsHistory.savingImageTotal[instance]
                 : (ingesterMetricsHistory.savingImageTotal[instance] = []);
-            currentSavHist.push([currentTimestamp, image_filter.total_images_for_save]);
-            if (currentSavHist.length > maxArrLen) currentSavHist.shift();
+            update_hist(currentSavHist, [currentTimestamp, image_filter.total_images_for_save]);
             ingesterMetrics.selected.savingImageRate.data[instance] = calculate_rate(currentSavHist);
         }
 
@@ -470,8 +442,7 @@ function processIngesterMetrics(count: number, data: any): void {
             let currentCntHist = ingesterMetricsHistory.savedImageTotal[instance]
                 ? ingesterMetricsHistory.savedImageTotal[instance]
                 : (ingesterMetricsHistory.savedImageTotal[instance] = []);
-            currentCntHist.push([currentTimestamp, image_writer.total_saved_counts]);
-            if (currentCntHist.length > maxArrLen) currentCntHist.shift();
+            update_hist(currentCntHist, [currentTimestamp, image_writer.total_saved_counts]);
             ingesterMetrics.selected.savedImageRate.data[instance] = calculate_rate(currentCntHist);
         }
 
@@ -482,15 +453,13 @@ function processIngesterMetrics(count: number, data: any): void {
             let currentReqHist = ingesterMetricsHistory.imageRequestTotal[instance]
                 ? ingesterMetricsHistory.imageRequestTotal[instance]
                 : (ingesterMetricsHistory.imageRequestTotal[instance] = []);
-            currentReqHist.push([currentTimestamp, http_server.total_request_counts]);
-            if (currentReqHist.length > maxArrLen) currentReqHist.shift();
+            update_hist(currentReqHist, [currentTimestamp, http_server.total_request_counts]);
             ingesterMetrics.selected.imageRequestRate.data[instance] = calculate_rate(currentReqHist);
             // imageSend
             let currentSndHist = ingesterMetricsHistory.imageSendTotal[instance]
                 ? ingesterMetricsHistory.imageSendTotal[instance]
                 : (ingesterMetricsHistory.imageSendTotal[instance] = []);
-            currentSndHist.push([currentTimestamp, http_server.total_sent_counts]);
-            if (currentSndHist.length > maxArrLen) currentSndHist.shift();
+            update_hist(currentSndHist, [currentTimestamp, http_server.total_sent_counts]);
             ingesterMetrics.selected.imageSendRate.data[instance] = calculate_rate(currentSndHist);
         }
     }
@@ -576,6 +545,15 @@ function update(count: number, data: any): void {
 
 //=============================================================================
 // common functions
+
+const rateStep = 1;
+const maxTimeGap = (61 + rateStep) * 1000; // us
+
+function update_hist(hist: [number, number][], item: [number, number]): void {
+    hist.push(item);
+    while (hist.slice(-1)[0][0] - hist[0][0] > maxTimeGap) hist.shift();
+}
+
 function calculate_rate(data: [number, number][]): [number, number][] {
     let rateList = [];
     if (data.length > rateStep) {
