@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MetricsDataService } from '../metrics-data.service';
 import { Subscription } from 'rxjs';
-import { MetricsType, MetricsData } from '../metrics.common';
+import { MetricsType, MetricsData, MetricsOverview } from '../metrics.common';
 
 @Component({
     selector: 'app-overview',
@@ -19,14 +19,14 @@ export class OverviewComponent implements OnInit, OnDestroy {
     // metrics
     public metrics_Object: any;
 
-    private _update(data: MetricsData) {
+    private _update(data: MetricsOverview) {
         // check type
         if (data.type !== MetricsType.overview) return;
 
         this.updateTime = new Date();
 
         // metrics
-        this.metrics_Object = JSON.stringify(data.metrics);
+        this.metrics_Object = JSON.stringify(data);
 
         console.log(this.metrics_Object);
     }

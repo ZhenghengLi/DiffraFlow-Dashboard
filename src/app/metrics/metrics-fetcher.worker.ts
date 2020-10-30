@@ -1,21 +1,106 @@
 /// <reference lib="webworker" />
 
 import { interval, Subscription } from 'rxjs';
-import { MetricsType, MetricsCommand, MetricsData } from './metrics.common';
+import { MetricsType, MetricsCommand, MetricsData, MetricsOverview } from './metrics.common';
 
 //=============================================================================
 // metrics data processing logics
 
 // ---- overview --------------------------------------------------------------
 
-let overviewMetrics: MetricsData = {
+let overviewMetrics: MetricsOverview = {
     type: MetricsType.overview,
-    metrics: { count: 0 },
-    selected: { dataRate: { unit: 'Rate (MiB/s)', data: { instance1: [], instance2: [] } } },
+    update_timestamp: 0,
+    update_timestamp_unit: 'milliseconds',
+    aggregated: {
+        // from dispatcher
+        tcpRecvPacketCount: 0,
+        tcpRecvDataSize: 0,
+        udpRecvPacketCount: 0,
+        udpRecvDataSize: 0,
+        udpFrameCountChecked: 0,
+        udpFrameCountAll: 0,
+        // from combiner
+        imageAlignmentCount: 0,
+        partialImageCount: 0,
+        lateArrivingCount: 0,
+        maxFrameQueueSize: 0,
+        // from ingester
+        processedImageCount: 0,
+        monitoringImageCount: 0,
+        savingImageCount: 0,
+        savedImageCount: 0,
+        imageRequestCount: 0,
+        imageSendCount: 0,
+    },
+    history: {
+        // from dispatcher
+        tcpRecvPacketRate: { unit: 'Packet Rate (pps)', data: [] },
+        tcpRecvDataRate: { unit: 'Data Rate (MiB/s)', data: [] },
+        udpRecvPacketRate: { unit: 'Packet Rate (pps)', data: [] },
+        udpRecvDataRate: { unit: 'Data Rate (MiB/s)', data: [] },
+        udpFrameRateChecked: { unit: 'Frame Rate (fps)', data: [] },
+        udpFrameRateAll: { unit: 'Frame Rate (fps)', data: [] },
+        // from combiner
+        imageAlignmentRate: { unit: 'Frame Rate (fps)', data: [] },
+        partialImageCount: { unit: 'Frame Rate (fps)', data: [] },
+        lateArrivingCount: { unit: 'Frame Rate (fps)', data: [] },
+        maxFrameQueueSize: { unit: 'Queue Size', data: [] },
+        // from ingester
+        processedImageRate: { unit: 'Frame Rate (fps)', data: [] },
+        monitoringImageRate: { unit: 'Frame Rate (fps)', data: [] },
+        savingImageRate: { unit: 'Frame Rate (fps)', data: [] },
+        savedImageRate: { unit: 'Frame Rate (fps)', data: [] },
+        imageRequestRate: { unit: 'Request Rate (rps)', data: [] },
+        imageSendRate: { unit: 'Frame Rate (fps)', data: [] },
+    },
+};
+
+let overviewMetricsHistory: any = {
+    // from dispatcher
+    tcpRecvPacketCount: [],
+    tcpRecvDataSize: [],
+    udpRecvPacketCount: [],
+    udpRecvDataSize: [],
+    udpFrameCountChecked: [],
+    udpFrameCountAll: [],
+    // from combiner
+    imageAlignmentCount: [],
+    partialImageCount: [],
+    lateArrivingCount: [],
+    maxFrameQueueSize: [],
+    // from ingester
+    processedImageCount: [],
+    monitoringImageCount: [],
+    savingImageCount: [],
+    savedImageCount: [],
+    imageRequestCount: [],
+    imageSendCount: [],
 };
 
 function processOverviewMetrics(count: number, data: any): void {
-    overviewMetrics.metrics.count = count;
+    if (data.update_timestamp <= overviewMetrics.update_timestamp) return;
+    overviewMetrics.update_timestamp = data.update_timestamp;
+
+    // recalculate each parameter
+    // from dispatcher
+    let dispatcher = data[MetricsType.dispatcher];
+    for (let instance in dispatcher) {
+        //
+    }
+    // from combiner
+    let combiner = data[MetricsType.combiner];
+    for (let instance in combiner) {
+        //
+    }
+    // from ingester
+    let ingester = data[MetricsType.ingester];
+    for (let instance in ingester) {
+        //
+    }
+
+    // recalculate history
+    //
 }
 
 // ---- sender ----------------------------------------------------------------
