@@ -18,9 +18,7 @@
             <option value="imageSendRate">Image Send Rate</option>
         </select>
     </div>
-    <p *ngIf="updateTime" class="update-time">
-        Update Time: {{ updateTime.toLocaleString("en-US", { hour12: false }) }}
-    </p>
+    <p *ngIf="updateTime" class="update-time">Update Time: {{ updateTime | date: "yyyy-MM-dd, HH:mm:ss" }}</p>
 </div>
 <div class="body-wrapper" [ngSwitch]="selectedView">
     <div class="card-group" *ngSwitchCase="'currentMetrics'">
