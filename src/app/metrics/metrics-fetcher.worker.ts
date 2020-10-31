@@ -43,8 +43,8 @@ let overviewMetrics: MetricsOverview = {
         udpFrameRateAll: { unit: 'Frame Rate (fps)', data: [] },
         // from combiner
         imageAlignmentRate: { unit: 'Frame Rate (fps)', data: [] },
-        partialImageCount: { unit: 'Frame Rate (fps)', data: [] },
-        lateArrivingCount: { unit: 'Frame Rate (fps)', data: [] },
+        partialImageRate: { unit: 'Frame Rate (fps)', data: [] },
+        lateArrivingRate: { unit: 'Frame Rate (fps)', data: [] },
         maxFrameQueueSize: { unit: 'Queue Size', data: [] },
         // from ingester
         processedImageRate: { unit: 'Frame Rate (fps)', data: [] },
