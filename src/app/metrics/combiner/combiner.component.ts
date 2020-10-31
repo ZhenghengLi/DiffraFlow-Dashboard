@@ -9,7 +9,7 @@ import { MetricsType, MetricsData } from '../metrics.common';
     styleUrls: ['./combiner.component.scss'],
 })
 export class CombinerComponent implements OnInit, OnDestroy {
-    constructor(public metricsService: MetricsDataService) {}
+    constructor(private _metricsService: MetricsDataService) {}
 
     public metricsSubscription: Subscription;
     public selectedView: string = 'currentMetrics';
@@ -71,12 +71,12 @@ export class CombinerComponent implements OnInit, OnDestroy {
 
     private _update() {
         // check
-        if (!this.metricsService.metricsGroup) return;
-        if (this.updateTime && this.updateTime.getTime() >= this.metricsService.metricsGroup.updateTimestamp) return;
+        if (!this._metricsService.metricsGroup) return;
+        if (this.updateTime && this.updateTime.getTime() >= this._metricsService.metricsGroup.updateTimestamp) return;
 
         // select data
-        const data: MetricsData = this.metricsService.metricsGroup[MetricsType.combiner];
-        this.updateTime = new Date(this.metricsService.metricsGroup.updateTimestamp);
+        const data: MetricsData = this._metricsService.metricsGroup[MetricsType.combiner];
+        this.updateTime = new Date(this._metricsService.metricsGroup.updateTimestamp);
 
         // metrics
         this.metrics_Object = data.metrics;
@@ -187,10 +187,10 @@ export class CombinerComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         console.log('init combiner');
         this._update();
-        this.metricsSubscription = this.metricsService.metricsNotifier.subscribe(() => {
+        this.metricsSubscription = this._metricsService.metricsNotifier.subscribe(() => {
             this._update();
         });
-        this.listening = this.metricsService.listening;
+        this.listening = this._metricsService.listening;
     }
 
     ngOnDestroy(): void {
@@ -204,12 +204,12 @@ export class CombinerComponent implements OnInit, OnDestroy {
     listening: boolean = false;
 
     resume(): void {
-        this.metricsService.listen();
-        this.listening = this.metricsService.listening;
+        this._metricsService.listen();
+        this.listening = this._metricsService.listening;
     }
 
     pause(): void {
-        this.metricsService.unlisten();
-        this.listening = this.metricsService.listening;
+        this._metricsService.unlisten();
+        this.listening = this._metricsService.listening;
     }
 }
