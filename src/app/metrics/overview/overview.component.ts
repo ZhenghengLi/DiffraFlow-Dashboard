@@ -9,7 +9,7 @@ import { MetricsType, MetricsData, MetricsOverview } from '../metrics.common';
     styleUrls: ['./overview.component.scss'],
 })
 export class OverviewComponent implements OnInit, OnDestroy {
-    constructor(private _metricsService: MetricsDataService) {}
+    constructor(private metricsService: MetricsDataService) {}
 
     public metricsSubscription: Subscription;
     public selectedView: string = 'currentMetrics';
@@ -19,11 +19,14 @@ export class OverviewComponent implements OnInit, OnDestroy {
     // metrics
     public metrics_Object: any;
 
-    private _update(data: MetricsOverview) {
-        // check type
-        if (data.type !== MetricsType.overview) return;
+    private _update() {
+        // check
+        if (!this.metricsService.metricsGroup) return;
+        if (this.updateTime && this.updateTime.getTime() >= this.metricsService.metricsGroup.updateTimestamp) return;
 
-        this.updateTime = new Date();
+        // select data
+        const data: MetricsOverview = this.metricsService.metricsGroup[MetricsType.overview];
+        this.updateTime = new Date(this.metricsService.metricsGroup.updateTimestamp);
 
         // metrics
         this.metrics_Object = data;
@@ -33,25 +36,30 @@ export class OverviewComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         console.log('init overview');
-        this._metricsService.select(MetricsType.overview);
-        this.resume();
+        this._update();
+        this.metricsSubscription = this.metricsService.metricsNotifier.subscribe(() => {
+            this._update();
+        });
+        this.listening = this.metricsService.listening;
     }
 
     ngOnDestroy(): void {
         console.log('destroy overview');
-        this._metricsService.unselect();
-    }
-
-    resume(): void {
-        if (!this.metricsSubscription) {
-            this.metricsSubscription = this._metricsService.metricsNotifier.subscribe((data) => this._update(data));
-        }
-    }
-
-    pause(): void {
         if (this.metricsSubscription) {
             this.metricsSubscription.unsubscribe();
             this.metricsSubscription = undefined;
         }
+    }
+
+    listening: boolean = false;
+
+    resume(): void {
+        this.metricsService.listen();
+        this.listening = this.metricsService.listening;
+    }
+
+    pause(): void {
+        this.metricsService.unlisten();
+        this.listening = this.metricsService.listening;
     }
 }

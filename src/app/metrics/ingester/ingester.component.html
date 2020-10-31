@@ -1,7 +1,7 @@
 <div class="head-wrapper">
     <div class="button-group">
-        <button (click)="resume()" [disabled]="metricsSubscription">Resume</button>
-        <button (click)="pause()" [disabled]="!metricsSubscription">Pause</button>
+        <button (click)="resume()" [disabled]="listening">Resume</button>
+        <button (click)="pause()" [disabled]="!listening">Pause</button>
         <select (change)="selectedView = $event.target.value">
             <option value="currentMetrics" selected>Current Metrics</option>
             <option disabled>──────────────────────</option>

@@ -9,7 +9,7 @@ import { MetricsType, MetricsData } from '../metrics.common';
     styleUrls: ['./ingester.component.scss'],
 })
 export class IngesterComponent implements OnInit, OnDestroy {
-    constructor(private _metricsService: MetricsDataService) {}
+    constructor(public metricsService: MetricsDataService) {}
 
     public metricsSubscription: Subscription;
     public selectedView: string = 'currentMetrics';
@@ -69,11 +69,14 @@ export class IngesterComponent implements OnInit, OnDestroy {
     public imageSendRate_Unit: string = '';
     public imageSendRate_Object: any;
 
-    private _update(data: MetricsData) {
-        // check type
-        if (data.type !== MetricsType.ingester) return;
+    private _update() {
+        // check
+        if (!this.metricsService.metricsGroup) return;
+        if (this.updateTime && this.updateTime.getTime() >= this.metricsService.metricsGroup.updateTimestamp) return;
 
-        this.updateTime = new Date();
+        // select data
+        const data: MetricsData = this.metricsService.metricsGroup[MetricsType.ingester];
+        this.updateTime = new Date(this.metricsService.metricsGroup.updateTimestamp);
 
         // metrics
         this.metrics_Object = data.metrics;
@@ -183,25 +186,30 @@ export class IngesterComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         console.log('init ingester');
-        this._metricsService.select(MetricsType.ingester);
-        this.resume();
+        this._update();
+        this.metricsSubscription = this.metricsService.metricsNotifier.subscribe(() => {
+            this._update();
+        });
+        this.listening = this.metricsService.listening;
     }
 
     ngOnDestroy(): void {
         console.log('destroy ingester');
-        this._metricsService.unselect();
-    }
-
-    resume(): void {
-        if (!this.metricsSubscription) {
-            this.metricsSubscription = this._metricsService.metricsNotifier.subscribe((data) => this._update(data));
-        }
-    }
-
-    pause(): void {
         if (this.metricsSubscription) {
             this.metricsSubscription.unsubscribe();
             this.metricsSubscription = undefined;
         }
+    }
+
+    listening: boolean = false;
+
+    resume(): void {
+        this.metricsService.listen();
+        this.listening = this.metricsService.listening;
+    }
+
+    pause(): void {
+        this.metricsService.unlisten();
+        this.listening = this.metricsService.listening;
     }
 }

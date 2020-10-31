@@ -1,16 +1,14 @@
 export enum MetricsType {
+    overview = 'overview',
     sender = 'sender',
     combiner = 'combiner',
     dispatcher = 'dispatcher',
     ingester = 'ingester',
     monitor = 'monitor',
     controller = 'controller',
-    overview = 'overview',
-    none = 'none',
 }
 
 export type MetricsOverview = {
-    type: MetricsType;
     update_timestamp: number;
     update_timestamp_unit: string;
     aggregated: {
@@ -25,7 +23,6 @@ export type MetricsOverview = {
 };
 
 export type MetricsData = {
-    type: MetricsType;
     metrics: any;
     selected: {
         [parameter: string]: {
@@ -35,7 +32,17 @@ export type MetricsData = {
     };
 };
 
+export type MetricsGroup = {
+    updateTimestamp: number;
+    [MetricsType.overview]: MetricsOverview;
+    [MetricsType.sender]: MetricsData;
+    [MetricsType.dispatcher]: MetricsData;
+    [MetricsType.combiner]: MetricsData;
+    [MetricsType.ingester]: MetricsData;
+    [MetricsType.monitor]: MetricsData;
+    [MetricsType.controller]: MetricsData;
+};
+
 export enum MetricsCommand {
-    select = 'select',
     setinterval = 'setinterval',
 }

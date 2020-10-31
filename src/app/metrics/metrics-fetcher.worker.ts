@@ -1,7 +1,7 @@
 /// <reference lib="webworker" />
 
 import { interval, Subscription } from 'rxjs';
-import { MetricsType, MetricsCommand, MetricsData, MetricsOverview } from './metrics.common';
+import { MetricsType, MetricsCommand, MetricsData, MetricsOverview, MetricsGroup } from './metrics.common';
 
 //=============================================================================
 // metrics data processing logics
@@ -9,7 +9,6 @@ import { MetricsType, MetricsCommand, MetricsData, MetricsOverview } from './met
 // ---- overview --------------------------------------------------------------
 
 let overviewMetrics: MetricsOverview = {
-    type: MetricsType.overview,
     update_timestamp: 0,
     update_timestamp_unit: 'milliseconds',
     aggregated: {
@@ -275,7 +274,6 @@ function processOverviewMetrics(count: number, data: any): void {
 // ---- sender ----------------------------------------------------------------
 
 let senderMetrics: MetricsData = {
-    type: MetricsType.sender,
     metrics: {},
     selected: {
         sendFrameRate: { unit: 'Frame Rate (fps)', data: {} },
@@ -359,7 +357,6 @@ function processSenderMetrics(count: number, data: any): void {
 // ---- dispatcher ------------------------------------------------------------
 
 let dispatcherMetrics: MetricsData = {
-    type: MetricsType.dispatcher,
     metrics: {},
     selected: {
         tcpPacketRate: { unit: 'Packet Rate (pps)', data: {} },
@@ -489,7 +486,6 @@ function processDispatcherMetrics(count: number, data: any): void {
 // ---- combiner --------------------------------------------------------------
 
 let combinerMetrics: MetricsData = {
-    type: MetricsType.combiner,
     metrics: {},
     selected: {
         recvPacketRate: { unit: 'Packet Rate (pps)', data: {} },
@@ -619,7 +615,6 @@ function processCombinerMetrics(count: number, data: any): void {
 // ---- ingester --------------------------------------------------------------
 
 let ingesterMetrics: MetricsData = {
-    type: MetricsType.ingester,
     metrics: {},
     selected: {
         recvImageRate: { unit: 'Frame Rate (fps)', data: {} },
@@ -733,7 +728,6 @@ function processIngesterMetrics(count: number, data: any): void {
 // ---- monitor ---------------------------------------------------------------
 
 let monitorMetrics: MetricsData = {
-    type: MetricsType.monitor,
     metrics: {},
     selected: {
         imageRequestRate: { unit: 'Request Rate (rps)', data: {} },
@@ -784,7 +778,6 @@ function processMonitorMetrics(count: number, data: any): void {
 // ---- controller ------------------------------------------------------------
 
 let controllerMetrics: MetricsData = {
-    type: MetricsType.controller,
     metrics: {},
     selected: {
         imageRequestRate: { unit: 'Request Rate (rps)', data: {} },
@@ -845,39 +838,18 @@ function update(count: number, data: any): void {
     processMonitorMetrics(count, data[MetricsType.monitor]);
     processControllerMetrics(count, data[MetricsType.controller]);
 
-    // post message
-    switch (selectedComponent) {
-        case MetricsType.overview:
-            console.log('post:', MetricsType.overview);
-            postMessage(overviewMetrics);
-            break;
-        case MetricsType.sender:
-            console.log('post:', MetricsType.sender);
-            postMessage(senderMetrics);
-            break;
-        case MetricsType.dispatcher:
-            console.log('post:', MetricsType.dispatcher);
-            postMessage(dispatcherMetrics);
-            break;
-        case MetricsType.combiner:
-            console.log('post:', MetricsType.combiner);
-            postMessage(combinerMetrics);
-            break;
-        case MetricsType.ingester:
-            console.log('post:', MetricsType.ingester);
-            postMessage(ingesterMetrics);
-            break;
-        case MetricsType.monitor:
-            console.log('post:', MetricsType.monitor);
-            postMessage(monitorMetrics);
-            break;
-        case MetricsType.controller:
-            console.log('post:', MetricsType.controller);
-            postMessage(controllerMetrics);
-            break;
-        default:
-            console.log('post:', MetricsType.none);
-    }
+    let metricsGroup: MetricsGroup = {
+        updateTimestamp: data.update_timestamp,
+        [MetricsType.overview]: overviewMetrics,
+        [MetricsType.sender]: senderMetrics,
+        [MetricsType.dispatcher]: dispatcherMetrics,
+        [MetricsType.combiner]: combinerMetrics,
+        [MetricsType.ingester]: ingesterMetrics,
+        [MetricsType.monitor]: monitorMetrics,
+        [MetricsType.controller]: controllerMetrics,
+    };
+
+    postMessage(metricsGroup);
 }
 
 //=============================================================================
@@ -907,16 +879,11 @@ function calculate_rate(data: [number, number][], rateStep: number = defaultRate
 // management functions
 
 const configUrl: string = 'assets/config.json';
-let selectedComponent: MetricsType;
 let intervalSubscription: Subscription;
 
 onmessage = ({ data }) => {
     console.log('received message: ', data);
     switch (data.command) {
-        case MetricsCommand.select:
-            selectedComponent = data.payload;
-            console.log('selectedComponent = ', selectedComponent);
-            break;
         case MetricsCommand.setinterval:
             setIntervalTime(data.payload);
             console.log('setIntervalTime: ', data.payload);
