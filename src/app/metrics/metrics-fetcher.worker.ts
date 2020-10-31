@@ -83,20 +83,93 @@ function processOverviewMetrics(count: number, data: any): void {
     overviewMetrics.update_timestamp = data.update_timestamp;
 
     // recalculate each parameter
+
     // from dispatcher
     let dispatcher = data[MetricsType.dispatcher];
+    //// tcp receiver
+    overviewMetrics.aggregated.tcpRecvPacketCount = 0;
+    overviewMetrics.aggregated.tcpRecvDataSize = 0;
     for (let instance in dispatcher) {
-        //
+        let image_frame_tcp_receiver = dispatcher[instance].image_frame_tcp_receiver;
+        if (image_frame_tcp_receiver) {
+            for (let conn of image_frame_tcp_receiver) {
+                overviewMetrics.aggregated.tcpRecvPacketCount += conn.network_stats.total_received_counts;
+                overviewMetrics.aggregated.tcpRecvDataSize += conn.network_stats.total_received_size;
+            }
+        }
     }
+    //// udp receiver
+    overviewMetrics.aggregated.udpRecvPacketCount = 0;
+    overviewMetrics.aggregated.udpRecvDataSize = 0;
+    overviewMetrics.aggregated.udpFrameCountChecked = 0;
+    overviewMetrics.aggregated.udpFrameCountAll = 0;
+    for (let instance in dispatcher) {
+        let image_frame_udp_receiver = dispatcher[instance].image_frame_udp_receiver;
+        if (image_frame_udp_receiver) {
+            overviewMetrics.aggregated.udpRecvPacketCount += image_frame_udp_receiver.dgram_stats.total_recv_count;
+            overviewMetrics.aggregated.udpRecvDataSize += image_frame_udp_receiver.dgram_stats.total_recv_size;
+            overviewMetrics.aggregated.udpFrameCountChecked += image_frame_udp_receiver.frame_stats.total_checked_count;
+            overviewMetrics.aggregated.udpFrameCountAll += image_frame_udp_receiver.frame_stats.total_received_count;
+        }
+    }
+
     // from combiner
     let combiner = data[MetricsType.combiner];
+    //// alignment
+    overviewMetrics.aggregated.imageAlignmentCount = 0;
+    overviewMetrics.aggregated.partialImageCount = 0;
+    overviewMetrics.aggregated.lateArrivingCount = 0;
     for (let instance in combiner) {
-        //
+        let alignment_stats = combiner[instance].image_cache?.alignment_stats;
+        if (alignment_stats) {
+            overviewMetrics.aggregated.imageAlignmentCount += alignment_stats.total_aligned_images;
+            overviewMetrics.aggregated.partialImageCount += alignment_stats.total_partial_images;
+            overviewMetrics.aggregated.lateArrivingCount += alignment_stats.total_late_arrived;
+        }
     }
+    //// frame queue
+    overviewMetrics.aggregated.maxFrameQueueSize = 0;
+    for (let instance in combiner) {
+        let queue_stats = combiner[instance].image_cache?.queue_stats;
+        if (queue_stats) {
+            overviewMetrics.aggregated.maxFrameQueueSize = Math.max(
+                overviewMetrics.aggregated.maxFrameQueueSize,
+                ...queue_stats.image_frame_queue_sizes
+            );
+        }
+    }
+
     // from ingester
     let ingester = data[MetricsType.ingester];
+    //// image filter
+    overviewMetrics.aggregated.processedImageCount = 0;
+    overviewMetrics.aggregated.monitoringImageCount = 0;
+    overviewMetrics.aggregated.savingImageCount = 0;
     for (let instance in ingester) {
-        //
+        let image_filter = ingester[instance].image_filter;
+        if (image_filter) {
+            overviewMetrics.aggregated.processedImageCount += image_filter.total_processed_images;
+            overviewMetrics.aggregated.monitoringImageCount += image_filter.total_images_for_monitor;
+            overviewMetrics.aggregated.savingImageCount += image_filter.total_images_for_save;
+        }
+    }
+    //// image_writer
+    overviewMetrics.aggregated.savedImageCount = 0;
+    for (let instance in ingester) {
+        let image_writer = ingester[instance].image_writer;
+        if (image_writer) {
+            overviewMetrics.aggregated.savedImageCount += image_writer.total_saved_counts;
+        }
+    }
+    //// image_http_server
+    overviewMetrics.aggregated.imageRequestCount = 0;
+    overviewMetrics.aggregated.imageSendCount = 0;
+    for (let instance in ingester) {
+        let image_http_server = ingester[instance].image_http_server;
+        if (image_http_server) {
+            overviewMetrics.aggregated.imageRequestCount += image_http_server.total_request_counts;
+            overviewMetrics.aggregated.imageSendCount += image_http_server.total_sent_counts;
+        }
     }
 
     // recalculate history

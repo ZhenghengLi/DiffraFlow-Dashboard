@@ -26,7 +26,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
         this.updateTime = new Date();
 
         // metrics
-        this.metrics_Object = JSON.stringify(data);
+        this.metrics_Object = data;
 
         console.log(this.metrics_Object);
     }
