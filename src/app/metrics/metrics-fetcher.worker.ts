@@ -173,7 +173,103 @@ function processOverviewMetrics(count: number, data: any): void {
     }
 
     // recalculate history
-    //
+    //// tcpRecvPacketRate
+    update_hist(overviewMetricsHistory.tcpRecvPacketCount, [
+        overviewMetrics.update_timestamp,
+        overviewMetrics.aggregated.tcpRecvPacketCount,
+    ]);
+    overviewMetrics.history.tcpRecvPacketRate.data = calculate_rate(overviewMetricsHistory.tcpRecvPacketCount);
+    //// tcpRecvDataRate
+    update_hist(overviewMetricsHistory.tcpRecvDataSize, [
+        overviewMetrics.update_timestamp,
+        overviewMetrics.aggregated.tcpRecvDataSize / 1024 / 1024,
+    ]);
+    overviewMetrics.history.tcpRecvDataRate.data = calculate_rate(overviewMetricsHistory.tcpRecvDataSize);
+    //// udpRecvPacketCount
+    update_hist(overviewMetricsHistory.udpRecvPacketCount, [
+        overviewMetrics.update_timestamp,
+        overviewMetrics.aggregated.udpRecvPacketCount,
+    ]);
+    overviewMetrics.history.udpRecvPacketRate.data = calculate_rate(overviewMetricsHistory.udpRecvPacketCount);
+    //// udpRecvDataSize
+    update_hist(overviewMetricsHistory.udpRecvDataSize, [
+        overviewMetrics.update_timestamp,
+        overviewMetrics.aggregated.udpRecvDataSize / 1024 / 1024,
+    ]);
+    overviewMetrics.history.udpRecvDataRate.data = calculate_rate(overviewMetricsHistory.udpRecvDataSize);
+    //// udpFrameCountChecked
+    update_hist(overviewMetricsHistory.udpFrameCountChecked, [
+        overviewMetrics.update_timestamp,
+        overviewMetrics.aggregated.udpFrameCountChecked,
+    ]);
+    overviewMetrics.history.udpFrameRateChecked.data = calculate_rate(overviewMetricsHistory.udpFrameCountChecked);
+    //// udpFrameCountAll
+    update_hist(overviewMetricsHistory.udpFrameCountAll, [
+        overviewMetrics.update_timestamp,
+        overviewMetrics.aggregated.udpFrameCountAll,
+    ]);
+    overviewMetrics.history.udpFrameRateAll.data = calculate_rate(overviewMetricsHistory.udpFrameCountAll);
+    //// imageAlignmentCount
+    update_hist(overviewMetricsHistory.imageAlignmentCount, [
+        overviewMetrics.update_timestamp,
+        overviewMetrics.aggregated.imageAlignmentCount,
+    ]);
+    overviewMetrics.history.imageAlignmentRate.data = calculate_rate(overviewMetricsHistory.imageAlignmentCount);
+    //// partialImageCount
+    update_hist(overviewMetricsHistory.partialImageCount, [
+        overviewMetrics.update_timestamp,
+        overviewMetrics.aggregated.partialImageCount,
+    ]);
+    overviewMetrics.history.partialImageRate.data = calculate_rate(overviewMetricsHistory.partialImageCount);
+    //// lateArrivingCount
+    update_hist(overviewMetricsHistory.lateArrivingCount, [
+        overviewMetrics.update_timestamp,
+        overviewMetrics.aggregated.lateArrivingCount,
+    ]);
+    overviewMetrics.history.lateArrivingRate.data = calculate_rate(overviewMetricsHistory.lateArrivingCount);
+    //// maxFrameQueueSize
+    update_hist(
+        overviewMetricsHistory.maxFrameQueueSize,
+        [overviewMetrics.update_timestamp, overviewMetrics.aggregated.maxFrameQueueSize],
+        defaultMaxArrLen - defaultRateStep
+    );
+    overviewMetrics.history.maxFrameQueueSize.data = overviewMetricsHistory.maxFrameQueueSize;
+    //// processedImageCount
+    update_hist(overviewMetricsHistory.processedImageCount, [
+        overviewMetrics.update_timestamp,
+        overviewMetrics.aggregated.processedImageCount,
+    ]);
+    overviewMetrics.history.processedImageRate.data = calculate_rate(overviewMetricsHistory.processedImageCount);
+    //// monitoringImageCount
+    update_hist(overviewMetricsHistory.monitoringImageCount, [
+        overviewMetrics.update_timestamp,
+        overviewMetrics.aggregated.monitoringImageCount,
+    ]);
+    overviewMetrics.history.monitoringImageRate.data = calculate_rate(overviewMetricsHistory.monitoringImageCount);
+    //// savingImageCount
+    update_hist(overviewMetricsHistory.savingImageCount, [
+        overviewMetrics.update_timestamp,
+        overviewMetrics.aggregated.savingImageCount,
+    ]);
+    overviewMetrics.history.savingImageRate.data = calculate_rate(overviewMetricsHistory.savingImageCount);
+    //// savedImageCount
+    update_hist(overviewMetricsHistory.savedImageCount, [
+        overviewMetrics.update_timestamp,
+        overviewMetrics.aggregated.savedImageCount,
+    ]);
+    overviewMetrics.history.savedImageRate.data = calculate_rate(overviewMetricsHistory.savedImageCount);
+    //// imageRequestCount
+    update_hist(overviewMetricsHistory.imageRequestCount, [
+        overviewMetrics.update_timestamp,
+        overviewMetrics.aggregated.imageRequestCount,
+    ]);
+    overviewMetrics.history.imageRequestRate.data = calculate_rate(overviewMetricsHistory.imageRequestCount);
+    //// imageSendCount
+    update_hist(overviewMetricsHistory.imageSendCount, [
+        overviewMetrics.update_timestamp,
+        overviewMetrics.aggregated.imageSendCount,
+    ]);
+    overviewMetrics.history.imageSendRate.data = calculate_rate(overviewMetricsHistory.imageSendCount);
 }
 
 // ---- sender ----------------------------------------------------------------
