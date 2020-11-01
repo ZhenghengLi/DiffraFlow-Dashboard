@@ -19,82 +19,82 @@
                     <th class="col-3">Rate</th>
                 </tr>
                 <tr class="dispatcher">
-                    <td class="col-1">Receiving TCP Packet</td>
+                    <td class="col-1">{{ tcpRecvPacketTitle }}</td>
                     <td class="col-2">{{ tcpRecvPacketCount / 1000 | number }} k</td>
                     <td class="col-3">{{ tcpRecvPacketRate_Last | number }} kpps</td>
                 </tr>
                 <tr class="dispatcher">
-                    <td class="col-1">Receiving TCP Data</td>
+                    <td class="col-1">{{ tcpRecvDataTitle }}</td>
                     <td class="col-2">{{ tcpRecvDataSize / 1024 / 1024 / 1024 | number }} GiB</td>
                     <td class="col-3">{{ tcpRecvDataRate_Last | number }} GiB/s</td>
                 </tr>
                 <tr class="dispatcher">
-                    <td class="col-1">Receiving UDP Packet</td>
+                    <td class="col-1">{{ udpRecvPacketTitle }}</td>
                     <td class="col-2">{{ udpRecvPacketCount / 1000 | number }} k</td>
                     <td class="col-3">{{ udpRecvPacketRate_Last | number }} kpps</td>
                 </tr>
                 <tr class="dispatcher">
-                    <td class="col-1">Receiving UDP Data</td>
+                    <td class="col-1">{{ udpRecvDataTitle }}</td>
                     <td class="col-2">{{ udpRecvDataSize / 1024 / 1024 / 1024 | number }} GiB</td>
                     <td class="col-3">{{ udpRecvDataRate_Last | number }} GiB/s</td>
                 </tr>
                 <tr class="dispatcher">
-                    <td class="col-1">Receiving UDP Frame (Checked)</td>
+                    <td class="col-1">{{ udpFrameTitleChecked }}</td>
                     <td class="col-2">{{ udpFrameCountChecked / 1000 | number }} k</td>
                     <td class="col-3">{{ udpFrameRateChecked_Last | number }} kfps</td>
                 </tr>
                 <tr class="dispatcher">
-                    <td class="col-1">Receiving UDP Frame (All)</td>
+                    <td class="col-1">{{ udpFrameTitleAll }}</td>
                     <td class="col-2">{{ udpFrameCountAll / 1000 | number }} k</td>
                     <td class="col-3">{{ udpFrameRateAll_Last | number }} kfps</td>
                 </tr>
                 <tr class="combiner">
-                    <td class="col-1">Image Alignment (Event Build)</td>
+                    <td class="col-1">{{ imageAlignmentTitle }}</td>
                     <td class="col-2">{{ imageAlignmentCount / 1000 | number }} k</td>
                     <td class="col-3">{{ imageAlignmentRate_Last | number }} kfps</td>
                 </tr>
                 <tr class="combiner">
-                    <td class="col-1">Partial Image</td>
+                    <td class="col-1">{{ partialImageTitle }}</td>
                     <td class="col-2">{{ partialImageCount / 1000 | number }} k</td>
                     <td class="col-3">{{ partialImageRate_Last | number }} kfps</td>
                 </tr>
                 <tr class="combiner">
-                    <td class="col-1">Late Arrived Image</td>
+                    <td class="col-1">{{ lateArrivingTitle }}</td>
                     <td class="col-2">{{ lateArrivingCount / 1000 | number }} k</td>
                     <td class="col-3">{{ lateArrivingRate_Last | number }} kfps</td>
                 </tr>
                 <tr class="combiner">
-                    <td class="col-1">Maximum Frame Queue Size</td>
+                    <td class="col-1">{{ maxFrameQueueSizeTitle }}</td>
                     <td class="col-2">{{ maxFrameQueueSize | number }}</td>
                     <td class="col-3">-</td>
                 </tr>
                 <tr class="ingester">
-                    <td class="col-1">Processed Image</td>
+                    <td class="col-1">{{ processedImageTitle }}</td>
                     <td class="col-2">{{ processedImageCount / 1000 | number }} k</td>
                     <td class="col-3">{{ processedImageRate_Last | number }} kfps</td>
                 </tr>
                 <tr class="ingester">
-                    <td class="col-1">Monitoring Image</td>
+                    <td class="col-1">{{ monitoringImageTitle }}</td>
                     <td class="col-2">{{ monitoringImageCount / 1000 | number }} k</td>
                     <td class="col-3">{{ monitoringImageRate_Last | number }} kfps</td>
                 </tr>
                 <tr class="ingester">
-                    <td class="col-1">Saving Image</td>
+                    <td class="col-1">{{ savingImageTitle }}</td>
                     <td class="col-2">{{ savingImageCount / 1000 | number }} k</td>
                     <td class="col-3">{{ savingImageRate_Last | number }} kfps</td>
                 </tr>
                 <tr class="ingester">
-                    <td class="col-1">Saved Image</td>
+                    <td class="col-1">{{ savedImageTitle }}</td>
                     <td class="col-2">{{ savedImageCount / 1000 | number }} k</td>
                     <td class="col-3">{{ savedImageRate_Last | number }} kfps</td>
                 </tr>
                 <tr class="ingester">
-                    <td class="col-1">Requested Image</td>
+                    <td class="col-1">{{ imageRequestTitle }}</td>
                     <td class="col-2">{{ imageRequestCount | number }}</td>
                     <td class="col-3">{{ imageRequestRate_Last | number }}</td>
                 </tr>
                 <tr class="ingester">
-                    <td class="col-1">Sent Image</td>
+                    <td class="col-1">{{ imageSendTitle }}</td>
                     <td class="col-2">{{ imageSendCount | number }}</td>
                     <td class="col-3">{{ imageSendRate_Last | number }}</td>
                 </tr>
@@ -103,68 +103,76 @@
     </div>
     <div class="card-group" *ngSwitchCase="'historyLine'">
         <app-time-line-chart
-            title="Receiving TCP Packet"
+            [title]="tcpRecvPacketTitle"
             [data]="tcpRecvPacketRate_Data"
             [yLabel]="tcpRecvPacketRate_Unit"
         >
         </app-time-line-chart>
-        <app-time-line-chart title="Receiving TCP Data" [data]="tcpRecvDataRate_Data" [yLabel]="tcpRecvDataRate_Unit">
+        <app-time-line-chart [title]="tcpRecvDataTitle" [data]="tcpRecvDataRate_Data" [yLabel]="tcpRecvDataRate_Unit">
         </app-time-line-chart>
         <app-time-line-chart
-            title="Receiving UDP Packet"
+            [title]="udpRecvPacketTitle"
             [data]="udpRecvPacketRate_Data"
             [yLabel]="udpRecvPacketRate_Unit"
         >
         </app-time-line-chart>
-        <app-time-line-chart title="Receiving UDP Data" [data]="udpRecvDataRate_Data" [yLabel]="udpRecvDataRate_Unit">
+        <app-time-line-chart [title]="udpRecvDataTitle" [data]="udpRecvDataRate_Data" [yLabel]="udpRecvDataRate_Unit">
         </app-time-line-chart>
         <app-time-line-chart
-            title="Receiving UDP Frame (Checked)"
+            [title]="udpFrameTitleChecked"
             [data]="udpFrameRateChecked_Data"
             [yLabel]="udpFrameRateChecked_Unit"
         >
         </app-time-line-chart>
-        <app-time-line-chart
-            title="Receiving UDP Frame (All)"
-            [data]="udpFrameRateAll_Data"
-            [yLabel]="udpFrameRateAll_Unit"
-        >
+        <app-time-line-chart [title]="udpFrameTitleAll" [data]="udpFrameRateAll_Data" [yLabel]="udpFrameRateAll_Unit">
         </app-time-line-chart>
         <app-time-line-chart
-            title="Image Alignment (Event Build)"
+            [title]="imageAlignmentTitle"
             [data]="imageAlignmentRate_Data"
             [yLabel]="imageAlignmentRate_Unit"
         >
         </app-time-line-chart>
-        <app-time-line-chart title="Partial Image" [data]="partialImageRate_Data" [yLabel]="partialImageRate_Unit">
-        </app-time-line-chart>
-        <app-time-line-chart title="Late Arrived Image" [data]="lateArrivingRate_Data" [yLabel]="lateArrivingRate_Unit">
+        <app-time-line-chart
+            [title]="partialImageTitle"
+            [data]="partialImageRate_Data"
+            [yLabel]="partialImageRate_Unit"
+        >
         </app-time-line-chart>
         <app-time-line-chart
-            title="Maximum Frame Queue Size"
+            [title]="lateArrivingTitle"
+            [data]="lateArrivingRate_Data"
+            [yLabel]="lateArrivingRate_Unit"
+        >
+        </app-time-line-chart>
+        <app-time-line-chart
+            [title]="maxFrameQueueSizeTitle"
             [data]="maxFrameQueueSize_Data"
             [yLabel]="maxFrameQueueSize_Unit"
         >
         </app-time-line-chart>
         <app-time-line-chart
-            title="Processed Image"
+            [title]="processedImageTitle"
             [data]="processedImageRate_Data"
             [yLabel]="processedImageRate_Unit"
         >
         </app-time-line-chart>
         <app-time-line-chart
-            title="Monitoring Image"
+            [title]="monitoringImageTitle"
             [data]="monitoringImageRate_Data"
             [yLabel]="monitoringImageRate_Unit"
         >
         </app-time-line-chart>
-        <app-time-line-chart title="Saving Image" [data]="savingImageRate_Data" [yLabel]="savingImageRate_Unit">
+        <app-time-line-chart [title]="savingImageTitle" [data]="savingImageRate_Data" [yLabel]="savingImageRate_Unit">
         </app-time-line-chart>
-        <app-time-line-chart title="Saved Image" [data]="savedImageRate_Data" [yLabel]="savedImageRate_Unit">
+        <app-time-line-chart [title]="savedImageTitle" [data]="savedImageRate_Data" [yLabel]="savedImageRate_Unit">
         </app-time-line-chart>
-        <app-time-line-chart title="Requested Image" [data]="imageRequestRate_Data" [yLabel]="imageRequestRate_Unit">
+        <app-time-line-chart
+            [title]="imageRequestTitle"
+            [data]="imageRequestRate_Data"
+            [yLabel]="imageRequestRate_Unit"
+        >
         </app-time-line-chart>
-        <app-time-line-chart title="Sent Image" [data]="imageSendRate_Data" [yLabel]="imageSendRate_Unit">
+        <app-time-line-chart [title]="imageSendTitle" [data]="imageSendRate_Data" [yLabel]="imageSendRate_Unit">
         </app-time-line-chart>
     </div>
 </div>

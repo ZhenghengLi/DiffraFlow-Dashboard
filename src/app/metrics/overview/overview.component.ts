@@ -16,80 +16,96 @@ export class OverviewComponent implements OnInit, OnDestroy {
 
     public updateTime: Date;
 
+    tcpRecvPacketTitle: string = 'Receiving TCP Packet';
     tcpRecvPacketCount: number = 0;
     tcpRecvPacketRate_Last: number = 0;
     tcpRecvPacketRate_Data: [number, number][] = [];
     tcpRecvPacketRate_Unit: string = '';
 
+    tcpRecvDataTitle: string = 'Receiving TCP Data';
     tcpRecvDataSize: number = 0;
     tcpRecvDataRate_Last: number = 0;
     tcpRecvDataRate_Data: [number, number][] = [];
     tcpRecvDataRate_Unit: string = '';
 
+    udpRecvPacketTitle: string = 'Receiving UDP Packet';
     udpRecvPacketCount: number = 0;
     udpRecvPacketRate_Last: number = 0;
     udpRecvPacketRate_Data: [number, number][] = [];
     udpRecvPacketRate_Unit: string = '';
 
+    udpRecvDataTitle: string = 'Receiving UDP Data';
     udpRecvDataSize: number = 0;
     udpRecvDataRate_Last: number = 0;
     udpRecvDataRate_Data: [number, number][] = [];
     udpRecvDataRate_Unit: string = '';
 
+    udpFrameTitleChecked: string = 'Receiving UDP Frame (Checked)';
     udpFrameCountChecked: number = 0;
     udpFrameRateChecked_Last: number = 0;
     udpFrameRateChecked_Data: [number, number][] = [];
     udpFrameRateChecked_Unit: string = '';
 
+    udpFrameTitleAll: string = 'Receiving UDP Frame (All)';
     udpFrameCountAll: number = 0;
     udpFrameRateAll_Last: number = 0;
     udpFrameRateAll_Data: [number, number][] = [];
     udpFrameRateAll_Unit: string = '';
 
+    imageAlignmentTitle: string = 'Image Alignment (Event Build)';
     imageAlignmentCount: number = 0;
     imageAlignmentRate_Last: number = 0;
     imageAlignmentRate_Data: [number, number][] = [];
     imageAlignmentRate_Unit: string = '';
 
+    partialImageTitle: string = 'Partial Image';
     partialImageCount: number = 0;
     partialImageRate_Last: number = 0;
     partialImageRate_Data: [number, number][] = [];
     partialImageRate_Unit: string = '';
 
+    lateArrivingTitle: string = 'Late Arrived Image';
     lateArrivingCount: number = 0;
     lateArrivingRate_Last: number = 0;
     lateArrivingRate_Data: [number, number][] = [];
     lateArrivingRate_Unit: string = '';
 
+    maxFrameQueueSizeTitle: string = 'Maximum Frame Queue Size';
     maxFrameQueueSize: number = 0;
     maxFrameQueueSize_Data: [number, number][] = [];
     maxFrameQueueSize_Unit: string = '';
 
+    processedImageTitle: string = 'Processed Image';
     processedImageCount: number = 0;
     processedImageRate_Last: number = 0;
     processedImageRate_Data: [number, number][] = [];
     processedImageRate_Unit: string = '';
 
+    monitoringImageTitle: string = 'Monitoring Image';
     monitoringImageCount: number = 0;
     monitoringImageRate_Last: number = 0;
     monitoringImageRate_Data: [number, number][] = [];
     monitoringImageRate_Unit: string = '';
 
+    savingImageTitle: string = 'Saving Image';
     savingImageCount: number = 0;
     savingImageRate_Last: number = 0;
     savingImageRate_Data: [number, number][] = [];
     savingImageRate_Unit: string = '';
 
+    savedImageTitle: string = 'Saved Image';
     savedImageCount: number = 0;
     savedImageRate_Last: number = 0;
     savedImageRate_Data: [number, number][] = [];
     savedImageRate_Unit: string = '';
 
+    imageRequestTitle: string = 'Requested Image';
     imageRequestCount: number = 0;
     imageRequestRate_Last: number = 0;
     imageRequestRate_Data: [number, number][] = [];
     imageRequestRate_Unit: string = '';
 
+    imageSendTitle: string = 'Sent Image';
     imageSendCount: number = 0;
     imageSendRate_Last: number = 0;
     imageSendRate_Data: [number, number][] = [];
