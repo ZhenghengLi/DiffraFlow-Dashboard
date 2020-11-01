@@ -6,271 +6,6 @@ import { MetricsType, MetricsCommand, MetricsData, MetricsOverview, MetricsGroup
 //=============================================================================
 // metrics data processing logics
 
-// ---- overview --------------------------------------------------------------
-
-let overviewMetrics: MetricsOverview = {
-    update_timestamp: 0,
-    update_timestamp_unit: 'milliseconds',
-    aggregated: {
-        // from dispatcher
-        tcpRecvPacketCount: 0,
-        tcpRecvDataSize: 0,
-        udpRecvPacketCount: 0,
-        udpRecvDataSize: 0,
-        udpFrameCountChecked: 0,
-        udpFrameCountAll: 0,
-        // from combiner
-        imageAlignmentCount: 0,
-        partialImageCount: 0,
-        lateArrivingCount: 0,
-        maxFrameQueueSize: 0,
-        // from ingester
-        processedImageCount: 0,
-        monitoringImageCount: 0,
-        savingImageCount: 0,
-        savedImageCount: 0,
-        imageRequestCount: 0,
-        imageSendCount: 0,
-    },
-    history: {
-        // from dispatcher
-        tcpRecvPacketRate: { unit: 'Packet Rate (pps)', data: [] },
-        tcpRecvDataRate: { unit: 'Data Rate (MiB/s)', data: [] },
-        udpRecvPacketRate: { unit: 'Packet Rate (pps)', data: [] },
-        udpRecvDataRate: { unit: 'Data Rate (MiB/s)', data: [] },
-        udpFrameRateChecked: { unit: 'Frame Rate (fps)', data: [] },
-        udpFrameRateAll: { unit: 'Frame Rate (fps)', data: [] },
-        // from combiner
-        imageAlignmentRate: { unit: 'Frame Rate (fps)', data: [] },
-        partialImageRate: { unit: 'Frame Rate (fps)', data: [] },
-        lateArrivingRate: { unit: 'Frame Rate (fps)', data: [] },
-        maxFrameQueueSize: { unit: 'Queue Size', data: [] },
-        // from ingester
-        processedImageRate: { unit: 'Frame Rate (fps)', data: [] },
-        monitoringImageRate: { unit: 'Frame Rate (fps)', data: [] },
-        savingImageRate: { unit: 'Frame Rate (fps)', data: [] },
-        savedImageRate: { unit: 'Frame Rate (fps)', data: [] },
-        imageRequestRate: { unit: 'Request Rate (rps)', data: [] },
-        imageSendRate: { unit: 'Frame Rate (fps)', data: [] },
-    },
-};
-
-let overviewMetricsHistory: any = {
-    // from dispatcher
-    tcpRecvPacketCount: [],
-    tcpRecvDataSize: [],
-    udpRecvPacketCount: [],
-    udpRecvDataSize: [],
-    udpFrameCountChecked: [],
-    udpFrameCountAll: [],
-    // from combiner
-    imageAlignmentCount: [],
-    partialImageCount: [],
-    lateArrivingCount: [],
-    maxFrameQueueSize: [],
-    // from ingester
-    processedImageCount: [],
-    monitoringImageCount: [],
-    savingImageCount: [],
-    savedImageCount: [],
-    imageRequestCount: [],
-    imageSendCount: [],
-};
-
-function processOverviewMetrics(count: number, data: any): void {
-    if (data.update_timestamp <= overviewMetrics.update_timestamp) return;
-    overviewMetrics.update_timestamp = data.update_timestamp;
-
-    // recalculate each parameter
-
-    // from dispatcher
-    let dispatcher = data[MetricsType.dispatcher];
-    //// tcp receiver
-    overviewMetrics.aggregated.tcpRecvPacketCount = 0;
-    overviewMetrics.aggregated.tcpRecvDataSize = 0;
-    for (let instance in dispatcher) {
-        let image_frame_tcp_receiver = dispatcher[instance].image_frame_tcp_receiver;
-        if (image_frame_tcp_receiver) {
-            for (let conn of image_frame_tcp_receiver) {
-                overviewMetrics.aggregated.tcpRecvPacketCount += conn.network_stats.total_received_counts;
-                overviewMetrics.aggregated.tcpRecvDataSize += conn.network_stats.total_received_size;
-            }
-        }
-    }
-    //// udp receiver
-    overviewMetrics.aggregated.udpRecvPacketCount = 0;
-    overviewMetrics.aggregated.udpRecvDataSize = 0;
-    overviewMetrics.aggregated.udpFrameCountChecked = 0;
-    overviewMetrics.aggregated.udpFrameCountAll = 0;
-    for (let instance in dispatcher) {
-        let image_frame_udp_receiver = dispatcher[instance].image_frame_udp_receiver;
-        if (image_frame_udp_receiver) {
-            overviewMetrics.aggregated.udpRecvPacketCount += image_frame_udp_receiver.dgram_stats.total_recv_count;
-            overviewMetrics.aggregated.udpRecvDataSize += image_frame_udp_receiver.dgram_stats.total_recv_size;
-            overviewMetrics.aggregated.udpFrameCountChecked += image_frame_udp_receiver.frame_stats.total_checked_count;
-            overviewMetrics.aggregated.udpFrameCountAll += image_frame_udp_receiver.frame_stats.total_received_count;
-        }
-    }
-
-    // from combiner
-    let combiner = data[MetricsType.combiner];
-    //// alignment
-    overviewMetrics.aggregated.imageAlignmentCount = 0;
-    overviewMetrics.aggregated.partialImageCount = 0;
-    overviewMetrics.aggregated.lateArrivingCount = 0;
-    for (let instance in combiner) {
-        let alignment_stats = combiner[instance].image_cache?.alignment_stats;
-        if (alignment_stats) {
-            overviewMetrics.aggregated.imageAlignmentCount += alignment_stats.total_aligned_images;
-            overviewMetrics.aggregated.partialImageCount += alignment_stats.total_partial_images;
-            overviewMetrics.aggregated.lateArrivingCount += alignment_stats.total_late_arrived;
-        }
-    }
-    //// frame queue
-    overviewMetrics.aggregated.maxFrameQueueSize = 0;
-    for (let instance in combiner) {
-        let queue_stats = combiner[instance].image_cache?.queue_stats;
-        if (queue_stats) {
-            overviewMetrics.aggregated.maxFrameQueueSize = Math.max(
-                overviewMetrics.aggregated.maxFrameQueueSize,
-                ...queue_stats.image_frame_queue_sizes
-            );
-        }
-    }
-
-    // from ingester
-    let ingester = data[MetricsType.ingester];
-    //// image filter
-    overviewMetrics.aggregated.processedImageCount = 0;
-    overviewMetrics.aggregated.monitoringImageCount = 0;
-    overviewMetrics.aggregated.savingImageCount = 0;
-    for (let instance in ingester) {
-        let image_filter = ingester[instance].image_filter;
-        if (image_filter) {
-            overviewMetrics.aggregated.processedImageCount += image_filter.total_processed_images;
-            overviewMetrics.aggregated.monitoringImageCount += image_filter.total_images_for_monitor;
-            overviewMetrics.aggregated.savingImageCount += image_filter.total_images_for_save;
-        }
-    }
-    //// image_writer
-    overviewMetrics.aggregated.savedImageCount = 0;
-    for (let instance in ingester) {
-        let image_writer = ingester[instance].image_writer;
-        if (image_writer) {
-            overviewMetrics.aggregated.savedImageCount += image_writer.total_saved_counts;
-        }
-    }
-    //// image_http_server
-    overviewMetrics.aggregated.imageRequestCount = 0;
-    overviewMetrics.aggregated.imageSendCount = 0;
-    for (let instance in ingester) {
-        let image_http_server = ingester[instance].image_http_server;
-        if (image_http_server) {
-            overviewMetrics.aggregated.imageRequestCount += image_http_server.total_request_counts;
-            overviewMetrics.aggregated.imageSendCount += image_http_server.total_sent_counts;
-        }
-    }
-
-    // recalculate history
-    //// tcpRecvPacketRate
-    update_hist(overviewMetricsHistory.tcpRecvPacketCount, [
-        overviewMetrics.update_timestamp,
-        overviewMetrics.aggregated.tcpRecvPacketCount,
-    ]);
-    overviewMetrics.history.tcpRecvPacketRate.data = calculate_rate(overviewMetricsHistory.tcpRecvPacketCount);
-    //// tcpRecvDataRate
-    update_hist(overviewMetricsHistory.tcpRecvDataSize, [
-        overviewMetrics.update_timestamp,
-        overviewMetrics.aggregated.tcpRecvDataSize / 1024 / 1024,
-    ]);
-    overviewMetrics.history.tcpRecvDataRate.data = calculate_rate(overviewMetricsHistory.tcpRecvDataSize);
-    //// udpRecvPacketCount
-    update_hist(overviewMetricsHistory.udpRecvPacketCount, [
-        overviewMetrics.update_timestamp,
-        overviewMetrics.aggregated.udpRecvPacketCount,
-    ]);
-    overviewMetrics.history.udpRecvPacketRate.data = calculate_rate(overviewMetricsHistory.udpRecvPacketCount);
-    //// udpRecvDataSize
-    update_hist(overviewMetricsHistory.udpRecvDataSize, [
-        overviewMetrics.update_timestamp,
-        overviewMetrics.aggregated.udpRecvDataSize / 1024 / 1024,
-    ]);
-    overviewMetrics.history.udpRecvDataRate.data = calculate_rate(overviewMetricsHistory.udpRecvDataSize);
-    //// udpFrameCountChecked
-    update_hist(overviewMetricsHistory.udpFrameCountChecked, [
-        overviewMetrics.update_timestamp,
-        overviewMetrics.aggregated.udpFrameCountChecked,
-    ]);
-    overviewMetrics.history.udpFrameRateChecked.data = calculate_rate(overviewMetricsHistory.udpFrameCountChecked);
-    //// udpFrameCountAll
-    update_hist(overviewMetricsHistory.udpFrameCountAll, [
-        overviewMetrics.update_timestamp,
-        overviewMetrics.aggregated.udpFrameCountAll,
-    ]);
-    overviewMetrics.history.udpFrameRateAll.data = calculate_rate(overviewMetricsHistory.udpFrameCountAll);
-    //// imageAlignmentCount
-    update_hist(overviewMetricsHistory.imageAlignmentCount, [
-        overviewMetrics.update_timestamp,
-        overviewMetrics.aggregated.imageAlignmentCount,
-    ]);
-    overviewMetrics.history.imageAlignmentRate.data = calculate_rate(overviewMetricsHistory.imageAlignmentCount);
-    //// partialImageCount
-    update_hist(overviewMetricsHistory.partialImageCount, [
-        overviewMetrics.update_timestamp,
-        overviewMetrics.aggregated.partialImageCount,
-    ]);
-    overviewMetrics.history.partialImageRate.data = calculate_rate(overviewMetricsHistory.partialImageCount);
-    //// lateArrivingCount
-    update_hist(overviewMetricsHistory.lateArrivingCount, [
-        overviewMetrics.update_timestamp,
-        overviewMetrics.aggregated.lateArrivingCount,
-    ]);
-    overviewMetrics.history.lateArrivingRate.data = calculate_rate(overviewMetricsHistory.lateArrivingCount);
-    //// maxFrameQueueSize
-    update_hist(
-        overviewMetricsHistory.maxFrameQueueSize,
-        [overviewMetrics.update_timestamp, overviewMetrics.aggregated.maxFrameQueueSize],
-        0
-    );
-    overviewMetrics.history.maxFrameQueueSize.data = overviewMetricsHistory.maxFrameQueueSize;
-    //// processedImageCount
-    update_hist(overviewMetricsHistory.processedImageCount, [
-        overviewMetrics.update_timestamp,
-        overviewMetrics.aggregated.processedImageCount,
-    ]);
-    overviewMetrics.history.processedImageRate.data = calculate_rate(overviewMetricsHistory.processedImageCount);
-    //// monitoringImageCount
-    update_hist(overviewMetricsHistory.monitoringImageCount, [
-        overviewMetrics.update_timestamp,
-        overviewMetrics.aggregated.monitoringImageCount,
-    ]);
-    overviewMetrics.history.monitoringImageRate.data = calculate_rate(overviewMetricsHistory.monitoringImageCount);
-    //// savingImageCount
-    update_hist(overviewMetricsHistory.savingImageCount, [
-        overviewMetrics.update_timestamp,
-        overviewMetrics.aggregated.savingImageCount,
-    ]);
-    overviewMetrics.history.savingImageRate.data = calculate_rate(overviewMetricsHistory.savingImageCount);
-    //// savedImageCount
-    update_hist(overviewMetricsHistory.savedImageCount, [
-        overviewMetrics.update_timestamp,
-        overviewMetrics.aggregated.savedImageCount,
-    ]);
-    overviewMetrics.history.savedImageRate.data = calculate_rate(overviewMetricsHistory.savedImageCount);
-    //// imageRequestCount
-    update_hist(overviewMetricsHistory.imageRequestCount, [
-        overviewMetrics.update_timestamp,
-        overviewMetrics.aggregated.imageRequestCount,
-    ]);
-    overviewMetrics.history.imageRequestRate.data = calculate_rate(overviewMetricsHistory.imageRequestCount);
-    //// imageSendCount
-    update_hist(overviewMetricsHistory.imageSendCount, [
-        overviewMetrics.update_timestamp,
-        overviewMetrics.aggregated.imageSendCount,
-    ]);
-    overviewMetrics.history.imageSendRate.data = calculate_rate(overviewMetricsHistory.imageSendCount);
-}
-
 // ---- sender ----------------------------------------------------------------
 
 let senderMetrics: MetricsData = {
@@ -825,18 +560,251 @@ function processControllerMetrics(count: number, data: any): void {
     }
 }
 
+// ---- overview --------------------------------------------------------------
+
+let overviewMetrics: MetricsOverview = {
+    update_timestamp: 0,
+    update_timestamp_unit: 'milliseconds',
+    aggregated: {
+        // from dispatcher
+        tcpRecvPacketCount: 0,
+        tcpRecvDataSize: 0,
+        udpRecvPacketCount: 0,
+        udpRecvDataSize: 0,
+        udpFrameCountChecked: 0,
+        udpFrameCountAll: 0,
+        // from combiner
+        imageAlignmentCount: 0,
+        partialImageCount: 0,
+        lateArrivingCount: 0,
+        maxFrameQueueSize: 0,
+        // from ingester
+        processedImageCount: 0,
+        monitoringImageCount: 0,
+        savingImageCount: 0,
+        savedImageCount: 0,
+        imageRequestCount: 0,
+        imageSendCount: 0,
+    },
+    history: {
+        // from dispatcher
+        tcpRecvPacketRate: { unit: 'Packet Rate (pps)', data: [] },
+        tcpRecvDataRate: { unit: 'Data Rate (MiB/s)', data: [] },
+        udpRecvPacketRate: { unit: 'Packet Rate (pps)', data: [] },
+        udpRecvDataRate: { unit: 'Data Rate (MiB/s)', data: [] },
+        udpFrameRateChecked: { unit: 'Frame Rate (fps)', data: [] },
+        udpFrameRateAll: { unit: 'Frame Rate (fps)', data: [] },
+        // from combiner
+        imageAlignmentRate: { unit: 'Frame Rate (fps)', data: [] },
+        partialImageRate: { unit: 'Frame Rate (fps)', data: [] },
+        lateArrivingRate: { unit: 'Frame Rate (fps)', data: [] },
+        maxFrameQueueSize: { unit: 'Queue Size', data: [] },
+        // from ingester
+        processedImageRate: { unit: 'Frame Rate (fps)', data: [] },
+        monitoringImageRate: { unit: 'Frame Rate (fps)', data: [] },
+        savingImageRate: { unit: 'Frame Rate (fps)', data: [] },
+        savedImageRate: { unit: 'Frame Rate (fps)', data: [] },
+        imageRequestRate: { unit: 'Request Rate (rps)', data: [] },
+        imageSendRate: { unit: 'Frame Rate (fps)', data: [] },
+    },
+};
+
+function processOverviewMetrics(count: number, data: any): void {
+    if (data.update_timestamp <= overviewMetrics.update_timestamp) return;
+    overviewMetrics.update_timestamp = data.update_timestamp;
+
+    // recalculate each parameter
+
+    // from dispatcher
+    let dispatcher = data[MetricsType.dispatcher];
+    //// tcp receiver
+    overviewMetrics.aggregated.tcpRecvPacketCount = 0;
+    overviewMetrics.aggregated.tcpRecvDataSize = 0;
+    for (let instance in dispatcher) {
+        let image_frame_tcp_receiver = dispatcher[instance].image_frame_tcp_receiver;
+        if (image_frame_tcp_receiver) {
+            for (let conn of image_frame_tcp_receiver) {
+                overviewMetrics.aggregated.tcpRecvPacketCount += conn.network_stats.total_received_counts;
+                overviewMetrics.aggregated.tcpRecvDataSize += conn.network_stats.total_received_size;
+            }
+        }
+    }
+    //// udp receiver
+    overviewMetrics.aggregated.udpRecvPacketCount = 0;
+    overviewMetrics.aggregated.udpRecvDataSize = 0;
+    overviewMetrics.aggregated.udpFrameCountChecked = 0;
+    overviewMetrics.aggregated.udpFrameCountAll = 0;
+    for (let instance in dispatcher) {
+        let image_frame_udp_receiver = dispatcher[instance].image_frame_udp_receiver;
+        if (image_frame_udp_receiver) {
+            overviewMetrics.aggregated.udpRecvPacketCount += image_frame_udp_receiver.dgram_stats.total_recv_count;
+            overviewMetrics.aggregated.udpRecvDataSize += image_frame_udp_receiver.dgram_stats.total_recv_size;
+            overviewMetrics.aggregated.udpFrameCountChecked += image_frame_udp_receiver.frame_stats.total_checked_count;
+            overviewMetrics.aggregated.udpFrameCountAll += image_frame_udp_receiver.frame_stats.total_received_count;
+        }
+    }
+
+    // from combiner
+    let combiner = data[MetricsType.combiner];
+    //// alignment
+    overviewMetrics.aggregated.imageAlignmentCount = 0;
+    overviewMetrics.aggregated.partialImageCount = 0;
+    overviewMetrics.aggregated.lateArrivingCount = 0;
+    for (let instance in combiner) {
+        let alignment_stats = combiner[instance].image_cache?.alignment_stats;
+        if (alignment_stats) {
+            overviewMetrics.aggregated.imageAlignmentCount += alignment_stats.total_aligned_images;
+            overviewMetrics.aggregated.partialImageCount += alignment_stats.total_partial_images;
+            overviewMetrics.aggregated.lateArrivingCount += alignment_stats.total_late_arrived;
+        }
+    }
+    //// frame queue
+    overviewMetrics.aggregated.maxFrameQueueSize = 0;
+    for (let instance in combiner) {
+        let queue_stats = combiner[instance].image_cache?.queue_stats;
+        if (queue_stats) {
+            overviewMetrics.aggregated.maxFrameQueueSize = Math.max(
+                overviewMetrics.aggregated.maxFrameQueueSize,
+                ...queue_stats.image_frame_queue_sizes
+            );
+        }
+    }
+
+    // from ingester
+    let ingester = data[MetricsType.ingester];
+    //// image filter
+    overviewMetrics.aggregated.processedImageCount = 0;
+    overviewMetrics.aggregated.monitoringImageCount = 0;
+    overviewMetrics.aggregated.savingImageCount = 0;
+    for (let instance in ingester) {
+        let image_filter = ingester[instance].image_filter;
+        if (image_filter) {
+            overviewMetrics.aggregated.processedImageCount += image_filter.total_processed_images;
+            overviewMetrics.aggregated.monitoringImageCount += image_filter.total_images_for_monitor;
+            overviewMetrics.aggregated.savingImageCount += image_filter.total_images_for_save;
+        }
+    }
+    //// image_writer
+    overviewMetrics.aggregated.savedImageCount = 0;
+    for (let instance in ingester) {
+        let image_writer = ingester[instance].image_writer;
+        if (image_writer) {
+            overviewMetrics.aggregated.savedImageCount += image_writer.total_saved_counts;
+        }
+    }
+    //// image_http_server
+    overviewMetrics.aggregated.imageRequestCount = 0;
+    overviewMetrics.aggregated.imageSendCount = 0;
+    for (let instance in ingester) {
+        let image_http_server = ingester[instance].image_http_server;
+        if (image_http_server) {
+            overviewMetrics.aggregated.imageRequestCount += image_http_server.total_request_counts;
+            overviewMetrics.aggregated.imageSendCount += image_http_server.total_sent_counts;
+        }
+    }
+
+    // history
+    //// frome dispatcher
+    let tcpRecvPacketRate = 0;
+    let tcpRecvDataRate = 0;
+    let udpRecvPacketRate = 0;
+    let udpRecvDataRate = 0;
+    let udpFrameRateChecked = 0;
+    let udpFrameRateAll = 0;
+    for (let instance in dispatcherMetrics.metrics) {
+        if (overviewMetrics.update_timestamp - dispatcherMetrics.metrics[instance].timestamp > maxTimeDelay) continue;
+        tcpRecvPacketRate += getLastRate(dispatcherMetrics.selected.tcpPacketRate.data[instance]);
+        tcpRecvDataRate += getLastRate(dispatcherMetrics.selected.tcpDataRate.data[instance]);
+        udpRecvPacketRate += getLastRate(dispatcherMetrics.selected.udpPacketRate.data[instance]);
+        udpRecvDataRate += getLastRate(dispatcherMetrics.selected.udpDataRate.data[instance]);
+        udpFrameRateChecked += getLastRate(dispatcherMetrics.selected.udpFrameRateChecked.data[instance]);
+        udpFrameRateAll += getLastRate(dispatcherMetrics.selected.udpFrameRateAll.data[instance]);
+    }
+    update_hist(
+        overviewMetrics.history.tcpRecvPacketRate.data,
+        [overviewMetrics.update_timestamp, tcpRecvPacketRate],
+        0
+    );
+    update_hist(overviewMetrics.history.tcpRecvDataRate.data, [overviewMetrics.update_timestamp, tcpRecvDataRate], 0);
+    update_hist(
+        overviewMetrics.history.udpRecvPacketRate.data,
+        [overviewMetrics.update_timestamp, udpRecvPacketRate],
+        0
+    );
+    update_hist(overviewMetrics.history.udpRecvDataRate.data, [overviewMetrics.update_timestamp, udpRecvDataRate], 0);
+    update_hist(
+        overviewMetrics.history.udpFrameRateChecked.data,
+        [overviewMetrics.update_timestamp, udpFrameRateChecked],
+        0
+    );
+    update_hist(overviewMetrics.history.udpFrameRateAll.data, [overviewMetrics.update_timestamp, udpFrameRateAll], 0);
+    //// from combiner
+    let imageAlignmentRate = 0;
+    let lateArrivingRate = 0;
+    let partialImageRate = 0;
+    let maxFrameQueueSize = 0;
+    for (let instance in combinerMetrics.metrics) {
+        if (overviewMetrics.update_timestamp - combinerMetrics.metrics[instance].timestamp > maxTimeDelay) continue;
+        imageAlignmentRate += getLastRate(combinerMetrics.selected.imageAlignmentRate.data[instance]);
+        lateArrivingRate += getLastRate(combinerMetrics.selected.lateArrivingRate.data[instance]);
+        partialImageRate += getLastRate(combinerMetrics.selected.partialImageRate.data[instance]);
+        maxFrameQueueSize += getLastRate(combinerMetrics.selected.maxFrameQueueSize.data[instance]);
+    }
+    update_hist(
+        overviewMetrics.history.imageAlignmentRate.data,
+        [overviewMetrics.update_timestamp, imageAlignmentRate],
+        0
+    );
+    update_hist(overviewMetrics.history.lateArrivingRate.data, [overviewMetrics.update_timestamp, lateArrivingRate], 0);
+    update_hist(overviewMetrics.history.partialImageRate.data, [overviewMetrics.update_timestamp, partialImageRate], 0);
+    update_hist(
+        overviewMetrics.history.maxFrameQueueSize.data,
+        [overviewMetrics.update_timestamp, maxFrameQueueSize],
+        0
+    );
+    //// from ingester
+    let processedImageRate = 0;
+    let monitoringImageRate = 0;
+    let savingImageRate = 0;
+    let savedImageRate = 0;
+    let imageRequestRate = 0;
+    let imageSendRate = 0;
+    for (let instance in ingesterMetrics.metrics) {
+        if (overviewMetrics.update_timestamp - ingesterMetrics.metrics[instance].timestamp > maxTimeDelay) continue;
+        processedImageRate += getLastRate(ingesterMetrics.selected.processedImageRate.data[instance]);
+        monitoringImageRate += getLastRate(ingesterMetrics.selected.monitoringImageRate.data[instance]);
+        savingImageRate += getLastRate(ingesterMetrics.selected.savingImageRate.data[instance]);
+        savedImageRate += getLastRate(ingesterMetrics.selected.savedImageRate.data[instance]);
+        imageRequestRate += getLastRate(ingesterMetrics.selected.imageRequestRate.data[instance]);
+        imageSendRate += getLastRate(ingesterMetrics.selected.imageSendRate.data[instance]);
+    }
+    update_hist(
+        overviewMetrics.history.processedImageRate.data,
+        [overviewMetrics.update_timestamp, processedImageRate],
+        0
+    );
+    update_hist(
+        overviewMetrics.history.monitoringImageRate.data,
+        [overviewMetrics.update_timestamp, monitoringImageRate],
+        0
+    );
+    update_hist(overviewMetrics.history.savingImageRate.data, [overviewMetrics.update_timestamp, savingImageRate], 0);
+    update_hist(overviewMetrics.history.savedImageRate.data, [overviewMetrics.update_timestamp, savedImageRate], 0);
+    update_hist(overviewMetrics.history.imageRequestRate.data, [overviewMetrics.update_timestamp, imageRequestRate], 0);
+    update_hist(overviewMetrics.history.imageSendRate.data, [overviewMetrics.update_timestamp, imageSendRate], 0);
+}
 // ============================================================================
 
 function update(count: number, data: any): void {
     console.log('update: ', count);
 
-    processOverviewMetrics(count, data);
     processSenderMetrics(count, data[MetricsType.sender]);
     processDispatcherMetrics(count, data[MetricsType.dispatcher]);
     processCombinerMetrics(count, data[MetricsType.combiner]);
     processIngesterMetrics(count, data[MetricsType.ingester]);
     processMonitorMetrics(count, data[MetricsType.monitor]);
     processControllerMetrics(count, data[MetricsType.controller]);
+    processOverviewMetrics(count, data);
 
     let metricsGroup: MetricsGroup = {
         updateTimestamp: data.update_timestamp,
@@ -854,6 +822,17 @@ function update(count: number, data: any): void {
 
 //=============================================================================
 // common functions
+
+var maxTimeDelay = 2000;
+
+function getLastRate(data: any): number {
+    let value = data?.slice(-1)[0]?.[1];
+    if (typeof value === 'number') {
+        return value;
+    } else {
+        return 0;
+    }
+}
 
 var intervalTime = 1000;
 var defaultRateStep = 1;
