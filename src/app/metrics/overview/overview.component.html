@@ -11,7 +11,95 @@
 </div>
 <div class="body-wrapper" [ngSwitch]="selectedView">
     <div class="card-group" *ngSwitchCase="'summaryTable'">
-        <p>summary table</p>
+        <div class="table">
+            <table>
+                <tr>
+                    <th class="col-1">Parameters</th>
+                    <th class="col-2">Total</th>
+                    <th class="col-3">Rate</th>
+                </tr>
+                <tr class="dispatcher">
+                    <td class="col-1">Receiving TCP Packet</td>
+                    <td class="col-2">{{ tcpRecvPacketCount }}</td>
+                    <td class="col-3">{{ tcpRecvPacketRate_Last }}</td>
+                </tr>
+                <tr class="dispatcher">
+                    <td class="col-1">Receiving TCP Data</td>
+                    <td class="col-2">{{ tcpRecvDataSize }}</td>
+                    <td class="col-3">{{ tcpRecvDataRate_Last }}</td>
+                </tr>
+                <tr class="dispatcher">
+                    <td class="col-1">Receiving UDP Packet</td>
+                    <td class="col-2">{{ udpRecvPacketCount }}</td>
+                    <td class="col-3">{{ udpRecvPacketRate_Last }}</td>
+                </tr>
+                <tr class="dispatcher">
+                    <td class="col-1">Receiving UDP Data</td>
+                    <td class="col-2">{{ udpRecvDataSize }}</td>
+                    <td class="col-3">{{ udpRecvDataRate_Last }}</td>
+                </tr>
+                <tr class="dispatcher">
+                    <td class="col-1">Receiving UDP Frame (Checked)</td>
+                    <td class="col-2">{{ udpFrameCountChecked }}</td>
+                    <td class="col-3">{{ udpFrameRateChecked_Last }}</td>
+                </tr>
+                <tr class="dispatcher">
+                    <td class="col-1">Receiving UDP Frame (All)</td>
+                    <td class="col-2">{{ udpFrameCountAll }}</td>
+                    <td class="col-3">{{ udpFrameRateAll_Last }}</td>
+                </tr>
+                <tr class="combiner">
+                    <td class="col-1">Image Alignment (Event Build)</td>
+                    <td class="col-2">{{ imageAlignmentCount }}</td>
+                    <td class="col-3">{{ imageAlignmentRate_Last }}</td>
+                </tr>
+                <tr class="combiner">
+                    <td class="col-1">Partial Image</td>
+                    <td class="col-2">{{ partialImageCount }}</td>
+                    <td class="col-3">{{ partialImageRate_Last }}</td>
+                </tr>
+                <tr class="combiner">
+                    <td class="col-1">Late Arrived Image</td>
+                    <td class="col-2">{{ lateArrivingCount }}</td>
+                    <td class="col-3">{{ lateArrivingRate_Last }}</td>
+                </tr>
+                <tr class="combiner">
+                    <td class="col-1">Maximum Frame Queue Size</td>
+                    <td class="col-2">{{ maxFrameQueueSize }}</td>
+                    <td class="col-3">-</td>
+                </tr>
+                <tr class="ingester">
+                    <td class="col-1">Processed Image</td>
+                    <td class="col-2">{{ processedImageCount }}</td>
+                    <td class="col-3">{{ processedImageRate_Last }}</td>
+                </tr>
+                <tr class="ingester">
+                    <td class="col-1">Monitoring Image</td>
+                    <td class="col-2">{{ monitoringImageCount }}</td>
+                    <td class="col-3">{{ monitoringImageRate_Last }}</td>
+                </tr>
+                <tr class="ingester">
+                    <td class="col-1">Saving Image</td>
+                    <td class="col-2">{{ savingImageCount }}</td>
+                    <td class="col-3">{{ savingImageRate_Last }}</td>
+                </tr>
+                <tr class="ingester">
+                    <td class="col-1">Saved Image</td>
+                    <td class="col-2">{{ savedImageCount }}</td>
+                    <td class="col-3">{{ savedImageRate_Last }}</td>
+                </tr>
+                <tr class="ingester">
+                    <td class="col-1">Requested Image</td>
+                    <td class="col-2">{{ imageRequestCount }}</td>
+                    <td class="col-3">{{ imageRequestRate_Last }}</td>
+                </tr>
+                <tr class="ingester">
+                    <td class="col-1">Sent Image</td>
+                    <td class="col-2">{{ imageSendCount }}</td>
+                    <td class="col-3">{{ imageSendRate_Last }}</td>
+                </tr>
+            </table>
+        </div>
     </div>
     <div class="card-group" *ngSwitchCase="'historyLine'">
         <p>history line</p>

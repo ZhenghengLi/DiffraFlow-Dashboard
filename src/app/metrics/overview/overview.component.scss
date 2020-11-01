@@ -1,1 +1,56 @@
 @import "../common/styles/metrics-json-graph.scss";
+
+$border-style: 1px solid lightblue;
+
+div.table {
+    width: 800px;
+    margin: 12px;
+    background-color: white;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12);
+}
+
+table {
+    width: 100%;
+    border: $border-style;
+    text-align: left;
+    border-collapse: collapse;
+    background-color: white;
+}
+
+table th {
+    background-color: gainsboro;
+}
+
+table tr.dispatcher {
+    background-color: aliceblue;
+}
+
+table tr.combiner {
+    background-color: cornsilk;
+}
+
+table tr.ingester {
+    background-color: honeydew;
+}
+
+table th,
+table td {
+    border: $border-style;
+    padding: 6px;
+    font-size: 18px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+table .col-1 {
+    width: 46%;
+}
+
+table .col-2 {
+    width: 27%;
+    color: blue;
+}
+
+table .col-3 {
+    width: 27%;
+    color: red;
+}
