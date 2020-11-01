@@ -12,7 +12,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
     constructor(private _metricsService: MetricsDataService) {}
 
     public metricsSubscription: Subscription;
-    public selectedView: string = 'currentMetrics';
+    public selectedView: string = 'summaryTable';
 
     public updateTime: Date;
 

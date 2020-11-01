@@ -1,2 +1,19 @@
-<p>overview works</p>
-<ngx-json-viewer [json]="metrics_Object"></ngx-json-viewer>
+<div class="head-wrapper">
+    <div class="button-group">
+        <button (click)="resume()" [disabled]="listening">Resume</button>
+        <button (click)="pause()" [disabled]="!listening">Pause</button>
+        <select (change)="selectedView = $event.target.value">
+            <option value="summaryTable" selected>Summary Table</option>
+            <option value="historyLine">History Line</option>
+        </select>
+    </div>
+    <p *ngIf="updateTime" class="update-time">Update Time: {{ updateTime | date: "yyyy-MM-dd, HH:mm:ss" }}</p>
+</div>
+<div class="body-wrapper" [ngSwitch]="selectedView">
+    <div class="card-group" *ngSwitchCase="'summaryTable'">
+        <p>summary table</p>
+    </div>
+    <div class="card-group" *ngSwitchCase="'historyLine'">
+        <p>history line</p>
+    </div>
+</div>

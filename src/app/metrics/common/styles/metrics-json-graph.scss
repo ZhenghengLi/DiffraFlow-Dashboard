@@ -44,23 +44,23 @@ p {
 .button-group button {
     margin-left: 10px;
     padding: 5px;
+    font-size: 16px;
 }
 
 .button-group select {
     margin-left: 30px;
     padding: 5px;
-    width: 340px;
+    width: 320px;
+    font-size: 16px;
+    font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana,
+        sans-serif;
+    font-weight: bold;
+    color: darkblue;
 }
 
 .update-time {
     text-align: center;
     color: red;
     margin-right: 15px;
-}
-
-.button-group select {
-    font-size: 14px;
-    font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana,
-        sans-serif;
-    font-weight: bold;
+    font-size: 18px;
 }
