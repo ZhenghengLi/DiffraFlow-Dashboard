@@ -588,22 +588,22 @@ let overviewMetrics: MetricsOverview = {
     },
     history: {
         // from dispatcher
-        tcpRecvPacketRate: { unit: 'Packet Rate (pps)', data: [] },
-        tcpRecvDataRate: { unit: 'Data Rate (MiB/s)', data: [] },
-        udpRecvPacketRate: { unit: 'Packet Rate (pps)', data: [] },
-        udpRecvDataRate: { unit: 'Data Rate (MiB/s)', data: [] },
-        udpFrameRateChecked: { unit: 'Frame Rate (fps)', data: [] },
-        udpFrameRateAll: { unit: 'Frame Rate (fps)', data: [] },
+        tcpRecvPacketRate: { unit: 'Packet Rate (kpps)', data: [] },
+        tcpRecvDataRate: { unit: 'Data Rate (GiB/s)', data: [] },
+        udpRecvPacketRate: { unit: 'Packet Rate (kpps)', data: [] },
+        udpRecvDataRate: { unit: 'Data Rate (GiB/s)', data: [] },
+        udpFrameRateChecked: { unit: 'Frame Rate (kfps)', data: [] },
+        udpFrameRateAll: { unit: 'Frame Rate (kfps)', data: [] },
         // from combiner
-        imageAlignmentRate: { unit: 'Frame Rate (fps)', data: [] },
-        partialImageRate: { unit: 'Frame Rate (fps)', data: [] },
-        lateArrivingRate: { unit: 'Frame Rate (fps)', data: [] },
+        imageAlignmentRate: { unit: 'Frame Rate (kfps)', data: [] },
+        partialImageRate: { unit: 'Frame Rate (kfps)', data: [] },
+        lateArrivingRate: { unit: 'Frame Rate (kfps)', data: [] },
         maxFrameQueueSize: { unit: 'Queue Size', data: [] },
         // from ingester
-        processedImageRate: { unit: 'Frame Rate (fps)', data: [] },
-        monitoringImageRate: { unit: 'Frame Rate (fps)', data: [] },
-        savingImageRate: { unit: 'Frame Rate (fps)', data: [] },
-        savedImageRate: { unit: 'Frame Rate (fps)', data: [] },
+        processedImageRate: { unit: 'Frame Rate (kfps)', data: [] },
+        monitoringImageRate: { unit: 'Frame Rate (kfps)', data: [] },
+        savingImageRate: { unit: 'Frame Rate (kfps)', data: [] },
+        savedImageRate: { unit: 'Frame Rate (kfps)', data: [] },
         imageRequestRate: { unit: 'Request Rate (rps)', data: [] },
         imageSendRate: { unit: 'Frame Rate (fps)', data: [] },
     },
@@ -722,22 +722,34 @@ function processOverviewMetrics(count: number, data: any): void {
     }
     update_hist(
         overviewMetrics.history.tcpRecvPacketRate.data,
-        [overviewMetrics.update_timestamp, tcpRecvPacketRate],
+        [overviewMetrics.update_timestamp, tcpRecvPacketRate / 1000],
         0
     );
-    update_hist(overviewMetrics.history.tcpRecvDataRate.data, [overviewMetrics.update_timestamp, tcpRecvDataRate], 0);
+    update_hist(
+        overviewMetrics.history.tcpRecvDataRate.data,
+        [overviewMetrics.update_timestamp, tcpRecvDataRate / 1024],
+        0
+    );
     update_hist(
         overviewMetrics.history.udpRecvPacketRate.data,
-        [overviewMetrics.update_timestamp, udpRecvPacketRate],
+        [overviewMetrics.update_timestamp, udpRecvPacketRate / 1000],
         0
     );
-    update_hist(overviewMetrics.history.udpRecvDataRate.data, [overviewMetrics.update_timestamp, udpRecvDataRate], 0);
+    update_hist(
+        overviewMetrics.history.udpRecvDataRate.data,
+        [overviewMetrics.update_timestamp, udpRecvDataRate / 1024],
+        0
+    );
     update_hist(
         overviewMetrics.history.udpFrameRateChecked.data,
-        [overviewMetrics.update_timestamp, udpFrameRateChecked],
+        [overviewMetrics.update_timestamp, udpFrameRateChecked / 1000],
         0
     );
-    update_hist(overviewMetrics.history.udpFrameRateAll.data, [overviewMetrics.update_timestamp, udpFrameRateAll], 0);
+    update_hist(
+        overviewMetrics.history.udpFrameRateAll.data,
+        [overviewMetrics.update_timestamp, udpFrameRateAll / 1000],
+        0
+    );
     //// from combiner
     let imageAlignmentRate = 0;
     let lateArrivingRate = 0;
@@ -752,11 +764,19 @@ function processOverviewMetrics(count: number, data: any): void {
     }
     update_hist(
         overviewMetrics.history.imageAlignmentRate.data,
-        [overviewMetrics.update_timestamp, imageAlignmentRate],
+        [overviewMetrics.update_timestamp, imageAlignmentRate / 1000],
         0
     );
-    update_hist(overviewMetrics.history.lateArrivingRate.data, [overviewMetrics.update_timestamp, lateArrivingRate], 0);
-    update_hist(overviewMetrics.history.partialImageRate.data, [overviewMetrics.update_timestamp, partialImageRate], 0);
+    update_hist(
+        overviewMetrics.history.lateArrivingRate.data,
+        [overviewMetrics.update_timestamp, lateArrivingRate / 1000],
+        0
+    );
+    update_hist(
+        overviewMetrics.history.partialImageRate.data,
+        [overviewMetrics.update_timestamp, partialImageRate / 1000],
+        0
+    );
     update_hist(
         overviewMetrics.history.maxFrameQueueSize.data,
         [overviewMetrics.update_timestamp, maxFrameQueueSize],
@@ -780,16 +800,24 @@ function processOverviewMetrics(count: number, data: any): void {
     }
     update_hist(
         overviewMetrics.history.processedImageRate.data,
-        [overviewMetrics.update_timestamp, processedImageRate],
+        [overviewMetrics.update_timestamp, processedImageRate / 1000],
         0
     );
     update_hist(
         overviewMetrics.history.monitoringImageRate.data,
-        [overviewMetrics.update_timestamp, monitoringImageRate],
+        [overviewMetrics.update_timestamp, monitoringImageRate / 1000],
         0
     );
-    update_hist(overviewMetrics.history.savingImageRate.data, [overviewMetrics.update_timestamp, savingImageRate], 0);
-    update_hist(overviewMetrics.history.savedImageRate.data, [overviewMetrics.update_timestamp, savedImageRate], 0);
+    update_hist(
+        overviewMetrics.history.savingImageRate.data,
+        [overviewMetrics.update_timestamp, savingImageRate / 1000],
+        0
+    );
+    update_hist(
+        overviewMetrics.history.savedImageRate.data,
+        [overviewMetrics.update_timestamp, savedImageRate / 1000],
+        0
+    );
     update_hist(overviewMetrics.history.imageRequestRate.data, [overviewMetrics.update_timestamp, imageRequestRate], 0);
     update_hist(overviewMetrics.history.imageSendRate.data, [overviewMetrics.update_timestamp, imageSendRate], 0);
 }
