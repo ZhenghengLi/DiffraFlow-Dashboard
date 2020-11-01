@@ -230,7 +230,7 @@ function processOverviewMetrics(count: number, data: any): void {
     update_hist(
         overviewMetricsHistory.maxFrameQueueSize,
         [overviewMetrics.update_timestamp, overviewMetrics.aggregated.maxFrameQueueSize],
-        defaultMaxArrLen - defaultRateStep
+        0
     );
     overviewMetrics.history.maxFrameQueueSize.data = overviewMetricsHistory.maxFrameQueueSize;
     //// processedImageCount
@@ -558,7 +558,7 @@ function processCombinerMetrics(count: number, data: any): void {
                 ? combinerMetrics.selected.maxFrameQueueSize.data[instance]
                 : (combinerMetrics.selected.maxFrameQueueSize.data[instance] = []);
             let maxQueueSize = Math.max(...image_frame_queue_sizes);
-            update_hist(currentQueueSizeHist, [currentTimestamp, maxQueueSize], defaultMaxArrLen - defaultRateStep);
+            update_hist(currentQueueSizeHist, [currentTimestamp, maxQueueSize], 0);
         }
 
         // alignment
@@ -855,13 +855,15 @@ function update(count: number, data: any): void {
 //=============================================================================
 // common functions
 
+var intervalTime = 1000;
 var defaultRateStep = 1;
-var defaultMaxArrLen = 61 + defaultRateStep;
 
-function update_hist(hist: [number, number][], item: [number, number], maxArrLen: number = defaultMaxArrLen): void {
+function update_hist(hist: [number, number][], item: [number, number], rateStep: number = defaultRateStep): void {
     hist.push(item);
+    let maxArrLen = 60000 / intervalTime + 1;
+    if (rateStep > 0) maxArrLen += rateStep;
     while (hist.length > maxArrLen) hist.shift();
-    while (hist.slice(-1)[0][0] - hist[0][0] > maxArrLen * 1200) hist.shift();
+    while (hist.slice(-1)[0][0] - hist[0][0] > maxArrLen * intervalTime * 1.2) hist.shift();
 }
 
 function calculate_rate(data: [number, number][], rateStep: number = defaultRateStep): [number, number][] {
@@ -894,7 +896,14 @@ onmessage = ({ data }) => {
 };
 
 function setIntervalTime(time: number): void {
-    let intervalTime = time > 500 ? time : 500;
+    if (time < 1000) {
+        intervalTime = 1000;
+    } else if (time > 6000) {
+        intervalTime = 6000;
+    } else {
+        intervalTime = time;
+    }
+
     fetch(configUrl)
         .then((response) => {
             if (response.ok) {
