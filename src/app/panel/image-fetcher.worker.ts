@@ -11,7 +11,17 @@ console.log('image fetching worker is running ...');
 //=============================================================================
 
 async function fetchAndProcess(count: number) {
-    //
+    console.log(count);
+    if (typeof controllerAddress !== 'string') return;
+    let eventSrcUrl = 'http://' + controllerAddress + '/event/' + lastEventKey;
+    let eventResponse = await fetch(eventSrcUrl);
+    if (!eventResponse.ok) {
+        console.log(`cannot fetch image data from url ${eventSrcUrl}`);
+        return;
+    }
+    let eventData = await eventResponse.arrayBuffer();
+    let eventObject = msgpack.decode(eventData);
+    console.log(eventObject);
 }
 
 //=============================================================================
@@ -72,3 +82,5 @@ function stop(): void {
     intervalSubscription?.unsubscribe();
     intervalSubscription = undefined;
 }
+
+start().catch((err) => console.error(err));

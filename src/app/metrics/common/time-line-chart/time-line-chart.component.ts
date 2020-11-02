@@ -29,6 +29,7 @@ export class TimeLineChartComponent implements OnInit {
 
     private _updateOptions(): void {
         this.options = {
+            animation: false,
             title: {
                 text: this.title,
                 left: 'center',
