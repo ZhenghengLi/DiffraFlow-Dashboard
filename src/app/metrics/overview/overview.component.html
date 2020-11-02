@@ -104,75 +104,75 @@
     <div class="card-group" *ngSwitchCase="'historyLine'">
         <app-time-line-chart
             [title]="tcpRecvPacketTitle"
-            [data]="tcpRecvPacketRate_Data"
             [yLabel]="tcpRecvPacketRate_Unit"
+            [data]="tcpRecvPacketRate_Data"
         >
         </app-time-line-chart>
         <app-time-line-chart [title]="tcpRecvDataTitle" [data]="tcpRecvDataRate_Data" [yLabel]="tcpRecvDataRate_Unit">
         </app-time-line-chart>
         <app-time-line-chart
             [title]="udpRecvPacketTitle"
-            [data]="udpRecvPacketRate_Data"
             [yLabel]="udpRecvPacketRate_Unit"
+            [data]="udpRecvPacketRate_Data"
         >
         </app-time-line-chart>
         <app-time-line-chart [title]="udpRecvDataTitle" [data]="udpRecvDataRate_Data" [yLabel]="udpRecvDataRate_Unit">
         </app-time-line-chart>
         <app-time-line-chart
             [title]="udpFrameTitleChecked"
-            [data]="udpFrameRateChecked_Data"
             [yLabel]="udpFrameRateChecked_Unit"
+            [data]="udpFrameRateChecked_Data"
         >
         </app-time-line-chart>
         <app-time-line-chart [title]="udpFrameTitleAll" [data]="udpFrameRateAll_Data" [yLabel]="udpFrameRateAll_Unit">
         </app-time-line-chart>
         <app-time-line-chart
             [title]="imageAlignmentTitle"
-            [data]="imageAlignmentRate_Data"
             [yLabel]="imageAlignmentRate_Unit"
+            [data]="imageAlignmentRate_Data"
         >
         </app-time-line-chart>
         <app-time-line-chart
             [title]="partialImageTitle"
-            [data]="partialImageRate_Data"
             [yLabel]="partialImageRate_Unit"
+            [data]="partialImageRate_Data"
         >
         </app-time-line-chart>
         <app-time-line-chart
             [title]="lateArrivingTitle"
-            [data]="lateArrivingRate_Data"
             [yLabel]="lateArrivingRate_Unit"
+            [data]="lateArrivingRate_Data"
         >
         </app-time-line-chart>
         <app-time-line-chart
             [title]="maxFrameQueueSizeTitle"
-            [data]="maxFrameQueueSize_Data"
             [yLabel]="maxFrameQueueSize_Unit"
+            [data]="maxFrameQueueSize_Data"
         >
         </app-time-line-chart>
         <app-time-line-chart
             [title]="processedImageTitle"
-            [data]="processedImageRate_Data"
             [yLabel]="processedImageRate_Unit"
+            [data]="processedImageRate_Data"
         >
         </app-time-line-chart>
         <app-time-line-chart
             [title]="monitoringImageTitle"
-            [data]="monitoringImageRate_Data"
             [yLabel]="monitoringImageRate_Unit"
+            [data]="monitoringImageRate_Data"
         >
         </app-time-line-chart>
-        <app-time-line-chart [title]="savingImageTitle" [data]="savingImageRate_Data" [yLabel]="savingImageRate_Unit">
+        <app-time-line-chart [title]="savingImageTitle" [yLabel]="savingImageRate_Unit" [data]="savingImageRate_Data">
         </app-time-line-chart>
-        <app-time-line-chart [title]="savedImageTitle" [data]="savedImageRate_Data" [yLabel]="savedImageRate_Unit">
+        <app-time-line-chart [title]="savedImageTitle" [yLabel]="savedImageRate_Unit" [data]="savedImageRate_Data">
         </app-time-line-chart>
         <app-time-line-chart
             [title]="imageRequestTitle"
-            [data]="imageRequestRate_Data"
             [yLabel]="imageRequestRate_Unit"
+            [data]="imageRequestRate_Data"
         >
         </app-time-line-chart>
-        <app-time-line-chart [title]="imageSendTitle" [data]="imageSendRate_Data" [yLabel]="imageSendRate_Unit">
+        <app-time-line-chart [title]="imageSendTitle" [yLabel]="imageSendRate_Unit" [data]="imageSendRate_Data">
         </app-time-line-chart>
     </div>
 </div>

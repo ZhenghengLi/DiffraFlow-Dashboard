@@ -23,8 +23,8 @@
         <app-time-line-chart
             *ngFor="let idx of imageRequestRate_Indexes"
             [title]="imageRequestRate_DataArr[idx][0]"
-            [data]="imageRequestRate_DataArr[idx][1]"
             [yLabel]="imageRequestRate_Unit"
+            [data]="imageRequestRate_DataArr[idx][1]"
         >
         </app-time-line-chart>
     </div>
@@ -32,8 +32,8 @@
         <app-time-line-chart
             *ngFor="let idx of imageSendRate_Indexes"
             [title]="imageSendRate_DataArr[idx][0]"
-            [data]="imageSendRate_DataArr[idx][1]"
             [yLabel]="imageSendRate_Unit"
+            [data]="imageSendRate_DataArr[idx][1]"
         >
         </app-time-line-chart>
     </div>

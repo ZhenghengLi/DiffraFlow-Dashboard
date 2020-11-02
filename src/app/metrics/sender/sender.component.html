@@ -28,8 +28,8 @@
         <app-time-line-chart
             *ngFor="let idx of sendFrameRate_Indexes"
             [title]="sendFrameRate_DataArr[idx][0]"
-            [data]="sendFrameRate_DataArr[idx][1]"
             [yLabel]="sendFrameRate_Unit"
+            [data]="sendFrameRate_DataArr[idx][1]"
         >
         </app-time-line-chart>
     </div>
@@ -37,8 +37,8 @@
         <app-time-line-chart
             *ngFor="let idx of tcpPacketRate_Indexes"
             [title]="tcpPacketRate_DataArr[idx][0]"
-            [data]="tcpPacketRate_DataArr[idx][1]"
             [yLabel]="tcpPacketRate_Unit"
+            [data]="tcpPacketRate_DataArr[idx][1]"
         >
         </app-time-line-chart>
     </div>
@@ -46,8 +46,8 @@
         <app-time-line-chart
             *ngFor="let idx of tcpDataRate_Indexes"
             [title]="tcpDataRate_DataArr[idx][0]"
-            [data]="tcpDataRate_DataArr[idx][1]"
             [yLabel]="tcpDataRate_Unit"
+            [data]="tcpDataRate_DataArr[idx][1]"
         >
         </app-time-line-chart>
     </div>
@@ -55,8 +55,8 @@
         <app-time-line-chart
             *ngFor="let idx of udpPacketRate_Indexes"
             [title]="udpPacketRate_DataArr[idx][0]"
-            [data]="udpPacketRate_DataArr[idx][1]"
             [yLabel]="udpPacketRate_Unit"
+            [data]="udpPacketRate_DataArr[idx][1]"
         >
         </app-time-line-chart>
     </div>
@@ -64,8 +64,8 @@
         <app-time-line-chart
             *ngFor="let idx of udpDataRate_Indexes"
             [title]="udpDataRate_DataArr[idx][0]"
-            [data]="udpDataRate_DataArr[idx][1]"
             [yLabel]="udpDataRate_Unit"
+            [data]="udpDataRate_DataArr[idx][1]"
         >
         </app-time-line-chart>
     </div>
