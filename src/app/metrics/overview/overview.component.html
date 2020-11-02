@@ -108,7 +108,7 @@
             [data]="tcpRecvPacketRate_Data"
         >
         </app-time-line-chart>
-        <app-time-line-chart [title]="tcpRecvDataTitle" [data]="tcpRecvDataRate_Data" [yLabel]="tcpRecvDataRate_Unit">
+        <app-time-line-chart [title]="tcpRecvDataTitle" [yLabel]="tcpRecvDataRate_Unit" [data]="tcpRecvDataRate_Data">
         </app-time-line-chart>
         <app-time-line-chart
             [title]="udpRecvPacketTitle"
@@ -116,7 +116,7 @@
             [data]="udpRecvPacketRate_Data"
         >
         </app-time-line-chart>
-        <app-time-line-chart [title]="udpRecvDataTitle" [data]="udpRecvDataRate_Data" [yLabel]="udpRecvDataRate_Unit">
+        <app-time-line-chart [title]="udpRecvDataTitle" [yLabel]="udpRecvDataRate_Unit" [data]="udpRecvDataRate_Data">
         </app-time-line-chart>
         <app-time-line-chart
             [title]="udpFrameTitleChecked"
@@ -124,7 +124,7 @@
             [data]="udpFrameRateChecked_Data"
         >
         </app-time-line-chart>
-        <app-time-line-chart [title]="udpFrameTitleAll" [data]="udpFrameRateAll_Data" [yLabel]="udpFrameRateAll_Unit">
+        <app-time-line-chart [title]="udpFrameTitleAll" [yLabel]="udpFrameRateAll_Unit" [data]="udpFrameRateAll_Data">
         </app-time-line-chart>
         <app-time-line-chart
             [title]="imageAlignmentTitle"
