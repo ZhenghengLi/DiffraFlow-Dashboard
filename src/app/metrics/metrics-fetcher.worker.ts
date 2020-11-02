@@ -902,7 +902,8 @@ onmessage = ({ data }) => {
     }
 };
 
-function setIntervalTime(time: number): void {
+async function setIntervalTime(time: number) {
+    // check time value
     if (time < 1000) {
         intervalTime = 1000;
     } else if (time > 6000) {
@@ -911,38 +912,32 @@ function setIntervalTime(time: number): void {
         intervalTime = time;
     }
 
-    fetch(configUrl)
-        .then((response) => {
-            if (response.ok) {
-                return response.json();
-            } else {
-                throw new Error(`cannot fetch addresses from ${configUrl}`);
+    // get aggregator address
+    let config_response = await fetch(configUrl);
+    if (!config_response.ok) {
+        throw new Error(`cannot fetch addresses from ${configUrl}`);
+    }
+    let config_data = await config_response.json();
+    let aggregatorAddress = config_data.aggregator_address;
+    console.log('aggregator_address:', aggregatorAddress);
+    if (typeof aggregatorAddress !== 'string') {
+        throw new Error('there is no aggregator_address in config');
+    }
+    let metricsUrl = 'http://' + aggregatorAddress;
+
+    // (re)start interval
+    intervalSubscription?.unsubscribe();
+    intervalSubscription = undefined;
+    intervalSubscription = interval(intervalTime).subscribe((count) => {
+        (async function () {
+            let metrics_response = await fetch(metricsUrl);
+            if (!metrics_response.ok) {
+                throw new Error(`cannot fetch metrics from ${metricsUrl}`);
             }
-        })
-        .then((data) => {
-            let aggregatorAddress = data.aggregator_address;
-            console.log(aggregatorAddress);
-            if (!aggregatorAddress) {
-                throw new Error('there is no aggregator_address in config');
-            }
-            intervalSubscription?.unsubscribe();
-            intervalSubscription = undefined;
-            intervalSubscription = interval(intervalTime).subscribe((count) => {
-                fetch('http://' + aggregatorAddress)
-                    .then((response) => {
-                        if (response.ok) {
-                            return response.json();
-                        } else {
-                            throw new Error(`cannot fetch metrics from ${configUrl}`);
-                        }
-                    })
-                    .then((data) => {
-                        update(count, data);
-                    })
-                    .catch((err) => console.error(err));
-            });
-        })
-        .catch((err) => console.error(err));
+            let metrics_data = await metrics_response.json();
+            update(count, metrics_data);
+        })().catch((err) => console.error(err));
+    });
 }
 
-setIntervalTime(1000);
+setIntervalTime(1000).catch((err) => console.error(err));
