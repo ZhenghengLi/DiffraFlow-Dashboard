@@ -1,4 +1,4 @@
 {
-    "aggregator_address": "10.15.86.19:27711",
-    "controller_address": "10.15.86.19:27511"
+    "aggregator_address": "10.15.86.21:27711",
+    "controller_address": "10.15.86.20:27511"
 }
