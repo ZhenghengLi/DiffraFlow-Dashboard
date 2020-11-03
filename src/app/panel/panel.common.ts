@@ -1,5 +1,9 @@
 export enum ImageFetcherCommand {
-    setinterval = 'setinterval',
     start = 'start',
     stop = 'stop',
+}
+
+export enum ImageFetcherMsgType {
+    status = 'status',
+    imagedata = 'imagedata',
 }

@@ -4,7 +4,7 @@ import { interval, Subscription } from 'rxjs';
 
 import * as msgpack from '@msgpack/msgpack';
 
-import { ImageFetcherCommand } from './panel.common';
+import { ImageFetcherCommand, ImageFetcherMsgType } from './panel.common';
 
 console.log('image fetching worker is running ...');
 
@@ -42,28 +42,46 @@ var lastEventKey: number = 0;
 
 onmessage = ({ data }) => {
     console.log('received message: ', data);
-
     switch (data.command) {
-        case ImageFetcherCommand.setinterval:
-            console.log('setIntervalTime: ', data.payload);
-            setIntervalTime(data.payload);
-            break;
         case ImageFetcherCommand.start:
             console.log('start fetching.');
-            start();
+            if (typeof data.payload === 'number') {
+                intervalTime = data.payload > 300 ? data.payload : 300;
+            }
+            start()
+                .then(() => {
+                    postMessage({
+                        type: ImageFetcherMsgType.status,
+                        payload: {
+                            intervalTime,
+                            running: true,
+                        },
+                    });
+                })
+                .catch((err) => {
+                    console.error(err);
+                    postMessage({
+                        type: ImageFetcherMsgType.status,
+                        payload: {
+                            intervalTime,
+                            running: false,
+                        },
+                    });
+                });
             break;
         case ImageFetcherCommand.stop:
             console.log('stop fetching.');
             stop();
-            break;
-        default:
+            postMessage({
+                type: ImageFetcherMsgType.status,
+                payload: {
+                    intervalTime,
+                    running: false,
+                },
+            });
             break;
     }
 };
-
-function setIntervalTime(time: number): void {
-    //
-}
 
 async function start() {
     if (intervalSubscription) return;
@@ -89,5 +107,3 @@ function stop(): void {
     intervalSubscription?.unsubscribe();
     intervalSubscription = undefined;
 }
-
-start().catch((err) => console.error(err));
