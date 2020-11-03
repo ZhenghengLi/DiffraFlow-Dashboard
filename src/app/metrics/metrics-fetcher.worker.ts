@@ -760,7 +760,10 @@ function processOverviewMetrics(count: number, data: any): void {
         imageAlignmentRate += getLastRate(combinerMetrics.selected.imageAlignmentRate.data[instance]);
         lateArrivingRate += getLastRate(combinerMetrics.selected.lateArrivingRate.data[instance]);
         partialImageRate += getLastRate(combinerMetrics.selected.partialImageRate.data[instance]);
-        maxFrameQueueSize += getLastRate(combinerMetrics.selected.maxFrameQueueSize.data[instance]);
+        maxFrameQueueSize = Math.max(
+            maxFrameQueueSize,
+            getLastRate(combinerMetrics.selected.maxFrameQueueSize.data[instance])
+        );
     }
     update_hist(
         overviewMetrics.history.imageAlignmentRate.data,
