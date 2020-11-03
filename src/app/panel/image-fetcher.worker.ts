@@ -79,6 +79,7 @@ async function start() {
             throw new Error('there is no controller_address in config');
         }
     }
+    lastEventKey = 0;
     intervalSubscription = interval(intervalTime).subscribe((count) => {
         fetchAndProcess(count).catch((err) => console.log(err));
     });
