@@ -28,6 +28,14 @@ async function fetchAndProcess(count: number) {
     let eventData = await eventResponse.arrayBuffer();
     let eventObject = msgpack.decode(eventData);
     console.log(eventObject);
+
+    // convert eventObject to canvas image and post it to frontend
+    //
+
+    postMessage({
+        type: ImageFetcherMsgType.image,
+        payload: {},
+    });
 }
 
 //=============================================================================

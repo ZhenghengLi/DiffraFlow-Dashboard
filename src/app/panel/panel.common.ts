@@ -5,5 +5,5 @@ export enum ImageFetcherCommand {
 
 export enum ImageFetcherMsgType {
     status = 'status',
-    imagedata = 'imagedata',
+    image = 'image',
 }
