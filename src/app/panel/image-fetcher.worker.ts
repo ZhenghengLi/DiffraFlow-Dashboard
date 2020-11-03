@@ -16,12 +16,15 @@ async function fetchAndProcess(count: number) {
     let eventSrcUrl = 'http://' + controllerAddress + '/event/' + lastEventKey;
     let eventResponse = await fetch(eventSrcUrl, { cache: 'no-store' });
     if (!eventResponse.ok) {
-        console.log(`cannot fetch image data from url ${eventSrcUrl}`);
+        console.log(`cannot fetch image data from url ${eventSrcUrl} with status ${eventResponse.statusText}`);
         return;
     }
-    eventResponse.headers.forEach((value, name) => {
-        console.log(name, '=>', value);
-    });
+    let eventKey = eventResponse.headers.get('event-key');
+    if (typeof eventKey === 'string') {
+        lastEventKey = parseInt(eventKey);
+    }
+    console.log('lastEventKey:', lastEventKey);
+
     let eventData = await eventResponse.arrayBuffer();
     let eventObject = msgpack.decode(eventData);
     console.log(eventObject);
