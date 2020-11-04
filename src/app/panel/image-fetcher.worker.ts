@@ -132,6 +132,7 @@ function stop(): void {
 // Uint8Array(65536)[16] => ImageData(width, height)
 function composeImage(frames: Uint8Array[], width: number = 1300, height = 1300): ImageData | null {
     // check data
+    if (!frames) return null;
     if (frames.length != 16) return null;
     for (let frame of frames) {
         if (frame.length !== 65536) return null;
