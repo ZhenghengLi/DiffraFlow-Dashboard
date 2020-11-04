@@ -26,16 +26,26 @@ async function fetchAndProcess(count: number) {
     console.log('lastEventKey:', lastEventKey);
 
     let eventData = await eventResponse.arrayBuffer();
-    let eventObject = msgpack.decode(eventData);
+    let eventObject = <any>msgpack.decode(eventData);
     console.log(eventObject);
 
     // convert eventObject to canvas image and post it to frontend
     //
 
-    postMessage({
-        type: ImageFetcherMsgType.image,
-        payload: { count, lastEventKey },
-    });
+    let imageData: ImageData = composeImage(eventObject.image_data.image_frame_vec);
+
+    postMessage(
+        {
+            type: ImageFetcherMsgType.image,
+            payload: {
+                imageData,
+                imageMeta: count,
+                analysisResult: eventObject.analysis_result,
+                imageFeature: eventObject.image_feature,
+            },
+        },
+        [imageData.data.buffer]
+    );
 }
 
 //=============================================================================
@@ -128,4 +138,8 @@ function composeImage(frames: Uint8Array[], width: number = 1300, height = 1300)
     }
     let image = new ImageData(width, height);
     let buffer = new Uint32Array(image.data.buffer);
+
+    // TODO: do compose
+
+    return image;
 }

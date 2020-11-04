@@ -12,9 +12,12 @@ export class PanelComponent implements OnInit, OnDestroy {
     private _imageFetcher: Worker;
 
     intervalTime: string = '1000';
-
     runningFlag: boolean = false;
-    imageData: string;
+
+    imageData: ImageData;
+    imageMeta: any;
+    analysisResult: any;
+    imageFeature: any;
 
     ngOnInit(): void {
         console.log('init panel');
@@ -36,7 +39,10 @@ export class PanelComponent implements OnInit, OnDestroy {
                 this.runningFlag = data.payload.running;
                 break;
             case ImageFetcherMsgType.image:
-                this.imageData = data.payload;
+                this.imageData = data.payload.imageData;
+                this.imageMeta = data.payload.imageMeta;
+                this.analysisResult = data.payload.analysisResult;
+                this.imageFeature = data.payload.imageFeature;
                 break;
         }
     };
