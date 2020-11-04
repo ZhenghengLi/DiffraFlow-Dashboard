@@ -1,1 +1,9 @@
 <p>panel works!</p>
+<label
+    >interval time:
+    <input [(ngModel)]="intervalTime" [disabled]="runningFlag" />
+</label>
+<button (click)="imageFetcherStart()">Start</button>
+<button (click)="imageFetcherStop()">Stop</button>
+<p>running: {{ runningFlag }}</p>
+<p>{{ imageData }}</p>

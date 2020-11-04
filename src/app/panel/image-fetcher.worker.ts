@@ -34,7 +34,7 @@ async function fetchAndProcess(count: number) {
 
     postMessage({
         type: ImageFetcherMsgType.image,
-        payload: {},
+        payload: { count },
     });
 }
 
@@ -49,12 +49,13 @@ var controllerAddress: string;
 var lastEventKey: number = 0;
 
 onmessage = ({ data }) => {
-    console.log('received message: ', data);
+    console.log('received command: ', data);
     switch (data.command) {
         case ImageFetcherCommand.start:
             console.log('start fetching.');
-            if (typeof data.payload === 'number') {
-                intervalTime = data.payload > 300 ? data.payload : 300;
+            if (typeof data.payload === 'string' && data.payload.match(/^\d+\.?\d*$/)) {
+                intervalTime = parseInt(data.payload);
+                if (intervalTime < 300) intervalTime = 300;
             }
             start()
                 .then(() => {
