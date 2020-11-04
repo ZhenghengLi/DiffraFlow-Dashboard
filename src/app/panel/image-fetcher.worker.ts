@@ -116,3 +116,16 @@ function stop(): void {
     intervalSubscription?.unsubscribe();
     intervalSubscription = undefined;
 }
+
+// ============================================================================
+
+// Uint8Array(65536)[16] => ImageData(width, height)
+function composeImage(frames: Uint8Array[], width: number = 1300, height = 1300): ImageData | null {
+    // check data
+    if (frames.length != 16) return null;
+    for (let frame of frames) {
+        if (frame.length !== 65536) return null;
+    }
+    let image = new ImageData(width, height);
+    let buffer = new Uint32Array(image.data.buffer);
+}
