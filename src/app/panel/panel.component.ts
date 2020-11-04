@@ -17,11 +17,13 @@ export class PanelComponent implements OnInit, OnDestroy {
     imageData: string;
 
     ngOnInit(): void {
+        console.log('init panel');
         this._imageFetcher = new Worker('./image-fetcher.worker', { type: 'module' });
         this._imageFetcher.onmessage = this._messageHandler;
     }
 
     ngOnDestroy(): void {
+        console.log('destroy panel');
         this._imageFetcher?.terminate();
         this._imageFetcher = undefined;
     }
@@ -34,7 +36,7 @@ export class PanelComponent implements OnInit, OnDestroy {
                 this.runningFlag = data.payload.running;
                 break;
             case ImageFetcherMsgType.image:
-                this.imageData = JSON.stringify(data.payload);
+                this.imageData = data.payload;
                 break;
         }
     };

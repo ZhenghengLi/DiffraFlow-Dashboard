@@ -6,4 +6,4 @@
 <button (click)="imageFetcherStart()">Start</button>
 <button (click)="imageFetcherStop()">Stop</button>
 <p>running: {{ runningFlag }}</p>
-<p>{{ imageData }}</p>
+<app-image-card [imageData]="imageData"> </app-image-card>

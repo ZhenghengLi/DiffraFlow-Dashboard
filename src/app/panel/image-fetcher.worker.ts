@@ -34,7 +34,7 @@ async function fetchAndProcess(count: number) {
 
     postMessage({
         type: ImageFetcherMsgType.image,
-        payload: { count },
+        payload: { count, lastEventKey },
     });
 }
 
