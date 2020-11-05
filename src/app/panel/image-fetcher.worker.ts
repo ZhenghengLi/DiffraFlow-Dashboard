@@ -129,18 +129,78 @@ function stop(): void {
 
 // ============================================================================
 
+const FRAME_LEN = 65536;
+const MOD_COUNT = 16;
+
 // Uint8Array(65536)[16] => ImageData(width, height)
 function composeImage(frames: Uint8Array[], width: number = 1300, height = 1300): ImageData | null {
     // check data
     if (!frames) return null;
-    if (frames.length != 16) return null;
+    if (frames.length != MOD_COUNT) return null;
     for (let frame of frames) {
-        if (frame && frame.length !== 65536) return null;
+        if (frame && frame.length !== FRAME_LEN) return null;
     }
     let image = new ImageData(width, height);
     let buffer = new Uint32Array(image.data.buffer);
+    // init buffer
+    for (let i = 0; i < width * height; i++) {
+        buffer[i] = 0xff000000;
+    }
 
-    // TODO: do compose
+    // compose
+    const [centerW, centerH] = [width / 2, height / 2];
+    const [offsetB, offsetS, modgap, asicgap] = [26, 4, 30, 2];
+    //// Q1
+    for (let i = 0; i < 4; i++) {
+        const firstW = centerW + offsetS + 512 + asicgap * 7;
+        const firstH = centerH - offsetB - 128 * (4 - i) - modgap * (3 - i);
+        const frame = frames[i];
+        if (frame) copyPixel(image, frame, [firstW, firstH], 1, asicgap);
+    }
+    //// Q2
+    for (let i = 0; i < 4; i++) {
+        const firstW = centerW + offsetB + 512 + asicgap * 7;
+        const firstH = centerH + offsetS + (128 + modgap) * i;
+        const frame = frames[4 + i];
+        if (frame) copyPixel(image, frame, [firstW, firstH], 1, asicgap);
+    }
+    //// Q3
+    for (let i = 0; i < 4; i++) {
+        const firstW = centerW - (offsetS + 512 + asicgap * 7);
+        const firstH = centerH + offsetB + 128 * (i + 1) + modgap + i;
+        const frame = frames[8 + i];
+        if (frame) copyPixel(image, frame, [firstW, firstH], 1, asicgap);
+    }
+    //// Q4
+    for (let i = 0; i < 4; i++) {
+        const firstW = centerW - (offsetB + 512 + asicgap * 7);
+        const firstH = centerH - offsetS - (128 + modgap) * (3 - i);
+        const frame = frames[12 + i];
+        if (frame) copyPixel(image, frame, [firstW, firstH], 1, asicgap);
+    }
 
     return image;
+}
+
+function copyPixel(image: ImageData, frame: Uint8Array, firstpos: [number, number], rot: 1 | -1, asicgap = 2) {
+    // check
+    if (frame.length != FRAME_LEN) return;
+    if (asicgap < 0) return;
+
+    // copy
+    let [oW, oH] = firstpos;
+    let buffer = new Uint32Array(image.data.buffer);
+    let [width, height] = [image.width, image.height];
+    for (let i = 0; i < FRAME_LEN; i++) {
+        let px = frame[i];
+        let frmH = i % 128;
+        let frmW = Math.floor(i / 128);
+        let frmB = Math.floor(frmW / 64);
+        frmW += asicgap * frmB;
+        let imgW = oW - rot * frmW;
+        let imgH = oH + rot * frmH;
+        if (imgW >= 0 && imgW < width && imgH >= 0 && imgH < height) {
+            buffer[imgH * width + imgW] = px;
+        }
+    }
 }
