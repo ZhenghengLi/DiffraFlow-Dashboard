@@ -70,7 +70,7 @@ onmessage = ({ data }) => {
             console.log('start fetching.');
             if (typeof data.payload === 'string' && data.payload.match(/^\d+\.?\d*$/)) {
                 intervalTime = parseInt(data.payload);
-                if (intervalTime < 300) intervalTime = 300;
+                if (intervalTime < 200) intervalTime = 200;
             }
             start()
                 .then(() => {
