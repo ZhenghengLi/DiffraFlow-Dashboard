@@ -4,7 +4,7 @@ import { interval, Subscription } from 'rxjs';
 
 import * as msgpack from '@msgpack/msgpack';
 
-import { ImageFetcherCommand, ImageFetcherMsgType } from './panel.common';
+import { ImageFetcherCommand, ImageFetcherMsgType, generateColorTable } from './panel.common';
 
 console.log('image fetching worker is running ...');
 
@@ -205,6 +205,12 @@ function copyPixel(image: ImageData, frame: Uint8Array, firstpos: [number, numbe
     }
 }
 
+var colorTable = generateColorTable();
+
 function getColor(px: number): number {
-    return 0xff000000 + px;
+    if (px > 255) {
+        return 0;
+    } else {
+        return colorTable[px];
+    }
 }
