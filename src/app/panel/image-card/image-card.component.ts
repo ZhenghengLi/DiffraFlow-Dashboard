@@ -18,7 +18,6 @@ export class ImageCardComponent implements OnInit, OnDestroy {
     set imageData(data: ImageData) {
         this._imageData = data;
         if (this._imageData) {
-            this.calculateColor();
             this.render(0, 0, this._imageData.width, this._imageData.height);
         }
     }
@@ -26,18 +25,6 @@ export class ImageCardComponent implements OnInit, OnDestroy {
     ngOnInit(): void {}
 
     ngOnDestroy(): void {}
-
-    calculateColor() {
-        if (!this._imageData) return;
-        let buffer = new Uint32Array(this._imageData.data.buffer);
-        for (let i = 0; i < buffer.length; i++) {
-            if (buffer[i] > 255) {
-                buffer[i] = 0;
-            } else {
-                buffer[i] += 0xff000000;
-            }
-        }
-    }
 
     render(w0: number, h0: number, dw: number, dh: number) {
         // check parameters

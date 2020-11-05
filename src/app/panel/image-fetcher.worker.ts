@@ -146,11 +146,6 @@ function composeImage(frames: Uint8Array[], width: number = 1300, height = 1300)
         if (frame && frame.length !== FRAME_LEN) return null;
     }
     let image = new ImageData(width, height);
-    let buffer = new Uint32Array(image.data.buffer);
-    // init buffer
-    for (let i = 0; i < width * height; i++) {
-        buffer[i] = 0xff000000;
-    }
 
     // compose
     const [centerW, centerH] = [width / 2, height / 2];
@@ -205,7 +200,11 @@ function copyPixel(image: ImageData, frame: Uint8Array, firstpos: [number, numbe
         let imgW = oW - rot * frmW;
         let imgH = oH + rot * frmH;
         if (imgW >= 0 && imgW < width && imgH >= 0 && imgH < height) {
-            buffer[imgH * width + imgW] = px;
+            buffer[imgH * width + imgW] = getColor(px);
         }
     }
+}
+
+function getColor(px: number): number {
+    return 0xff000000 + px;
 }
