@@ -37,7 +37,14 @@ async function fetchAndProcess(count: number) {
             type: ImageFetcherMsgType.image,
             payload: {
                 imageData,
-                imageMeta: count,
+                imageMeta: {
+                    alignment_vec: eventObject.image_data.alignment_vec,
+                    bunch_id: eventObject.image_data.bunch_id,
+                    calib_level: eventObject.image_data.calib_level,
+                    late_arrived: eventObject.image_data.late_arrived,
+                    max_energy: eventObject.image_data.max_energy,
+                    min_energy: eventObject.image_data.min_energy,
+                },
                 analysisResult: eventObject.analysis_result,
                 imageFeature: eventObject.image_feature,
             },

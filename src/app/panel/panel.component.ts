@@ -15,9 +15,9 @@ export class PanelComponent implements OnInit, OnDestroy {
     runningFlag: boolean = false;
 
     imageData: ImageData;
-    imageMeta: any;
-    analysisResult: any;
-    imageFeature: any;
+    imageMeta: any = {};
+    analysisResult: any = {};
+    imageFeature: any = {};
 
     ngOnInit(): void {
         console.log('init panel');

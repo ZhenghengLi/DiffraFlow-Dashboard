@@ -11,9 +11,6 @@ export class ImageCardComponent implements OnInit, OnDestroy {
     private _imageData: ImageData;
     private _colorTable: Uint32Array;
 
-    imageWidth: number = 100;
-    imageHeight: number = 100;
-
     @ViewChild('imageCanvas')
     imageCanvas: ElementRef;
 
