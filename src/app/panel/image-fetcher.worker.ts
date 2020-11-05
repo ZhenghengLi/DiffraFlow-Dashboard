@@ -135,7 +135,7 @@ function composeImage(frames: Uint8Array[], width: number = 1300, height = 1300)
     if (!frames) return null;
     if (frames.length != 16) return null;
     for (let frame of frames) {
-        if (frame.length !== 65536) return null;
+        if (frame && frame.length !== 65536) return null;
     }
     let image = new ImageData(width, height);
     let buffer = new Uint32Array(image.data.buffer);
