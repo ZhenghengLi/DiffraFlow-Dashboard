@@ -32,7 +32,6 @@ export class PanelComponent implements OnInit, OnDestroy {
     }
 
     private _messageHandler = ({ data }) => {
-        console.log('received message:', data);
         switch (data.type) {
             case ImageFetcherMsgType.status:
                 this.intervalTime = '' + data.payload.intervalTime;

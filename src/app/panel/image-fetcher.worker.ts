@@ -27,10 +27,8 @@ async function fetchAndProcess(count: number) {
 
     let eventData = await eventResponse.arrayBuffer();
     let eventObject = <any>msgpack.decode(eventData);
-    console.log(eventObject);
 
     // convert eventObject to canvas image and post it to frontend
-    //
 
     let imageData: ImageData = composeImage(eventObject.image_data.image_frame_vec);
 
@@ -167,16 +165,16 @@ function composeImage(frames: Uint8Array[], width: number = 1300, height = 1300)
     //// Q3
     for (let i = 0; i < 4; i++) {
         const firstW = centerW - (offsetS + 512 + asicgap * 7);
-        const firstH = centerH + offsetB + 128 * (i + 1) + modgap + i;
+        const firstH = centerH + offsetB + 128 * (i + 1) + modgap * i;
         const frame = frames[8 + i];
-        if (frame) copyPixel(image, frame, [firstW, firstH], 1, asicgap);
+        if (frame) copyPixel(image, frame, [firstW, firstH], -1, asicgap);
     }
     //// Q4
     for (let i = 0; i < 4; i++) {
         const firstW = centerW - (offsetB + 512 + asicgap * 7);
         const firstH = centerH - offsetS - (128 + modgap) * (3 - i);
         const frame = frames[12 + i];
-        if (frame) copyPixel(image, frame, [firstW, firstH], 1, asicgap);
+        if (frame) copyPixel(image, frame, [firstW, firstH], -1, asicgap);
     }
 
     return image;

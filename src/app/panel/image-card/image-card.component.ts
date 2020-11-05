@@ -11,8 +11,8 @@ export class ImageCardComponent implements OnInit, OnDestroy {
     private _imageData: ImageData;
     private _colorTable: Uint32Array;
 
-    imageWidth: number = 10;
-    imageHeight: number = 10;
+    imageWidth: number = 100;
+    imageHeight: number = 100;
 
     @ViewChild('imageCanvas')
     imageCanvas: ElementRef;
@@ -20,29 +20,38 @@ export class ImageCardComponent implements OnInit, OnDestroy {
     @Input()
     set imageData(data: ImageData) {
         this._imageData = data;
-        this.render();
+        if (this._imageData) {
+            this.calculateColor();
+            this.render(0, 0, this._imageData.width, this._imageData.height);
+        }
     }
 
     ngOnInit(): void {}
 
     ngOnDestroy(): void {}
 
-    render() {
+    calculateColor() {
+        if (!this._imageData) return;
+        let buffer = new Uint32Array(this._imageData.data.buffer);
+        for (let i = 0; i < buffer.length; i++) {
+            if (buffer[i] > 255) {
+                buffer[i] = 0;
+            } else {
+                buffer[i] += 0xff000000;
+            }
+        }
+    }
+
+    render(w0: number, h0: number, dw: number, dh: number) {
+        // check parameters
+        if (w0 < 0 || h0 < 0 || dw < 0 || dh < 0) return;
         let canvas = <HTMLCanvasElement>this.imageCanvas?.nativeElement;
         let context = canvas?.getContext('2d');
         if (!context) return;
-        // clear canvas
+        // clear and draw
+        canvas.width = dw;
+        canvas.height = dh;
         context.clearRect(0, 0, canvas.width, canvas.height);
-        // -- draw image data ------------------------------
-        // context.fillText('' + data.count, 2, 5);
-        let imageDat = new ImageData(10, 10);
-        let imageBuf = new Uint32Array(imageDat.data.buffer);
-        for (let y = 0; y < 10; y++) {
-            for (let x = 0; x < 10; x++) {
-                let idx = y * 10 + x;
-                imageBuf[idx] = (255 << 24) + ((x * 10 * 2) << 8) + y * 10 * 2;
-            }
-        }
-        context.putImageData(imageDat, 0, 0);
+        context.putImageData(this._imageData, 0, 0, w0, h0, dw, dh);
     }
 }
