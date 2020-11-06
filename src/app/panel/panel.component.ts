@@ -15,6 +15,7 @@ export class PanelComponent implements OnInit, OnDestroy {
     runningFlag: boolean = false;
 
     imageData: ImageData;
+    imageEnergyRange: [number, number] = [0, 10];
     imageMeta: any = {};
     analysisResult: any = {};
     imageFeature: any = {};
@@ -42,6 +43,7 @@ export class PanelComponent implements OnInit, OnDestroy {
                 this.imageMeta = data.payload.imageMeta;
                 this.analysisResult = data.payload.analysisResult;
                 this.imageFeature = data.payload.imageFeature;
+                this.imageEnergyRange = [this.imageMeta?.min_energy, this.imageMeta?.max_energy];
                 break;
         }
     };
