@@ -50,22 +50,24 @@ export class PanelComponent implements OnInit, OnDestroy {
 
     imageFetcherStart(): void {
         console.log('start image fetching');
-        if (!this._imageFetcher) {
+        if (this._imageFetcher) {
+            this._imageFetcher.postMessage({
+                command: ImageFetcherCommand.start,
+                payload: this.intervalTime,
+            });
+        } else {
             console.warn('image fetching worker is not started.');
         }
-        this._imageFetcher.postMessage({
-            command: ImageFetcherCommand.start,
-            payload: this.intervalTime,
-        });
     }
 
     imageFetcherStop(): void {
         console.log('stop image fetching');
-        if (!this._imageFetcher) {
+        if (this._imageFetcher) {
+            this._imageFetcher.postMessage({
+                command: ImageFetcherCommand.stop,
+            });
+        } else {
             console.warn('image fetching worker is not started.');
         }
-        this._imageFetcher.postMessage({
-            command: ImageFetcherCommand.stop,
-        });
     }
 }
