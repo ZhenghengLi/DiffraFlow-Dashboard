@@ -6,7 +6,8 @@
     max-width: 1400px;
 }
 
-div.monitor {
+div.monitor,
+div.parameters {
     margin: 7px;
     padding: 10px;
     background-color: aliceblue;
@@ -15,25 +16,22 @@ div.monitor {
     min-width: fit-content;
 }
 
+div.parameters {
+    margin-top: 0px;
+    padding: 10px;
+}
+
 div.header {
-    margin-bottom: 10px;
+    margin-bottom: 12px;
     margin-left: 10px;
     font-size: 20px;
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     color: blue;
 }
 
-div.monitor div.row-container {
+div.row-container {
     display: flex;
     flex-direction: row;
-}
-
-div.parameters {
-    margin: 7px;
-    margin-top: 0px;
-    padding: 10px;
-    background-color: aliceblue;
-    display: flex;
 }
 
 div.image {
@@ -178,4 +176,22 @@ div.analysis div.json-card {
     overflow: auto;
     font-size: 16px;
     border: 1px solid gainsboro;
+}
+
+div.parameters div.row-container div.left {
+    width: 50%;
+    margin-right: 5px;
+    padding: 10px;
+    height: 250px;
+    background-color: white;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12);
+}
+
+div.parameters div.row-container div.right {
+    width: 50%;
+    margin-left: 5px;
+    padding: 10px;
+    height: 250px;
+    background-color: white;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12);
 }
