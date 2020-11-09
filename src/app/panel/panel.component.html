@@ -22,39 +22,41 @@
                     <label class="status stopped">STOPPED</label>
                 </ng-template>
             </div>
+            <div class="image-meta">
+                <table>
+                    <tr>
+                        <th class="col1">Update Time</th>
+                        <td class="col2">
+                            <ng-container *ngIf="updateTime">
+                                {{ updateTime | date: "yyyy-MM-dd, HH:mm:ss.SSS" }}
+                            </ng-container>
+                        </td>
+                        <th class="col3">Bunch ID</th>
+                        <td class="col4">
+                            <ng-container *ngIf="imageMeta">
+                                {{ imageMeta.bunch_id }}
+                            </ng-container>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="col1">Calibration Level</th>
+                        <td class="col2">
+                            <ng-container *ngIf="imageMeta">
+                                {{ imageMeta.calib_level }}
+                            </ng-container>
+                        </td>
+                        <th class="col3">Late Arrived</th>
+                        <td class="col4">
+                            <ng-container *ngIf="imageMeta">
+                                {{ imageMeta.late_arrived }}
+                            </ng-container>
+                        </td>
+                    </tr>
+                </table>
+            </div>
             <div class="analysis">
-                <div class="table">
-                    <table class="image-meta">
-                        <tr>
-                            <th class="col1">Update Time</th>
-                            <td class="col2">
-                                <ng-container *ngIf="updateTime">
-                                    {{ updateTime | date: "yyyy-MM-dd, HH:mm:ss.SSS" }}
-                                </ng-container>
-                            </td>
-                            <th class="col3">Bunch ID</th>
-                            <td class="col4">
-                                <ng-container *ngIf="imageMeta">
-                                    {{ imageMeta.bunch_id }}
-                                </ng-container>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th class="col1">Calibration Level</th>
-                            <td class="col2">
-                                <ng-container *ngIf="imageMeta">
-                                    {{ imageMeta.calib_level }}
-                                </ng-container>
-                            </td>
-                            <th class="col3">Late Arrived</th>
-                            <td class="col4">
-                                <ng-container *ngIf="imageMeta">
-                                    {{ imageMeta.late_arrived }}
-                                </ng-container>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
+                <div class="feature"><label>image feature</label></div>
+                <div class="results"><label>analysis results</label></div>
             </div>
         </div>
     </div>

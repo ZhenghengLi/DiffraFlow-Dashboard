@@ -56,7 +56,7 @@ div.metadata div.control {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    max-width: 650px;
+    max-width: 700px;
     min-width: 600px;
 }
 
@@ -91,8 +91,8 @@ button.stop {
 
 $border-style: 1px solid lightblue;
 
-div.metadata div.analysis {
-    max-width: 650px;
+div.metadata div.image-meta {
+    max-width: 700px;
     min-width: 600px;
     padding: 10px;
     margin-top: 10px;
@@ -100,40 +100,64 @@ div.metadata div.analysis {
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12);
 }
 
-div.analysis div.table {
-    overflow: auto;
-}
-
-div.analysis table {
+div.image-meta table {
     width: 100%;
     border: $border-style;
     text-align: left;
     border-collapse: collapse;
+    overflow: auto;
 }
 
-table.image-meta th,
-table.image-meta td {
+div.image-meta table th,
+div.image-meta table td {
     border: $border-style;
     padding: 8px;
     font-size: 14px;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
-table.image-meta th {
+div.image-meta table th {
     font-weight: normal;
 }
 
-table.image-meta td {
+div.image-meta table td {
     color: red;
 }
 
-table.image-meta .col1 {
-    width: 25%;
+div.image-meta table .col1 {
+    width: 23%;
 }
 
-table.image-meta .col2 {
+div.image-meta table .col2 {
     width: 35%;
 }
-table.image-meta .col3 {
-    width: 20%;
+div.image-meta table .col3 {
+    width: 18%;
+}
+
+div.metadata div.analysis {
+    max-width: 720px;
+    min-width: 600px;
+    margin-top: 10px;
+    display: flex;
+    height: 100%;
+    margin-bottom: 20px;
+}
+
+div.analysis div.feature {
+    background-color: white;
+    width: 50%;
+    margin-right: 5px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12);
+    padding: 10px;
+    height: 100%;
+}
+
+div.analysis div.results {
+    background-color: white;
+    width: 50%;
+    margin-left: 5px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12);
+    padding: 10px;
+    height: 100%;
 }
