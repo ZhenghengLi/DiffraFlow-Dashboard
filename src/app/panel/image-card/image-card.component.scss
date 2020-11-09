@@ -11,7 +11,7 @@ div.image-container {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12);
+    border: 1px solid gainsboro;
 }
 
 canvas.data {
@@ -21,7 +21,8 @@ canvas.data {
     background-color: white;
     max-height: 97%;
     max-width: 85%;
-    border: 1px solid black;
+    // border: 1px solid black;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12);
 }
 
 canvas.color {
@@ -31,5 +32,6 @@ canvas.color {
     background-color: white;
     max-height: 97%;
     max-width: 12%;
-    border: 1px solid black;
+    // border: 1px solid black;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12);
 }
