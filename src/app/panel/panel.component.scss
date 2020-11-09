@@ -140,7 +140,6 @@ div.metadata div.analysis {
     margin-top: 10px;
     display: flex;
     height: 100%;
-    margin-bottom: 20px;
 }
 
 div.analysis div.feature {
@@ -149,7 +148,6 @@ div.analysis div.feature {
     margin-right: 5px;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12);
     padding: 10px;
-    height: 100%;
     overflow: auto;
 }
 
@@ -159,7 +157,6 @@ div.analysis div.results {
     margin-left: 5px;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12);
     padding: 10px;
-    height: 100%;
     overflow: auto;
 }
 
@@ -170,6 +167,11 @@ div.analysis label {
     margin-bottom: 10px;
     font-size: 18px;
     text-align: center;
+}
+
+div.analysis div.scroll-wrapper {
+    overflow: auto;
+    height: 255px;
 }
 
 div.analysis div.json-card {
