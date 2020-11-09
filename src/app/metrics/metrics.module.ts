@@ -1,8 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-
-import { NgxEchartsModule } from 'ngx-echarts';
-import { NgxJsonViewerModule } from 'ngx-json-viewer';
+import { SharedModule } from '../shared/shared.module';
 
 import { MetricsRoutingModule } from './metrics-routing.module';
 import { MetricsComponent } from './metrics.component';
@@ -30,14 +27,7 @@ import { MetricsCardComponent } from './common/metrics-card/metrics-card.compone
         TimeLineChartComponent,
         MetricsCardComponent,
     ],
-    imports: [
-        CommonModule,
-        MetricsRoutingModule,
-        NgxEchartsModule.forRoot({
-            echarts: () => import('echarts'),
-        }),
-        NgxJsonViewerModule,
-    ],
+    imports: [SharedModule, MetricsRoutingModule],
     providers: [MetricsDataService],
 })
 export class MetricsModule {}
