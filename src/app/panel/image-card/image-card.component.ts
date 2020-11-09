@@ -63,6 +63,7 @@ export class ImageCardComponent implements OnInit, OnDestroy {
         if (!colorBarCanvasContext) return;
         // draw color bar
         let [width, height] = [colorBarCanvasElement.width, colorBarCanvasElement.height];
+        colorBarCanvasContext.clearRect(0, 0, width, height);
         let colorBarWidth = width * 0.4;
         let imageData = new ImageData(colorBarWidth, height);
         let imageDataBuffer = new Uint32Array(imageData.data.buffer);

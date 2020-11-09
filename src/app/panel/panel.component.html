@@ -55,8 +55,18 @@
                 </table>
             </div>
             <div class="analysis">
-                <div class="feature"><label>image feature</label></div>
-                <div class="results"><label>analysis results</label></div>
+                <div class="feature">
+                    <label>image feature</label>
+                    <div class="json-card">
+                        <ngx-json-viewer [json]="imageFeature"></ngx-json-viewer>
+                    </div>
+                </div>
+                <div class="results">
+                    <label>analysis results</label>
+                    <div class="json-card">
+                        <ngx-json-viewer [json]="analysisResult"></ngx-json-viewer>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

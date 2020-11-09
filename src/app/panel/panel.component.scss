@@ -151,6 +151,7 @@ div.analysis div.feature {
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12);
     padding: 10px;
     height: 100%;
+    overflow: auto;
 }
 
 div.analysis div.results {
@@ -160,4 +161,20 @@ div.analysis div.results {
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12);
     padding: 10px;
     height: 100%;
+    overflow: auto;
+}
+
+div.analysis label {
+    display: block;
+    background-color: aliceblue;
+    padding: 5px;
+    margin-bottom: 10px;
+    font-size: 18px;
+    text-align: center;
+}
+
+div.analysis div.json-card {
+    overflow: auto;
+    font-size: 16px;
+    border: 1px solid gainsboro;
 }
