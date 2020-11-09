@@ -1,5 +1,6 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ImageFetcherCommand, ImageFetcherMsgType } from './panel.common';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
     selector: 'app-panel',
@@ -7,7 +8,7 @@ import { ImageFetcherCommand, ImageFetcherMsgType } from './panel.common';
     styleUrls: ['./panel.component.scss'],
 })
 export class PanelComponent implements OnInit, OnDestroy {
-    constructor() {}
+    constructor(private _http: HttpClient) {}
 
     private _imageFetcher: Worker;
 
