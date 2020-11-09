@@ -40,10 +40,10 @@ export class PanelComponent implements OnInit, OnDestroy {
                 break;
             case ImageFetcherMsgType.image:
                 this.imageData = data.payload.imageData;
+                this.imageEnergyRange = data.payload.imageEnergyRange;
                 this.imageMeta = data.payload.imageMeta;
                 this.analysisResult = data.payload.analysisResult;
                 this.imageFeature = data.payload.imageFeature;
-                this.imageEnergyRange = [this.imageMeta?.min_energy, this.imageMeta?.max_energy];
                 break;
         }
     };
