@@ -14,6 +14,7 @@ export class PanelComponent implements OnInit, OnDestroy {
     intervalTime: string = '1000';
     runningFlag: boolean = false;
 
+    updateTime: Date;
     imageData: ImageData;
     imageEnergyRange: [number, number] = [0, 10];
     imageMeta: any = {};
@@ -39,6 +40,7 @@ export class PanelComponent implements OnInit, OnDestroy {
                 this.runningFlag = data.payload.running;
                 break;
             case ImageFetcherMsgType.image:
+                this.updateTime = data.payload.updateTime;
                 this.imageData = data.payload.imageData;
                 this.imageEnergyRange = data.payload.imageEnergyRange;
                 this.imageMeta = data.payload.imageMeta;

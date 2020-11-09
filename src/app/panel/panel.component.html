@@ -1,25 +1,61 @@
 <div class="monitor">
-    <div class="image">
-        <app-image-card [energyRange]="imageEnergyRange" [imageData]="imageData"> </app-image-card>
+    <div class="header">
+        <label>Current aligned full image and related analysis results</label>
     </div>
-    <div class="metadata">
-        <div class="control">
-            <div class="button-group">
-                <button class="start" (click)="imageFetcherStart()">Start</button>
-                <button class="stop" (click)="imageFetcherStop()">Stop</button>
-            </div>
-            <label class="interval"
-                >Interval Time:
-                <input class="interval" [(ngModel)]="intervalTime" [disabled]="runningFlag" />
-                ms
-            </label>
-            <label *ngIf="runningFlag; else statusStopped" class="status running"> RUNNING </label>
-            <ng-template #statusStopped>
-                <label class="status stopped">STOPPED</label>
-            </ng-template>
+    <div class="row-container">
+        <div class="image">
+            <app-image-card [energyRange]="imageEnergyRange" [imageData]="imageData"> </app-image-card>
         </div>
-        <div class="analysis">
-            <p>analysis results</p>
+        <div class="metadata">
+            <div class="control">
+                <div class="button-group">
+                    <button class="start" (click)="imageFetcherStart()" [disabled]="runningFlag">Start</button>
+                    <button class="stop" (click)="imageFetcherStop()" [disabled]="!runningFlag">Stop</button>
+                </div>
+                <label class="interval"
+                    >Interval Time:
+                    <input class="interval" [(ngModel)]="intervalTime" [disabled]="runningFlag" />
+                    ms
+                </label>
+                <label *ngIf="runningFlag; else statusStopped" class="status running"> RUNNING </label>
+                <ng-template #statusStopped>
+                    <label class="status stopped">STOPPED</label>
+                </ng-template>
+            </div>
+            <div class="analysis">
+                <div class="table">
+                    <table class="image-meta">
+                        <tr>
+                            <th class="col1">Update Time</th>
+                            <td class="col2">
+                                <ng-container *ngIf="updateTime">
+                                    {{ updateTime | date: "yyyy-MM-dd, HH:mm:ss.SSS" }}
+                                </ng-container>
+                            </td>
+                            <th class="col3">Bunch ID</th>
+                            <td class="col4">
+                                <ng-container *ngIf="imageMeta">
+                                    {{ imageMeta.bunch_id }}
+                                </ng-container>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="col1">Calibration Level</th>
+                            <td class="col2">
+                                <ng-container *ngIf="imageMeta">
+                                    {{ imageMeta.calib_level }}
+                                </ng-container>
+                            </td>
+                            <th class="col3">Late Arrived</th>
+                            <td class="col4">
+                                <ng-container *ngIf="imageMeta">
+                                    {{ imageMeta.late_arrived }}
+                                </ng-container>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>

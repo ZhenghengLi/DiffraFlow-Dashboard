@@ -25,6 +25,7 @@ async function fetchAndProcess(count: number) {
     }
     console.log('lastEventKey:', lastEventKey);
 
+    let updateTime = new Date();
     let eventData = await eventResponse.arrayBuffer();
     let eventObject = <any>msgpack.decode(eventData);
 
@@ -36,6 +37,7 @@ async function fetchAndProcess(count: number) {
         {
             type: ImageFetcherMsgType.image,
             payload: {
+                updateTime,
                 imageData,
                 imageEnergyRange: [eventObject.image_data.min_energy, eventObject.image_data.max_energy],
                 imageMeta: {
