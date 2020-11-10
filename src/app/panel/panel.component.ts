@@ -60,6 +60,39 @@ export class PanelComponent implements OnInit, OnDestroy {
     monitorStatusText: string = 'monitor status';
     monitorStatusColor: string = 'green';
 
+    // check functions
+    ingesterCheckAll(): boolean {
+        return (
+            this.ingesterCheckRunNumber() ||
+            this.ingesterCheckDoubleParam() ||
+            this.ingesterCheckIntegerParam() ||
+            this.ingesterCheckStringParam()
+        );
+    }
+    ingesterCheckRunNumber(): boolean {
+        if (!this.ingesterChange.runNumber) return false;
+        if (this.ingesterChange.runNumber === this.ingesterCurrent.runNumber) return false;
+        if (!this.ingesterChange.runNumber.match(/^\d+$/)) return false;
+        return true;
+    }
+    ingesterCheckDoubleParam(): boolean {
+        if (!this.ingesterChange.doubleParam) return false;
+        if (this.ingesterChange.doubleParam === this.ingesterCurrent.doubleParam) return false;
+        if (!this.ingesterChange.doubleParam.match(/^-?\d+\.?\d*$/)) return false;
+        return true;
+    }
+    ingesterCheckIntegerParam(): boolean {
+        if (!this.ingesterChange.integerParam) return false;
+        if (this.ingesterChange.integerParam === this.ingesterCurrent.integerParam) return false;
+        if (!this.ingesterChange.integerParam.match(/^-?\d+$/)) return false;
+        return true;
+    }
+    ingesterCheckStringParam(): boolean {
+        if (!this.ingesterChange.stringParam) return false;
+        if (this.ingesterChange.stringParam === this.ingesterCurrent.stringParam) return false;
+        return true;
+    }
+
     ngOnInit(): void {
         console.log('init panel');
         this._imageFetcher = new Worker('./image-fetcher.worker', { type: 'module' });

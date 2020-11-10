@@ -85,7 +85,7 @@
                 <label class="name">INGESTER</label>
                 <div class="button">
                     <button class="top">Sync</button>
-                    <button class="top">Update All</button>
+                    <button class="top" [disabled]="!ingesterCheckAll()">Update All</button>
                 </div>
                 <label class="status" [style.color]="ingesterStatusColor">{{ ingesterStatusText }}</label>
             </div>
@@ -101,25 +101,25 @@
                         <td class="col1">Run Number</td>
                         <td class="col2">{{ ingesterCurrent.runNumber }}</td>
                         <td class="col3"><input [(ngModel)]="ingesterChange.runNumber" /></td>
-                        <td class="col4"><button>Update</button></td>
+                        <td class="col4"><button [disabled]="!ingesterCheckRunNumber()">Update</button></td>
                     </tr>
                     <tr>
                         <td class="col1">Double Param</td>
                         <td class="col2">{{ ingesterCurrent.doubleParam }}</td>
                         <td class="col3"><input [(ngModel)]="ingesterChange.doubleParam" /></td>
-                        <td class="col4"><button>Update</button></td>
+                        <td class="col4"><button [disabled]="!ingesterCheckDoubleParam()">Update</button></td>
                     </tr>
                     <tr>
                         <td class="col1">Integer Param</td>
                         <td class="col2">{{ ingesterCurrent.integerParam }}</td>
                         <td class="col3"><input [(ngModel)]="ingesterChange.integerParam" /></td>
-                        <td class="col4"><button>Update</button></td>
+                        <td class="col4"><button [disabled]="!ingesterCheckIntegerParam()">Update</button></td>
                     </tr>
                     <tr>
                         <td class="col1">String Param</td>
                         <td class="col2">{{ ingesterCurrent.stringParam }}</td>
                         <td class="col3"><input [(ngModel)]="ingesterChange.stringParam" /></td>
-                        <td class="col4"><button>Update</button></td>
+                        <td class="col4"><button [disabled]="!ingesterCheckStringParam()">Update</button></td>
                     </tr>
                 </table>
             </div>
