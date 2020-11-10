@@ -195,8 +195,8 @@ div.parameters div.row-container div.right {
 }
 
 div.parameters div.row-container div.top {
-    background-color: beige;
-    padding: 8px;
+    background-color: gainsboro;
+    padding: 7px;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12);
     display: flex;
     // justify-content: space-between;
@@ -204,23 +204,23 @@ div.parameters div.row-container div.top {
 }
 
 div.parameters div.row-container label.name {
-    font-size: 18px;
+    font-size: 14px;
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    margin-left: 7px;
+    margin-left: 15px;
 }
 
 div.parameters div.row-container div.button {
     margin-left: 15px;
 }
 div.parameters div.row-container button.top {
-    padding: 4px;
+    padding: 3px;
     margin-left: 5px;
     margin-right: 5px;
-    font-size: 16px;
+    font-size: 14px;
 }
 
 div.parameters div.row-container label.status {
-    font-size: 18px;
+    font-size: 16px;
     font-family: "Times New Roman", Times, serif;
     margin-left: 15px;
     color: green;
@@ -229,6 +229,5 @@ div.parameters div.row-container label.status {
 div.parameters div.row-container div.down {
     background-color: white;
     padding: 10px;
-    margin-top: 10px;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12);
 }
