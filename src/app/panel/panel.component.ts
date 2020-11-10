@@ -102,7 +102,6 @@ export class PanelComponent implements OnInit, OnDestroy {
             throw new Error(`cannot get ingester config from url ${ingesterConfigUrl}.`);
         }
         let ingesterConfigData = await response.json();
-        console.log(ingesterConfigData);
         this.ingesterCurrent.runNumber = this.ingesterChange.runNumber = ingesterConfigData.data?.dy_run_number;
         this.ingesterCurrent.doubleParam = this.ingesterChange.doubleParam = ingesterConfigData.data?.dy_param_double;
         this.ingesterCurrent.integerParam = this.ingesterChange.integerParam = ingesterConfigData.data?.dy_param_int;
@@ -142,7 +141,6 @@ export class PanelComponent implements OnInit, OnDestroy {
         if (this.ingesterCheckStringParam()) {
             patch_data.dy_param_string = this.ingesterChange.stringParam;
         }
-        console.log(JSON.stringify(patch_data));
         let response = await fetch(ingesterConfigUrl, {
             method: 'PATCH',
             headers: new Headers({ 'Content-Type': 'application/json' }),
@@ -228,7 +226,6 @@ export class PanelComponent implements OnInit, OnDestroy {
             throw new Error(`cannot get monitor config from url ${monitorConfigUrl}.`);
         }
         let monitorConfigData = await response.json();
-        console.log(monitorConfigData);
         this.monitorCurrent.lowerEnergyCut = this.monitorChange.lowerEnergyCut =
             monitorConfigData.data?.dy_energy_down_cut;
         this.monitorCurrent.upperEnergyCut = this.monitorChange.upperEnergyCut =
@@ -274,7 +271,6 @@ export class PanelComponent implements OnInit, OnDestroy {
         if (this.monitorCheckStringParam()) {
             patch_data.dy_param_string = this.monitorChange.stringParam;
         }
-        console.log(JSON.stringify(patch_data));
         let response = await fetch(monitorConfigUrl, {
             method: 'PATCH',
             headers: new Headers({ 'Content-Type': 'application/json' }),
