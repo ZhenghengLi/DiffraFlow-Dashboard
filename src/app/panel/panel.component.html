@@ -129,7 +129,7 @@
                 <label class="name">MONITOR</label>
                 <div class="button">
                     <button class="top">Sync</button>
-                    <button class="top">Update All</button>
+                    <button class="top" [disabled]="!monitorCheckAll()">Update All</button>
                 </div>
                 <label class="status" [style.color]="monitorStatusColor">{{ monitorStatusText }}</label>
             </div>
@@ -145,31 +145,31 @@
                         <td class="col1">Lower Energy Cut</td>
                         <td class="col2">{{ monitorCurrent.lowerEnergyCut }}</td>
                         <td class="col3"><input [(ngModel)]="monitorChange.lowerEnergyCut" /></td>
-                        <td class="col4"><button>Update</button></td>
+                        <td class="col4"><button [disabled]="!monitorCheckLowerEnergyCut()">Update</button></td>
                     </tr>
                     <tr>
                         <td class="col1">Upper Energy Cut</td>
                         <td class="col2">{{ monitorCurrent.upperEnergyCut }}</td>
                         <td class="col3"><input [(ngModel)]="monitorChange.upperEnergyCut" /></td>
-                        <td class="col4"><button>Update</button></td>
+                        <td class="col4"><button [disabled]="!monitorCheckUpperEnergyCut()">Update</button></td>
                     </tr>
                     <tr>
                         <td class="col1">Double Param</td>
                         <td class="col2">{{ monitorCurrent.doubleParam }}</td>
                         <td class="col3"><input [(ngModel)]="monitorChange.doubleParam" /></td>
-                        <td class="col4"><button>Update</button></td>
+                        <td class="col4"><button [disabled]="!monitorCheckDoubleParam()">Update</button></td>
                     </tr>
                     <tr>
                         <td class="col1">Integer Param</td>
                         <td class="col2">{{ monitorCurrent.integerParam }}</td>
                         <td class="col3"><input [(ngModel)]="monitorChange.integerParam" /></td>
-                        <td class="col4"><button>Update</button></td>
+                        <td class="col4"><button [disabled]="!monitorCheckIntegerParam()">Update</button></td>
                     </tr>
                     <tr>
                         <td class="col1">String Param</td>
                         <td class="col2">{{ monitorCurrent.stringParam }}</td>
                         <td class="col3"><input [(ngModel)]="monitorChange.stringParam" /></td>
-                        <td class="col4"><button>Update</button></td>
+                        <td class="col4"><button [disabled]="!monitorCheckStringParam()">Update</button></td>
                     </tr>
                 </table>
             </div>

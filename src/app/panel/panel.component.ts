@@ -61,6 +61,7 @@ export class PanelComponent implements OnInit, OnDestroy {
     monitorStatusColor: string = 'green';
 
     // check functions
+    //// ingester
     ingesterCheckAll(): boolean {
         return (
             this.ingesterCheckRunNumber() ||
@@ -79,6 +80,9 @@ export class PanelComponent implements OnInit, OnDestroy {
         if (!this.ingesterChange.doubleParam) return false;
         if (this.ingesterChange.doubleParam === this.ingesterCurrent.doubleParam) return false;
         if (!this.ingesterChange.doubleParam.match(/^-?\d+\.?\d*$/)) return false;
+        if (parseFloat(this.ingesterChange.doubleParam) === parseFloat(this.ingesterCurrent.doubleParam)) {
+            return false;
+        }
         return true;
     }
     ingesterCheckIntegerParam(): boolean {
@@ -97,6 +101,64 @@ export class PanelComponent implements OnInit, OnDestroy {
         console.log('init panel');
         this._imageFetcher = new Worker('./image-fetcher.worker', { type: 'module' });
         this._imageFetcher.onmessage = this._messageHandler;
+    }
+    //// monitor
+    monitorCheckAll(): boolean {
+        // check energy range
+        let lowerEnergy = this.monitorCheckLowerEnergyCut();
+        let upperEnergy = this.monitorCheckUpperEnergyCut();
+        if (lowerEnergy && upperEnergy) {
+            if (parseFloat(this.monitorChange.lowerEnergyCut) >= parseFloat(this.monitorChange.upperEnergyCut)) {
+                return false;
+            }
+        }
+        return lowerEnergy || upperEnergy;
+    }
+    monitorCheckLowerEnergyCut(): boolean {
+        if (!this.monitorChange.lowerEnergyCut) return false;
+        if (this.monitorChange.lowerEnergyCut === this.monitorCurrent.lowerEnergyCut) return false;
+        if (!this.monitorChange.lowerEnergyCut.match(/^-?\d+\.?\d*$/)) return false;
+        if (parseFloat(this.monitorChange.lowerEnergyCut) === parseFloat(this.monitorCurrent.lowerEnergyCut)) {
+            return false;
+        }
+        if (parseFloat(this.monitorChange.lowerEnergyCut) < parseFloat(this.monitorCurrent.upperEnergyCut)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    monitorCheckUpperEnergyCut(): boolean {
+        if (!this.monitorChange.upperEnergyCut) return false;
+        if (this.monitorChange.upperEnergyCut === this.monitorCurrent.upperEnergyCut) return false;
+        if (!this.monitorChange.upperEnergyCut.match(/^-?\d+\.?\d*$/)) return false;
+        if (parseFloat(this.monitorChange.upperEnergyCut) === parseFloat(this.monitorCurrent.upperEnergyCut)) {
+            return false;
+        }
+        if (parseFloat(this.monitorChange.upperEnergyCut) > parseFloat(this.monitorCurrent.lowerEnergyCut)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    monitorCheckDoubleParam(): boolean {
+        if (!this.monitorChange.doubleParam) return false;
+        if (this.monitorChange.doubleParam === this.monitorCurrent.doubleParam) return false;
+        if (!this.monitorChange.doubleParam.match(/^-?\d+\.?\d*$/)) return false;
+        if (parseFloat(this.monitorChange.doubleParam) === parseFloat(this.monitorCurrent.doubleParam)) {
+            return false;
+        }
+        return true;
+    }
+    monitorCheckIntegerParam(): boolean {
+        if (!this.monitorChange.integerParam) return false;
+        if (this.monitorChange.integerParam === this.monitorCurrent.integerParam) return false;
+        if (!this.monitorChange.integerParam.match(/^-?\d+$/)) return false;
+        return true;
+    }
+    monitorCheckStringParam(): boolean {
+        if (!this.monitorChange.stringParam) return false;
+        if (this.monitorChange.stringParam === this.monitorCurrent.stringParam) return false;
+        return true;
     }
 
     ngOnDestroy(): void {
