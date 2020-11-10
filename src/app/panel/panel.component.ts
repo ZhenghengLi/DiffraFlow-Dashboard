@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ImageFetcherCommand, ImageFetcherMsgType, IngesterParam, MonitorParam } from './panel.common';
-import { HttpClient } from '@angular/common/http';
 
 @Component({
     selector: 'app-panel',
@@ -8,7 +7,7 @@ import { HttpClient } from '@angular/common/http';
     styleUrls: ['./panel.component.scss'],
 })
 export class PanelComponent implements OnInit, OnDestroy {
-    constructor(private _http: HttpClient) {}
+    constructor() {}
 
     private _imageFetcher: Worker;
 
@@ -25,31 +24,31 @@ export class PanelComponent implements OnInit, OnDestroy {
     // runtime parameters
     //// ingester
     ingesterCurrent: IngesterParam = {
-        runNumber: '1',
-        doubleParam: '2',
-        integerParam: '3',
-        stringParam: '4',
+        runNumber: '',
+        doubleParam: '',
+        integerParam: '',
+        stringParam: '',
     };
     ingesterChange: IngesterParam = {
-        runNumber: '5',
-        doubleParam: '6',
-        integerParam: '7',
-        stringParam: '8',
+        runNumber: '',
+        doubleParam: '',
+        integerParam: '',
+        stringParam: '',
     };
     //// monitor
     monitorCurrent: MonitorParam = {
-        lowerEnergyCut: '9',
-        upperEnergyCut: '10',
-        doubleParam: '11',
-        integerParam: '12',
-        stringParam: '13',
+        lowerEnergyCut: '',
+        upperEnergyCut: '',
+        doubleParam: '',
+        integerParam: '',
+        stringParam: '',
     };
     monitorChange: MonitorParam = {
-        lowerEnergyCut: '14',
-        upperEnergyCut: '15',
-        doubleParam: '16',
-        integerParam: '17',
-        stringParam: '18',
+        lowerEnergyCut: '',
+        upperEnergyCut: '',
+        doubleParam: '',
+        integerParam: '',
+        stringParam: '',
     };
 
     // update status
@@ -59,6 +58,84 @@ export class PanelComponent implements OnInit, OnDestroy {
     //// monitor
     monitorStatusText: string = 'monitor status';
     monitorStatusColor: string = 'green';
+
+    // config name
+    private _configUrl: string = 'assets/config.json';
+    private _controllerAddress: string;
+    private _ingesterConfig: string;
+    private _monitorConfig: string;
+
+    private async _fetchConfig(): Promise<void> {
+        let response = await fetch(this._configUrl);
+        if (!response.ok) {
+            throw new Error(`cannot fetch config from ${this._configUrl}.`);
+        }
+        let config_data = await response.json();
+        this._controllerAddress = config_data.controller_address;
+        this._ingesterConfig = config_data.ingester_config;
+        this._monitorConfig = config_data.monitor_config;
+        if (!this._controllerAddress) {
+            throw new Error(`there is no controller_address in config ${this._configUrl}`);
+        }
+        if (!this._ingesterConfig) {
+            throw new Error(`there is no ingester_config in config ${this._configUrl}`);
+        }
+        if (!this._monitorConfig) {
+            throw new Error(`there is no monitor_config in config ${this._configUrl}`);
+        }
+        // debug
+        console.log('controller_address:', this._controllerAddress);
+        console.log('ingester_config:', this._ingesterConfig);
+        console.log('monitor_config:', this._monitorConfig);
+    }
+
+    // update actions
+    //// ingester
+    async ingesterSync(): Promise<void> {
+        if (!this._controllerAddress || !this._ingesterConfig) {
+            await this._fetchConfig();
+        }
+        let ingesterConfigUrl = 'http://' + this._controllerAddress + '/config/' + this._ingesterConfig;
+        let response = await fetch(ingesterConfigUrl);
+        if (!response.ok) {
+            throw new Error(`cannot get ingester config from url ${ingesterConfigUrl}.`);
+        }
+        let ingesterConfigData = await response.json();
+        console.log(ingesterConfigData);
+        this.ingesterCurrent.runNumber = this.ingesterChange.runNumber = ingesterConfigData.data?.dy_run_number;
+        this.ingesterCurrent.doubleParam = this.ingesterChange.doubleParam = ingesterConfigData.data?.dy_param_double;
+        this.ingesterCurrent.integerParam = this.ingesterChange.integerParam = ingesterConfigData.data?.dy_param_int;
+        this.ingesterCurrent.stringParam = this.ingesterChange.stringParam = ingesterConfigData.data?.dy_param_string;
+    }
+
+    async ingesterUpdateAll(): Promise<void> {}
+
+    async ingesterUpdateOne(key: string): Promise<void> {}
+
+    //// monitor
+    async monitorSync(): Promise<void> {
+        if (!this._controllerAddress || !this._monitorConfig) {
+            await this._fetchConfig();
+        }
+        let monitorConfigUrl = 'http://' + this._controllerAddress + '/config/' + this._monitorConfig;
+        let response = await fetch(monitorConfigUrl);
+        if (!response.ok) {
+            throw new Error(`cannot get monitor config from url ${monitorConfigUrl}.`);
+        }
+        let monitorConfigData = await response.json();
+        console.log(monitorConfigData);
+        this.monitorCurrent.lowerEnergyCut = this.monitorChange.lowerEnergyCut =
+            monitorConfigData.data?.dy_energy_down_cut;
+        this.monitorCurrent.upperEnergyCut = this.monitorChange.upperEnergyCut =
+            monitorConfigData.data?.dy_energy_up_cut;
+        this.monitorCurrent.doubleParam = this.monitorChange.doubleParam = monitorConfigData.data?.dy_param_double;
+        this.monitorCurrent.integerParam = this.monitorChange.integerParam = monitorConfigData.data?.dy_param_int;
+        this.monitorCurrent.stringParam = this.monitorChange.stringParam = monitorConfigData.data?.dy_param_string;
+    }
+
+    async monitorUpdateAll(): Promise<void> {}
+
+    async monitorUpdateOne(key: string): Promise<void> {}
 
     // check functions
     //// ingester
@@ -97,11 +174,6 @@ export class PanelComponent implements OnInit, OnDestroy {
         return true;
     }
 
-    ngOnInit(): void {
-        console.log('init panel');
-        this._imageFetcher = new Worker('./image-fetcher.worker', { type: 'module' });
-        this._imageFetcher.onmessage = this._messageHandler;
-    }
     //// monitor
     monitorCheckAll(): boolean {
         // check energy range
@@ -159,6 +231,13 @@ export class PanelComponent implements OnInit, OnDestroy {
         if (!this.monitorChange.stringParam) return false;
         if (this.monitorChange.stringParam === this.monitorCurrent.stringParam) return false;
         return true;
+    }
+
+    ngOnInit(): void {
+        console.log('init panel');
+        this._imageFetcher = new Worker('./image-fetcher.worker', { type: 'module' });
+        this._imageFetcher.onmessage = this._messageHandler;
+        this._fetchConfig().catch((err) => console.error(err));
     }
 
     ngOnDestroy(): void {

@@ -84,7 +84,7 @@
             <div class="top">
                 <label class="name">INGESTER</label>
                 <div class="button">
-                    <button class="top">Sync</button>
+                    <button class="top" (click)="ingesterSync()">Sync</button>
                     <button class="top" [disabled]="!ingesterCheckAll()">Update All</button>
                 </div>
                 <label class="status" [style.color]="ingesterStatusColor">{{ ingesterStatusText }}</label>
@@ -128,7 +128,7 @@
             <div class="top">
                 <label class="name">MONITOR</label>
                 <div class="button">
-                    <button class="top">Sync</button>
+                    <button class="top" (click)="monitorSync()">Sync</button>
                     <button class="top" [disabled]="!monitorCheckAll()">Update All</button>
                 </div>
                 <label class="status" [style.color]="monitorStatusColor">{{ monitorStatusText }}</label>
