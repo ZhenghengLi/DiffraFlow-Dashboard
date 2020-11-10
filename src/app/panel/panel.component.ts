@@ -301,7 +301,56 @@ export class PanelComponent implements OnInit, OnDestroy {
             });
     }
 
-    async monitorUpdateOne(key: string): Promise<void> {}
+    private async _monitorUpdateOne(key: string): Promise<void> {
+        if (!this._controllerAddress || !this._monitorConfig) {
+            await this._fetchConfig();
+        }
+        let monitorConfigUrl = 'http://' + this._controllerAddress + '/config/' + this._monitorConfig;
+        let patch_data: any = {};
+        switch (key) {
+            case 'lowerEnergyCut':
+                patch_data.dy_energy_down_cut = this.monitorChange.lowerEnergyCut;
+                break;
+            case 'upperEnergyCut':
+                patch_data.dy_energy_up_cut = this.monitorChange.upperEnergyCut;
+                break;
+            case 'doubleParam':
+                patch_data.dy_param_double = this.monitorChange.doubleParam;
+                break;
+            case 'integerParam':
+                patch_data.dy_param_int = this.monitorChange.integerParam;
+                break;
+            case 'stringParam':
+                patch_data.dy_param_string = this.monitorChange.stringParam;
+                break;
+            default:
+                throw new Error(`unknown key ${key}`);
+        }
+        let response = await fetch(monitorConfigUrl, {
+            method: 'PATCH',
+            headers: new Headers({ 'Content-Type': 'application/json' }),
+            body: JSON.stringify(patch_data),
+        });
+        if (!response.ok) {
+            throw new Error(`cannot patch config by url ${monitorConfigUrl}`);
+        }
+    }
+
+    onMonitorUpdateOne(key: string): void {
+        this.monitorStatusText = 'parameter updating in progress ...';
+        this.monitorStatusColor = 'purple';
+        this._monitorUpdateOne(key)
+            .then(() => {
+                this.monitorStatusText = 'parameter updating succeeded.';
+                this.monitorStatusColor = 'green';
+                this.onMonitorSync();
+            })
+            .catch((err) => {
+                this.monitorStatusText = 'parameter updating failed.';
+                this.monitorStatusColor = 'red';
+                console.error(err);
+            });
+    }
 
     // check functions
     //// ingester
