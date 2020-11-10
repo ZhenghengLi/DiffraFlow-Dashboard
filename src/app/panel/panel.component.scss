@@ -158,7 +158,7 @@ div.analysis div.results {
 
 div.analysis label {
     display: block;
-    background-color: aliceblue;
+    background-color: honeydew;
     padding: 5px;
     margin-bottom: 10px;
     font-size: 18px;
@@ -183,8 +183,7 @@ div.parameters div.row-container div.left {
     margin-right: 5px;
     padding: 10px;
     height: 250px;
-    background-color: white;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12);
+    border: 1px solid gainsboro;
 }
 
 div.parameters div.row-container div.right {
@@ -192,6 +191,44 @@ div.parameters div.row-container div.right {
     margin-left: 5px;
     padding: 10px;
     height: 250px;
+    border: 1px solid gainsboro;
+}
+
+div.parameters div.row-container div.top {
+    background-color: beige;
+    padding: 8px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12);
+    display: flex;
+    // justify-content: space-between;
+    align-items: center;
+}
+
+div.parameters div.row-container label.name {
+    font-size: 18px;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    margin-left: 7px;
+}
+
+div.parameters div.row-container div.button {
+    margin-left: 15px;
+}
+div.parameters div.row-container button.top {
+    padding: 4px;
+    margin-left: 5px;
+    margin-right: 5px;
+    font-size: 16px;
+}
+
+div.parameters div.row-container label.status {
+    font-size: 18px;
+    font-family: "Times New Roman", Times, serif;
+    margin-left: 15px;
+    color: green;
+}
+
+div.parameters div.row-container div.down {
     background-color: white;
+    padding: 10px;
+    margin-top: 10px;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12);
 }
