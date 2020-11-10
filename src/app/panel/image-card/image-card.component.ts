@@ -32,7 +32,7 @@ export class ImageCardComponent implements OnInit, OnDestroy {
     set energyRange(data: [number, number]) {
         if (data[1] <= data[0]) return;
         if (data[0] === this._minEnergy && data[1] === this._maxEnergy) return;
-        [this._maxEnergy, this._maxEnergy] = data;
+        [this._minEnergy, this._maxEnergy] = data;
         this.renderColorTable();
     }
 
