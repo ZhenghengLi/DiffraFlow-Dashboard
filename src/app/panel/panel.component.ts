@@ -1,3 +1,4 @@
+import { JsonPipe } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ImageFetcherCommand, ImageFetcherMsgType, IngesterParam, MonitorParam } from './panel.common';
 
@@ -53,11 +54,11 @@ export class PanelComponent implements OnInit, OnDestroy {
 
     // update status
     //// ingester
-    ingesterStatusText: string = 'ingester status';
-    ingesterStatusColor: string = 'green';
+    ingesterStatusText: string = 'parameters are not synchronized.';
+    ingesterStatusColor: string = 'red';
     //// monitor
-    monitorStatusText: string = 'monitor status';
-    monitorStatusColor: string = 'green';
+    monitorStatusText: string = 'parameters are not synchronized.';
+    monitorStatusColor: string = 'red';
 
     // config name
     private _configUrl: string = 'assets/config.json';
@@ -91,7 +92,7 @@ export class PanelComponent implements OnInit, OnDestroy {
 
     // update actions
     //// ingester
-    async ingesterSync(): Promise<void> {
+    private async _ingesterSync(): Promise<void> {
         if (!this._controllerAddress || !this._ingesterConfig) {
             await this._fetchConfig();
         }
@@ -108,12 +109,68 @@ export class PanelComponent implements OnInit, OnDestroy {
         this.ingesterCurrent.stringParam = this.ingesterChange.stringParam = ingesterConfigData.data?.dy_param_string;
     }
 
-    async ingesterUpdateAll(): Promise<void> {}
+    onIngesterSync(): void {
+        this.ingesterStatusText = 'synchronizing parameters ...';
+        this.ingesterStatusColor = 'purple';
+        this._ingesterSync()
+            .then(() => {
+                this.ingesterStatusText = 'successfully synchronized all parameters.';
+                this.ingesterStatusColor = 'green';
+            })
+            .catch(() => {
+                this.ingesterStatusText = 'failed to synchronize all parameters.';
+                this.ingesterStatusColor = 'red';
+            });
+    }
+
+    private async _ingesterUpdateAll(): Promise<void> {
+        if (!this._controllerAddress || !this._ingesterConfig) {
+            await this._fetchConfig();
+        }
+        let ingesterConfigUrl = 'http://' + this._controllerAddress + '/config/' + this._ingesterConfig;
+        let patch_data: any = {};
+        if (this.ingesterCheckRunNumber()) {
+            patch_data.dy_run_number = this.ingesterChange.runNumber;
+        }
+        if (this.ingesterCheckDoubleParam()) {
+            patch_data.dy_param_double = this.ingesterChange.doubleParam;
+        }
+        if (this.ingesterCheckIntegerParam()) {
+            patch_data.dy_param_int = this.ingesterChange.integerParam;
+        }
+        if (this.ingesterCheckStringParam()) {
+            patch_data.dy_param_string = this.ingesterChange.stringParam;
+        }
+        console.log(JSON.stringify(patch_data));
+        let response = await fetch(ingesterConfigUrl, {
+            method: 'PATCH',
+            headers: new Headers({ 'Content-Type': 'application/json' }),
+            body: JSON.stringify(patch_data),
+        });
+        if (!response.ok) {
+            throw new Error(`cannot patch config by url ${ingesterConfigUrl}`);
+        }
+    }
+
+    onIngesterUpdateAll() {
+        this.ingesterStatusText = 'parameter updating in progress ...';
+        this.ingesterStatusColor = 'purple';
+        this._ingesterUpdateAll()
+            .then(() => {
+                this.ingesterStatusText = 'parameter updating succeeded.';
+                this.ingesterStatusColor = 'green';
+                this.onIngesterSync();
+            })
+            .catch(() => {
+                this.ingesterStatusText = 'parameter updating failed.';
+                this.ingesterStatusColor = 'red';
+            });
+    }
 
     async ingesterUpdateOne(key: string): Promise<void> {}
 
     //// monitor
-    async monitorSync(): Promise<void> {
+    private async _monitorSync(): Promise<void> {
         if (!this._controllerAddress || !this._monitorConfig) {
             await this._fetchConfig();
         }
@@ -131,6 +188,20 @@ export class PanelComponent implements OnInit, OnDestroy {
         this.monitorCurrent.doubleParam = this.monitorChange.doubleParam = monitorConfigData.data?.dy_param_double;
         this.monitorCurrent.integerParam = this.monitorChange.integerParam = monitorConfigData.data?.dy_param_int;
         this.monitorCurrent.stringParam = this.monitorChange.stringParam = monitorConfigData.data?.dy_param_string;
+    }
+
+    onMonitorSync(): void {
+        this.monitorStatusText = 'synchronizing parameters ...';
+        this.monitorStatusColor = 'purple';
+        this._monitorSync()
+            .then(() => {
+                this.monitorStatusText = 'successfully synchronized all parameters.';
+                this.monitorStatusColor = 'green';
+            })
+            .catch(() => {
+                this.monitorStatusText = 'failed to synchronize all parameters.';
+                this.monitorStatusColor = 'red';
+            });
     }
 
     async monitorUpdateAll(): Promise<void> {}
