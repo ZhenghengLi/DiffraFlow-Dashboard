@@ -117,9 +117,10 @@ export class PanelComponent implements OnInit, OnDestroy {
                 this.ingesterStatusText = 'successfully synchronized all parameters.';
                 this.ingesterStatusColor = 'green';
             })
-            .catch(() => {
+            .catch((err) => {
                 this.ingesterStatusText = 'failed to synchronize all parameters.';
                 this.ingesterStatusColor = 'red';
+                console.error(err);
             });
     }
 
@@ -161,13 +162,60 @@ export class PanelComponent implements OnInit, OnDestroy {
                 this.ingesterStatusColor = 'green';
                 this.onIngesterSync();
             })
-            .catch(() => {
+            .catch((err) => {
                 this.ingesterStatusText = 'parameter updating failed.';
                 this.ingesterStatusColor = 'red';
+                console.error(err);
             });
     }
 
-    async ingesterUpdateOne(key: string): Promise<void> {}
+    private async _ingesterUpdateOne(key: string): Promise<void> {
+        if (!this._controllerAddress || !this._ingesterConfig) {
+            await this._fetchConfig();
+        }
+        let ingesterConfigUrl = 'http://' + this._controllerAddress + '/config/' + this._ingesterConfig;
+        let patch_data: any = {};
+        switch (key) {
+            case 'runNumber':
+                patch_data.dy_run_number = this.ingesterChange.runNumber;
+                break;
+            case 'doubleParam':
+                patch_data.dy_param_double = this.ingesterChange.doubleParam;
+                break;
+            case 'integerParam':
+                patch_data.dy_param_int = this.ingesterChange.integerParam;
+                break;
+            case 'stringParam':
+                patch_data.dy_param_string = this.ingesterChange.stringParam;
+                break;
+            default:
+                throw new Error(`unknown key ${key}`);
+        }
+        let response = await fetch(ingesterConfigUrl, {
+            method: 'PATCH',
+            headers: new Headers({ 'Content-Type': 'application/json' }),
+            body: JSON.stringify(patch_data),
+        });
+        if (!response.ok) {
+            throw new Error(`cannot patch config by url ${ingesterConfigUrl}`);
+        }
+    }
+
+    onIngesterUpdateOne(key: string): void {
+        this.ingesterStatusText = 'parameter updating in progress ...';
+        this.ingesterStatusColor = 'purple';
+        this._ingesterUpdateOne(key)
+            .then(() => {
+                this.ingesterStatusText = 'parameter updating succeeded.';
+                this.ingesterStatusColor = 'green';
+                this.onIngesterSync();
+            })
+            .catch((err) => {
+                this.ingesterStatusText = 'parameter updating failed.';
+                this.ingesterStatusColor = 'red';
+                console.error(err);
+            });
+    }
 
     //// monitor
     private async _monitorSync(): Promise<void> {
@@ -198,9 +246,10 @@ export class PanelComponent implements OnInit, OnDestroy {
                 this.monitorStatusText = 'successfully synchronized all parameters.';
                 this.monitorStatusColor = 'green';
             })
-            .catch(() => {
+            .catch((err) => {
                 this.monitorStatusText = 'failed to synchronize all parameters.';
                 this.monitorStatusColor = 'red';
+                console.error(err);
             });
     }
 
@@ -245,9 +294,10 @@ export class PanelComponent implements OnInit, OnDestroy {
                 this.monitorStatusColor = 'green';
                 this.onMonitorSync();
             })
-            .catch(() => {
+            .catch((err) => {
                 this.monitorStatusText = 'parameter updating failed.';
                 this.monitorStatusColor = 'red';
+                console.error(err);
             });
     }
 
