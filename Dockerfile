@@ -33,8 +33,10 @@ LABEL description="Dashboard for DiffraFlow project" \
     build_time="$BUILD_TIME"
 
 # set runtime environment variables
-ENV AGGREGATOR_ADDRESS=10.15.86.19:27711 \
-    CONTROLLER_ADDRESS=10.15.86.19:27511
+ENV AGGREGATOR_ADDRESS="10.15.86.21:27711" \
+    CONTROLLER_ADDRESS="10.15.86.20:27511" \
+    INGESTER_CONFIG="ingester.dyconf" \
+    MONITOR_CONFIG="monitor.dyconf"
 
 COPY scripts/30-serve-index-when-not-found.sh /docker-entrypoint.d
 COPY scripts/entrypoint.sh /scripts/

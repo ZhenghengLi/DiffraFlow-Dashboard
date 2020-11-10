@@ -1,4 +1,6 @@
 {
     "aggregator_address": "10.15.86.21:27711",
-    "controller_address": "10.15.86.20:27511"
+    "controller_address": "10.15.86.20:27511",
+    "ingester_config": "ingester.dyconf",
+    "monitor_config": "monitor.dyconf"
 }
