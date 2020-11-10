@@ -40,7 +40,6 @@ div.image {
 
 div.metadata {
     border: 1px solid gainsboro;
-    // background-color: lightcyan;
     padding: 10px;
     font-size: 18px;
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
@@ -182,7 +181,6 @@ div.parameters div.row-container div.left {
     width: 50%;
     margin-right: 5px;
     padding: 10px;
-    height: 250px;
     border: 1px solid gainsboro;
 }
 
@@ -190,7 +188,6 @@ div.parameters div.row-container div.right {
     width: 50%;
     margin-left: 5px;
     padding: 10px;
-    height: 250px;
     border: 1px solid gainsboro;
 }
 
@@ -207,6 +204,7 @@ div.parameters div.row-container label.name {
     font-size: 14px;
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     margin-left: 15px;
+    font-weight: bold;
 }
 
 div.parameters div.row-container div.button {
@@ -230,4 +228,50 @@ div.parameters div.row-container div.down {
     background-color: white;
     padding: 10px;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12);
+}
+
+div.parameters div.row-container table {
+    width: 100%;
+    border: $border-style;
+    text-align: left;
+    border-collapse: collapse;
+    background-color: white;
+}
+
+div.parameters div.row-container table th {
+    background-color: honeydew;
+}
+
+div.parameters div.row-container table th,
+div.parameters div.row-container table td {
+    border: $border-style;
+    padding: 5px;
+    font-size: 16px;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+div.parameters div.row-container table .col1 {
+    width: 30%;
+}
+
+div.parameters div.row-container table .col2 {
+    width: 27%;
+}
+
+div.parameters div.row-container table .col3 {
+    width: 27%;
+}
+
+div.parameters div.row-container table .col4 {
+    text-align: center;
+}
+
+div.parameters div.row-container table input {
+    box-sizing: border-box;
+    width: 100%;
+}
+
+div.parameters div.row-container table button {
+    box-sizing: border-box;
+    width: 100%;
 }
