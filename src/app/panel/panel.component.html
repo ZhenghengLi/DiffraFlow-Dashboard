@@ -131,7 +131,9 @@
                 <label class="name">MONITOR</label>
                 <div class="button">
                     <button class="top" (click)="onMonitorSync()">Sync</button>
-                    <button class="top" [disabled]="!monitorCheckAll()">Update All</button>
+                    <button class="top" [disabled]="!monitorCheckAll()" (click)="onMonitorUpdateAll()">
+                        Update All
+                    </button>
                 </div>
                 <label class="status" [style.color]="monitorStatusColor">{{ monitorStatusText }}</label>
             </div>
