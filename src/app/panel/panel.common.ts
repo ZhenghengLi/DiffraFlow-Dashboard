@@ -8,6 +8,21 @@ export enum ImageFetcherMsgType {
     image = 'image',
 }
 
+export type IngesterParam = {
+    runNumber: string;
+    doubleParam: string;
+    integerParam: string;
+    stringParam: string;
+};
+
+export type MonitorParam = {
+    lowerEnergyCut: string;
+    upperEnergyCut: string;
+    doubleParam: string;
+    integerParam: string;
+    stringParam: string;
+};
+
 export function generateColorTable(): Uint32Array {
     let colorTable = new Uint32Array(256);
 

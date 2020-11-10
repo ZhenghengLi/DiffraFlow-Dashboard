@@ -87,7 +87,7 @@
                     <button class="top">Sync</button>
                     <button class="top">Update All</button>
                 </div>
-                <label class="status">status</label>
+                <label class="status" [style.color]="ingesterStatusColor">{{ ingesterStatusText }}</label>
             </div>
             <div class="down">
                 <table>
@@ -99,26 +99,26 @@
                     </tr>
                     <tr>
                         <td class="col1">Run Number</td>
-                        <td class="col2">3</td>
-                        <td class="col3"><input /></td>
+                        <td class="col2">{{ ingesterCurrent.runNumber }}</td>
+                        <td class="col3"><input [(ngModel)]="ingesterChange.runNumber" /></td>
                         <td class="col4"><button>Update</button></td>
                     </tr>
                     <tr>
                         <td class="col1">Double Param</td>
-                        <td class="col2">1.23</td>
-                        <td class="col3"><input /></td>
+                        <td class="col2">{{ ingesterCurrent.doubleParam }}</td>
+                        <td class="col3"><input [(ngModel)]="ingesterChange.doubleParam" /></td>
                         <td class="col4"><button>Update</button></td>
                     </tr>
                     <tr>
                         <td class="col1">Integer Param</td>
-                        <td class="col2">56</td>
-                        <td class="col3"><input /></td>
+                        <td class="col2">{{ ingesterCurrent.integerParam }}</td>
+                        <td class="col3"><input [(ngModel)]="ingesterChange.integerParam" /></td>
                         <td class="col4"><button>Update</button></td>
                     </tr>
                     <tr>
                         <td class="col1">String Param</td>
-                        <td class="col2">xfel</td>
-                        <td class="col3"><input /></td>
+                        <td class="col2">{{ ingesterCurrent.stringParam }}</td>
+                        <td class="col3"><input [(ngModel)]="ingesterChange.stringParam" /></td>
                         <td class="col4"><button>Update</button></td>
                     </tr>
                 </table>
@@ -131,7 +131,7 @@
                     <button class="top">Sync</button>
                     <button class="top">Update All</button>
                 </div>
-                <label class="status">status</label>
+                <label class="status" [style.color]="monitorStatusColor">{{ monitorStatusText }}</label>
             </div>
             <div class="down">
                 <table>
@@ -143,32 +143,32 @@
                     </tr>
                     <tr>
                         <td class="col1">Lower Energy Cut</td>
-                        <td class="col2">0</td>
-                        <td class="col3"><input /></td>
+                        <td class="col2">{{ monitorCurrent.lowerEnergyCut }}</td>
+                        <td class="col3"><input [(ngModel)]="monitorChange.lowerEnergyCut" /></td>
                         <td class="col4"><button>Update</button></td>
                     </tr>
                     <tr>
                         <td class="col1">Upper Energy Cut</td>
-                        <td class="col2">100</td>
-                        <td class="col3"><input /></td>
+                        <td class="col2">{{ monitorCurrent.upperEnergyCut }}</td>
+                        <td class="col3"><input [(ngModel)]="monitorChange.upperEnergyCut" /></td>
                         <td class="col4"><button>Update</button></td>
                     </tr>
                     <tr>
                         <td class="col1">Double Param</td>
-                        <td class="col2">1.23</td>
-                        <td class="col3"><input /></td>
+                        <td class="col2">{{ monitorCurrent.doubleParam }}</td>
+                        <td class="col3"><input [(ngModel)]="monitorChange.doubleParam" /></td>
                         <td class="col4"><button>Update</button></td>
                     </tr>
                     <tr>
                         <td class="col1">Integer Param</td>
-                        <td class="col2">56</td>
-                        <td class="col3"><input /></td>
+                        <td class="col2">{{ monitorCurrent.integerParam }}</td>
+                        <td class="col3"><input [(ngModel)]="monitorChange.integerParam" /></td>
                         <td class="col4"><button>Update</button></td>
                     </tr>
                     <tr>
                         <td class="col1">String Param</td>
-                        <td class="col2">xfel</td>
-                        <td class="col3"><input /></td>
+                        <td class="col2">{{ monitorCurrent.stringParam }}</td>
+                        <td class="col3"><input [(ngModel)]="monitorChange.stringParam" /></td>
                         <td class="col4"><button>Update</button></td>
                     </tr>
                 </table>

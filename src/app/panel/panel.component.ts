@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ImageFetcherCommand, ImageFetcherMsgType } from './panel.common';
+import { ImageFetcherCommand, ImageFetcherMsgType, IngesterParam, MonitorParam } from './panel.common';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
@@ -21,6 +21,44 @@ export class PanelComponent implements OnInit, OnDestroy {
     imageMeta: any = {};
     analysisResult: any = {};
     imageFeature: any = {};
+
+    // runtime parameters
+    //// ingester
+    ingesterCurrent: IngesterParam = {
+        runNumber: '1',
+        doubleParam: '2',
+        integerParam: '3',
+        stringParam: '4',
+    };
+    ingesterChange: IngesterParam = {
+        runNumber: '5',
+        doubleParam: '6',
+        integerParam: '7',
+        stringParam: '8',
+    };
+    //// monitor
+    monitorCurrent: MonitorParam = {
+        lowerEnergyCut: '9',
+        upperEnergyCut: '10',
+        doubleParam: '11',
+        integerParam: '12',
+        stringParam: '13',
+    };
+    monitorChange: MonitorParam = {
+        lowerEnergyCut: '14',
+        upperEnergyCut: '15',
+        doubleParam: '16',
+        integerParam: '17',
+        stringParam: '18',
+    };
+
+    // update status
+    //// ingester
+    ingesterStatusText: string = 'ingester status';
+    ingesterStatusColor: string = 'green';
+    //// monitor
+    monitorStatusText: string = 'monitor status';
+    monitorStatusColor: string = 'green';
 
     ngOnInit(): void {
         console.log('init panel');

@@ -209,19 +209,23 @@ div.parameters div.row-container label.name {
 
 div.parameters div.row-container div.button {
     margin-left: 15px;
+    display: flex;
 }
 div.parameters div.row-container button.top {
     padding: 3px;
     margin-left: 5px;
     margin-right: 5px;
     font-size: 14px;
+    white-space: nowrap;
 }
 
 div.parameters div.row-container label.status {
     font-size: 16px;
     font-family: "Times New Roman", Times, serif;
     margin-left: 15px;
-    color: green;
+    // color: green;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 div.parameters div.row-container div.down {
