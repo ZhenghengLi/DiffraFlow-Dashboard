@@ -2,7 +2,7 @@
     <div class="button-group">
         <button (click)="resume()" [disabled]="listening">Resume</button>
         <button (click)="pause()" [disabled]="!listening">Pause</button>
-        <select (change)="selectedView = $event.target.value">
+        <select [(ngModel)]="selectedView">
             <option value="currentMetrics" selected>Current Metrics</option>
             <option disabled>──────────────────────</option>
             <option value="sendFrameRate">Sending Frame Rate</option>
