@@ -6,3 +6,5 @@
  page is shown below.
 
  ![panel](docs/images/panel.png)
+
+ Note: the image shown in this screenshot is from the test data generated using [CXIDB ID 83](https://cxidb.org/id-83.html).
