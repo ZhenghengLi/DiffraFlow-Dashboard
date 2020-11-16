@@ -1,7 +1,7 @@
 #!/bin/bash
 
 tmp_dir=$(dirname ${BASH_SOURCE[0]})
-base_dir=$(cd $tmp_dir > /dev/null ; pwd)
+base_dir=$(cd $tmp_dir/.. > /dev/null ; pwd)
 
 registry_url="10.15.86.19:25443"
 
