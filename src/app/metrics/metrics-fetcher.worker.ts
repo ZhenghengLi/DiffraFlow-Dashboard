@@ -229,6 +229,7 @@ let combinerMetrics: MetricsData = {
         imageAlignmentRate: { unit: 'Frame Rate (fps)', data: {} },
         lateArrivingRate: { unit: 'Frame Rate (fps)', data: {} },
         partialImageRate: { unit: 'Frame Rate (fps)', data: {} },
+        imagePushLossRate: { unit: 'Frame Rate (fps)', data: {} },
         imageTakingRate: { unit: 'Frame Rate (fps)', data: {} },
         imageSendingRate: { unit: 'Frame Rate (fps)', data: {} },
     },
@@ -241,6 +242,7 @@ let combinerMetricsHistory: any = {
     imageAlignmentTotal: {},
     lateArrivingTotal: {},
     partialImageTotal: {},
+    imagePushLossTotal: {},
     imageTakingTotal: {},
     imageSendingTotal: {},
 };
@@ -321,9 +323,16 @@ function processCombinerMetrics(count: number, data: any): void {
             combinerMetrics.selected.partialImageRate.data[instance] = calculate_rate(currentPartHist);
         }
 
-        // image takine
+        // queue
         let queue_stats = data[instance].image_cache?.queue_stats;
         if (queue_stats) {
+            // image push loss
+            let currentLossHist = combinerMetricsHistory.imagePushLossTotal[instance]
+                ? combinerMetricsHistory.imagePushLossTotal[instance]
+                : (combinerMetricsHistory.imagePushLossTotal[instance] = []);
+            update_hist(currentLossHist, [currentTimestamp, queue_stats.image_data_queue_push_fail_counts]);
+            combinerMetrics.selected.imagePushLossRate.data[instance] = calculate_rate(currentLossHist);
+            // image taking
             let currentCntHist = combinerMetricsHistory.imageTakingTotal[instance]
                 ? combinerMetricsHistory.imageTakingTotal[instance]
                 : (combinerMetricsHistory.imageTakingTotal[instance] = []);
@@ -357,6 +366,7 @@ let ingesterMetrics: MetricsData = {
         processedImageRate: { unit: 'Frame Rate (fps)', data: {} },
         monitoringImageRate: { unit: 'Frame Rate (fps)', data: {} },
         savingImageRate: { unit: 'Frame Rate (fps)', data: {} },
+        savingImageLossRate: { unit: 'Frame Rate (fps)', data: {} },
         savedImageRate: { unit: 'Frame Rate (fps)', data: {} },
         imageRequestRate: { unit: 'Request Rate (rps)', data: {} },
         imageSendRate: { unit: 'Frame Rate (fps)', data: {} },
@@ -370,6 +380,7 @@ let ingesterMetricsHistory: any = {
     processedImageTotal: {},
     monitoringImageTotal: {},
     savingImageTotal: {},
+    savingImageLossTotal: {},
     savedImageTotal: {},
     imageRequestTotal: {},
     imageSendTotal: {},
@@ -428,6 +439,12 @@ function processIngesterMetrics(count: number, data: any): void {
                 : (ingesterMetricsHistory.savingImageTotal[instance] = []);
             update_hist(currentSavHist, [currentTimestamp, image_filter.total_images_for_save]);
             ingesterMetrics.selected.savingImageRate.data[instance] = calculate_rate(currentSavHist);
+            // savingImageLoss
+            let currentLossHist = ingesterMetricsHistory.savingImageLossTotal[instance]
+                ? ingesterMetricsHistory.savingImageLossTotal[instance]
+                : (ingesterMetricsHistory.savingImageLossTotal[instance] = []);
+            update_hist(currentLossHist, [currentTimestamp, image_filter.total_images_for_save_fail]);
+            ingesterMetrics.selected.savingImageLossRate.data[instance] = calculate_rate(currentLossHist);
         }
 
         // image_writer

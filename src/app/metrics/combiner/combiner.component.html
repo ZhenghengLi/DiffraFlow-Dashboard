@@ -13,6 +13,7 @@
             <option value="lateArrivingRate">Late Arriving Rate</option>
             <option value="partialImageRate">Partial Image Rate</option>
             <option disabled>──────────────────────</option>
+            <option value="imagePushLossRate">Image Push Loss Rate</option>
             <option value="imageTakingRate">Image Taking Rate</option>
             <option value="imageSendingRate">Image Sending Rate</option>
         </select>
@@ -78,6 +79,15 @@
             [title]="partialImageRate_DataArr[idx][0]"
             [yLabel]="partialImageRate_Unit"
             [data]="partialImageRate_DataArr[idx][1]"
+        >
+        </app-time-line-chart>
+    </div>
+    <div class="card-group" *ngSwitchCase="'imagePushLossRate'">
+        <app-time-line-chart
+            *ngFor="let idx of imagePushLossRate_Indexes"
+            [title]="imagePushLossRate_DataArr[idx][0]"
+            [yLabel]="imagePushLossRate_Unit"
+            [data]="imagePushLossRate_DataArr[idx][1]"
         >
         </app-time-line-chart>
     </div>

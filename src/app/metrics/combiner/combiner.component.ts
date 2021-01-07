@@ -57,6 +57,12 @@ export class CombinerComponent implements OnInit, OnDestroy {
     public partialImageRate_Unit: string = '';
     public partialImageRate_Object: any;
 
+    // imagePushLossRate
+    public imagePushLossRate_Indexes: number[] = [];
+    public imagePushLossRate_DataArr: [string, any][] = [];
+    public imagePushLossRate_Unit: string = '';
+    public imagePushLossRate_Object: any;
+
     // imageTakingRate
     public imageTakingRate_Indexes: number[] = [];
     public imageTakingRate_DataArr: [string, any][] = [];
@@ -157,6 +163,18 @@ export class CombinerComponent implements OnInit, OnDestroy {
                 this.partialImageRate_DataArr.push([key, this.partialImageRate_Object[key]]);
             }
             this.partialImageRate_Indexes = [...this.partialImageRate_DataArr.keys()];
+        }
+
+        // imagePushLossRate
+        this.imagePushLossRate_DataArr = [];
+        this.imagePushLossRate_Indexes = [];
+        if (data.selected.imagePushLossRate) {
+            this.imagePushLossRate_Unit = data.selected.imagePushLossRate.unit;
+            this.imagePushLossRate_Object = data.selected.imagePushLossRate.data;
+            for (let key in this.imagePushLossRate_Object) {
+                this.imagePushLossRate_DataArr.push([key, this.imagePushLossRate_Object[key]]);
+            }
+            this.imagePushLossRate_Indexes = [...this.imagePushLossRate_DataArr.keys()];
         }
 
         // imageTakingRate
