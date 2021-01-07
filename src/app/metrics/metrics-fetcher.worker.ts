@@ -595,10 +595,12 @@ let overviewMetrics: MetricsOverview = {
         partialImageCount: 0,
         lateArrivingCount: 0,
         maxFrameQueueSize: 0,
+        imagePushLossCount: 0,
         // from ingester
         processedImageCount: 0,
         monitoringImageCount: 0,
         savingImageCount: 0,
+        savingImageLossCount: 0,
         savedImageCount: 0,
         imageRequestCount: 0,
         imageSendCount: 0,
@@ -616,10 +618,12 @@ let overviewMetrics: MetricsOverview = {
         partialImageRate: { unit: 'Frame Rate (kfps)', data: [] },
         lateArrivingRate: { unit: 'Frame Rate (kfps)', data: [] },
         maxFrameQueueSize: { unit: 'Queue Size', data: [] },
+        imagePushLossRate: { unit: 'Frame Rate (kfps)', data: [] },
         // from ingester
         processedImageRate: { unit: 'Frame Rate (kfps)', data: [] },
         monitoringImageRate: { unit: 'Frame Rate (kfps)', data: [] },
         savingImageRate: { unit: 'Frame Rate (kfps)', data: [] },
+        savingImageLossRate: { unit: 'Frame Rate (kfps)', data: [] },
         savedImageRate: { unit: 'Frame Rate (kfps)', data: [] },
         imageRequestRate: { unit: 'Request Rate (rps)', data: [] },
         imageSendRate: { unit: 'Frame Rate (fps)', data: [] },
@@ -686,6 +690,14 @@ function processOverviewMetrics(count: number, data: any): void {
             );
         }
     }
+    //// image queue
+    overviewMetrics.aggregated.imagePushLossCount = 0;
+    for (let instance in combiner) {
+        let queue_stats = combiner[instance].image_cache?.queue_stats;
+        if (queue_stats) {
+            overviewMetrics.aggregated.imagePushLossCount += queue_stats.image_data_queue_push_fail_counts;
+        }
+    }
 
     // from ingester
     let ingester = data[MetricsType.ingester];
@@ -693,12 +705,14 @@ function processOverviewMetrics(count: number, data: any): void {
     overviewMetrics.aggregated.processedImageCount = 0;
     overviewMetrics.aggregated.monitoringImageCount = 0;
     overviewMetrics.aggregated.savingImageCount = 0;
+    overviewMetrics.aggregated.savingImageLossCount = 0;
     for (let instance in ingester) {
         let image_filter = ingester[instance].image_filter;
         if (image_filter) {
             overviewMetrics.aggregated.processedImageCount += image_filter.total_processed_images;
             overviewMetrics.aggregated.monitoringImageCount += image_filter.total_images_for_monitor;
             overviewMetrics.aggregated.savingImageCount += image_filter.total_images_for_save;
+            overviewMetrics.aggregated.savingImageLossCount += image_filter.total_images_for_save_fail;
         }
     }
     //// image_writer
@@ -772,6 +786,7 @@ function processOverviewMetrics(count: number, data: any): void {
     let lateArrivingRate = 0;
     let partialImageRate = 0;
     let maxFrameQueueSize = 0;
+    let imagePushLossRate = 0;
     for (let instance in combinerMetrics.metrics) {
         if (overviewMetrics.update_timestamp - combinerMetrics.metrics[instance].timestamp > maxTimeDelay) continue;
         imageAlignmentRate += getLastRate(combinerMetrics.selected.imageAlignmentRate.data[instance]);
@@ -781,6 +796,7 @@ function processOverviewMetrics(count: number, data: any): void {
             maxFrameQueueSize,
             getLastRate(combinerMetrics.selected.maxFrameQueueSize.data[instance])
         );
+        imagePushLossRate += getLastRate(combinerMetrics.selected.imagePushLossRate.data[instance]);
     }
     update_hist(
         overviewMetrics.history.imageAlignmentRate.data,
@@ -802,10 +818,16 @@ function processOverviewMetrics(count: number, data: any): void {
         [overviewMetrics.update_timestamp, maxFrameQueueSize],
         0
     );
+    update_hist(
+        overviewMetrics.history.imagePushLossRate.data,
+        [overviewMetrics.update_timestamp, imagePushLossRate / 1000],
+        0
+    );
     //// from ingester
     let processedImageRate = 0;
     let monitoringImageRate = 0;
     let savingImageRate = 0;
+    let savingImageLossRate = 0;
     let savedImageRate = 0;
     let imageRequestRate = 0;
     let imageSendRate = 0;
@@ -814,6 +836,7 @@ function processOverviewMetrics(count: number, data: any): void {
         processedImageRate += getLastRate(ingesterMetrics.selected.processedImageRate.data[instance]);
         monitoringImageRate += getLastRate(ingesterMetrics.selected.monitoringImageRate.data[instance]);
         savingImageRate += getLastRate(ingesterMetrics.selected.savingImageRate.data[instance]);
+        savingImageLossRate += getLastRate(ingesterMetrics.selected.savingImageLossRate.data[instance]);
         savedImageRate += getLastRate(ingesterMetrics.selected.savedImageRate.data[instance]);
         imageRequestRate += getLastRate(ingesterMetrics.selected.imageRequestRate.data[instance]);
         imageSendRate += getLastRate(ingesterMetrics.selected.imageSendRate.data[instance]);
@@ -831,6 +854,11 @@ function processOverviewMetrics(count: number, data: any): void {
     update_hist(
         overviewMetrics.history.savingImageRate.data,
         [overviewMetrics.update_timestamp, savingImageRate / 1000],
+        0
+    );
+    update_hist(
+        overviewMetrics.history.savingImageLossRate.data,
+        [overviewMetrics.update_timestamp, savingImageLossRate / 1000],
         0
     );
     update_hist(

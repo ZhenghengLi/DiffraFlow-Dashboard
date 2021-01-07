@@ -68,6 +68,11 @@
                     <td class="col-2">{{ maxFrameQueueSize | number }}</td>
                     <td class="col-3">-</td>
                 </tr>
+                <tr class="combiner">
+                    <td class="col-1">{{ imagePushLossTitle }}</td>
+                    <td class="col-2">{{ imagePushLossCount / 1000 | number }} k</td>
+                    <td class="col-3">{{ imagePushLossRate_Last | number }} kfps</td>
+                </tr>
                 <tr class="ingester">
                     <td class="col-1">{{ processedImageTitle }}</td>
                     <td class="col-2">{{ processedImageCount / 1000 | number }} k</td>
@@ -82,6 +87,11 @@
                     <td class="col-1">{{ savingImageTitle }}</td>
                     <td class="col-2">{{ savingImageCount / 1000 | number }} k</td>
                     <td class="col-3">{{ savingImageRate_Last | number }} kfps</td>
+                </tr>
+                <tr class="ingester">
+                    <td class="col-1">{{ savingImageLossTitle }}</td>
+                    <td class="col-2">{{ savingImageLossCount / 1000 | number }} k</td>
+                    <td class="col-3">{{ savingImageLossRate_Last | number }} kfps</td>
                 </tr>
                 <tr class="ingester">
                     <td class="col-1">{{ savedImageTitle }}</td>
@@ -151,6 +161,12 @@
         >
         </app-time-line-chart>
         <app-time-line-chart
+            [title]="imagePushLossTitle"
+            [yLabel]="imagePushLossRate_Unit"
+            [data]="imagePushLossRate_Data"
+        >
+        </app-time-line-chart>
+        <app-time-line-chart
             [title]="processedImageTitle"
             [yLabel]="processedImageRate_Unit"
             [data]="processedImageRate_Data"
@@ -163,6 +179,12 @@
         >
         </app-time-line-chart>
         <app-time-line-chart [title]="savingImageTitle" [yLabel]="savingImageRate_Unit" [data]="savingImageRate_Data">
+        </app-time-line-chart>
+        <app-time-line-chart
+            [title]="savingImageLossTitle"
+            [yLabel]="savingImageLossRate_Unit"
+            [data]="savingImageLossRate_Data"
+        >
         </app-time-line-chart>
         <app-time-line-chart [title]="savedImageTitle" [yLabel]="savedImageRate_Unit" [data]="savedImageRate_Data">
         </app-time-line-chart>

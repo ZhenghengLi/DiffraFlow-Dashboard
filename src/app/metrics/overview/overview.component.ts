@@ -75,6 +75,12 @@ export class OverviewComponent implements OnInit, OnDestroy {
     maxFrameQueueSize_Data: [number, number][] = [];
     maxFrameQueueSize_Unit: string = '';
 
+    imagePushLossTitle: string = 'Image Push Full Queue Loss';
+    imagePushLossCount: number = 0;
+    imagePushLossRate_Last: number = 0;
+    imagePushLossRate_Data: [number, number][] = [];
+    imagePushLossRate_Unit: string = '';
+
     processedImageTitle: string = 'Processed Image';
     processedImageCount: number = 0;
     processedImageRate_Last: number = 0;
@@ -92,6 +98,12 @@ export class OverviewComponent implements OnInit, OnDestroy {
     savingImageRate_Last: number = 0;
     savingImageRate_Data: [number, number][] = [];
     savingImageRate_Unit: string = '';
+
+    savingImageLossTitle: string = 'Saving Image Full Queue Loss';
+    savingImageLossCount: number = 0;
+    savingImageLossRate_Last: number = 0;
+    savingImageLossRate_Data: [number, number][] = [];
+    savingImageLossRate_Unit: string = '';
 
     savedImageTitle: string = 'Saved Image';
     savedImageCount: number = 0;
@@ -188,6 +200,13 @@ export class OverviewComponent implements OnInit, OnDestroy {
         this.maxFrameQueueSize_Unit = data.history.maxFrameQueueSize.unit;
         this.maxFrameQueueSize_Data = data.history.maxFrameQueueSize.data;
 
+        this.imagePushLossCount = data.aggregated.imagePushLossCount;
+        this.imagePushLossRate_Unit = data.history.imagePushLossRate.unit;
+        this.imagePushLossRate_Data = data.history.imagePushLossRate.data;
+        if (this.imagePushLossRate_Data.length > 0) {
+            this.imagePushLossRate_Last = this.imagePushLossRate_Data.slice(-1)[0][1];
+        }
+
         this.processedImageCount = data.aggregated.processedImageCount;
         this.processedImageRate_Unit = data.history.processedImageRate.unit;
         this.processedImageRate_Data = data.history.processedImageRate.data;
@@ -207,6 +226,13 @@ export class OverviewComponent implements OnInit, OnDestroy {
         this.savingImageRate_Data = data.history.savingImageRate.data;
         if (this.savingImageRate_Data.length > 0) {
             this.savingImageRate_Last = this.savingImageRate_Data.slice(-1)[0][1];
+        }
+
+        this.savingImageLossCount = data.aggregated.savingImageLossCount;
+        this.savingImageLossRate_Unit = data.history.savingImageLossRate.unit;
+        this.savingImageLossRate_Data = data.history.savingImageLossRate.data;
+        if (this.savingImageLossRate_Data.length > 0) {
+            this.savingImageLossRate_Last = this.savingImageLossRate_Data.slice(-1)[0][1];
         }
 
         this.savedImageCount = data.aggregated.savedImageCount;
