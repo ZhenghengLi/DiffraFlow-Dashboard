@@ -51,6 +51,12 @@ export class IngesterComponent implements OnInit, OnDestroy {
     public savingImageRate_Unit: string = '';
     public savingImageRate_Object: any;
 
+    // savingImageLossRate
+    public savingImageLossRate_Indexes: number[] = [];
+    public savingImageLossRate_DataArr: [string, any][] = [];
+    public savingImageLossRate_Unit: string = '';
+    public savingImageLossRate_Object: any;
+
     // savedImageRate
     public savedImageRate_Indexes: number[] = [];
     public savedImageRate_DataArr: [string, any][] = [];
@@ -145,6 +151,18 @@ export class IngesterComponent implements OnInit, OnDestroy {
                 this.savingImageRate_DataArr.push([key, this.savingImageRate_Object[key]]);
             }
             this.savingImageRate_Indexes = [...this.savingImageRate_DataArr.keys()];
+        }
+
+        // savingImageLossRate
+        this.savingImageLossRate_DataArr = [];
+        this.savingImageLossRate_Indexes = [];
+        if (data.selected.savingImageLossRate) {
+            this.savingImageLossRate_Unit = data.selected.savingImageLossRate.unit;
+            this.savingImageLossRate_Object = data.selected.savingImageLossRate.data;
+            for (let key in this.savingImageLossRate_Object) {
+                this.savingImageLossRate_DataArr.push([key, this.savingImageLossRate_Object[key]]);
+            }
+            this.savingImageLossRate_Indexes = [...this.savingImageLossRate_DataArr.keys()];
         }
 
         // savedImageRate

@@ -11,6 +11,7 @@
             <option value="processedImageRate">Processed Image Rate</option>
             <option value="monitoringImageRate">Monitoring Image Rate</option>
             <option value="savingImageRate">Saving Image Rate</option>
+            <option value="savingImageLossRate">Saving Image Loss Rate</option>
             <option disabled>──────────────────────</option>
             <option value="savedImageRate">Saved Image Rate</option>
             <option disabled>──────────────────────</option>
@@ -70,6 +71,15 @@
             [title]="savingImageRate_DataArr[idx][0]"
             [yLabel]="savingImageRate_Unit"
             [data]="savingImageRate_DataArr[idx][1]"
+        >
+        </app-time-line-chart>
+    </div>
+    <div class="card-group" *ngSwitchCase="'savingImageLossRate'">
+        <app-time-line-chart
+            *ngFor="let idx of savingImageLossRate_Indexes"
+            [title]="savingImageLossRate_DataArr[idx][0]"
+            [yLabel]="savingImageLossRate_Unit"
+            [data]="savingImageLossRate_DataArr[idx][1]"
         >
         </app-time-line-chart>
     </div>
