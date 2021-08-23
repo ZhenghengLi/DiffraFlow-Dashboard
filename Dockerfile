@@ -2,7 +2,8 @@
 # maintainer: Zhengheng Li <zhenghenge@gmail.com>
 
 # build ############################################################
-FROM zhenghengli/angular:10.1.5 AS builder
+# FROM zhenghengli/angular:10.1.5 AS builder
+FROM registry.physky.org/lizhengheng/docker-angular:10.1.5 AS builder
 
 ARG SOURCE_DIR=/opt/angular-devel
 
