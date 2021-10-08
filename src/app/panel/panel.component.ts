@@ -26,16 +26,56 @@ export class PanelComponent implements OnInit, OnDestroy {
     //// ingester
     ingesterCurrent: IngesterParam = {
         runNumber: '',
-        doubleParam: '',
-        integerParam: '',
-        stringParam: '',
+
+        // peak MSSE
+        peakMsseMinEnergy: '',
+        peakMsseMaxEnergy: '',
+        peakMsseInlierThr: '',
+        peakMsseOutlierThr: '',
+        peakMsseResidualThr: '',
+        peakMsseEnergyThr: '',
+
+        // global mean and rms
+        meanRmsMinEnergy: '',
+        meanRmsMaxEnergy: '',
+
+        // saving filter thresholds
+        savingGlobalMeanThr: '',
+        savingGlobalRmsThr: '',
+        savingPeakPixelsThr: '',
+
+        // monitor filter thresholds
+        monitorGlobalMeanThr: '',
+        monitorGlobalRmsThr: '',
+        monitorPeakPixelsThr: '',
     };
+
     ingesterChange: IngesterParam = {
         runNumber: '',
-        doubleParam: '',
-        integerParam: '',
-        stringParam: '',
+
+        // peak MSSE
+        peakMsseMinEnergy: '',
+        peakMsseMaxEnergy: '',
+        peakMsseInlierThr: '',
+        peakMsseOutlierThr: '',
+        peakMsseResidualThr: '',
+        peakMsseEnergyThr: '',
+
+        // global mean and rms
+        meanRmsMinEnergy: '',
+        meanRmsMaxEnergy: '',
+
+        // saving filter thresholds
+        savingGlobalMeanThr: '',
+        savingGlobalRmsThr: '',
+        savingPeakPixelsThr: '',
+
+        // monitor filter thresholds
+        monitorGlobalMeanThr: '',
+        monitorGlobalRmsThr: '',
+        monitorPeakPixelsThr: '',
     };
+
     //// monitor
     monitorCurrent: MonitorParam = {
         lowerEnergyCut: '',
@@ -103,9 +143,34 @@ export class PanelComponent implements OnInit, OnDestroy {
         }
         let ingesterConfigData = await response.json();
         this.ingesterCurrent.runNumber = this.ingesterChange.runNumber = ingesterConfigData.data?.dy_run_number;
-        this.ingesterCurrent.doubleParam = this.ingesterChange.doubleParam = ingesterConfigData.data?.dy_param_double;
-        this.ingesterCurrent.integerParam = this.ingesterChange.integerParam = ingesterConfigData.data?.dy_param_int;
-        this.ingesterCurrent.stringParam = this.ingesterChange.stringParam = ingesterConfigData.data?.dy_param_string;
+        this.ingesterCurrent.peakMsseMinEnergy = this.ingesterChange.peakMsseMinEnergy =
+            ingesterConfigData.data?.dy_peak_msse_min_energy;
+        this.ingesterCurrent.peakMsseMaxEnergy = this.ingesterChange.peakMsseMaxEnergy =
+            ingesterConfigData.data?.dy_peak_msse_max_energy;
+        this.ingesterCurrent.peakMsseInlierThr = this.ingesterChange.peakMsseInlierThr =
+            ingesterConfigData.data?.dy_peak_msse_inlier_thr;
+        this.ingesterCurrent.peakMsseOutlierThr = this.ingesterChange.peakMsseOutlierThr =
+            ingesterConfigData.data?.dy_peak_msse_outlier_thr;
+        this.ingesterCurrent.peakMsseResidualThr = this.ingesterChange.peakMsseResidualThr =
+            ingesterConfigData.data?.dy_peak_msse_residual_thr;
+        this.ingesterCurrent.peakMsseEnergyThr = this.ingesterChange.peakMsseEnergyThr =
+            ingesterConfigData.data?.dy_peak_msse_energy_thr;
+        this.ingesterCurrent.meanRmsMinEnergy = this.ingesterChange.meanRmsMinEnergy =
+            ingesterConfigData.data?.dy_mean_rms_min_energy;
+        this.ingesterCurrent.meanRmsMaxEnergy = this.ingesterChange.meanRmsMaxEnergy =
+            ingesterConfigData.data?.dy_mean_rms_max_energy;
+        this.ingesterCurrent.savingGlobalMeanThr = this.ingesterChange.savingGlobalMeanThr =
+            ingesterConfigData.data?.dy_saving_global_mean_thr;
+        this.ingesterCurrent.savingGlobalRmsThr = this.ingesterChange.savingGlobalRmsThr =
+            ingesterConfigData.data?.dy_saving_global_rms_thr;
+        this.ingesterCurrent.savingPeakPixelsThr = this.ingesterChange.savingPeakPixelsThr =
+            ingesterConfigData.data?.dy_saving_peak_pixels_thr;
+        this.ingesterCurrent.monitorGlobalMeanThr = this.ingesterChange.monitorGlobalMeanThr =
+            ingesterConfigData.data?.dy_monitor_global_mean_thr;
+        this.ingesterCurrent.monitorGlobalRmsThr = this.ingesterChange.monitorGlobalRmsThr =
+            ingesterConfigData.data?.dy_monitor_global_rms_thr;
+        this.ingesterCurrent.monitorPeakPixelsThr = this.ingesterChange.monitorPeakPixelsThr =
+            ingesterConfigData.data?.dy_monitor_peak_pixels_thr;
     }
 
     onIngesterSync(): void {
@@ -132,15 +197,49 @@ export class PanelComponent implements OnInit, OnDestroy {
         if (this.ingesterCheckRunNumber()) {
             patch_data.dy_run_number = this.ingesterChange.runNumber;
         }
-        if (this.ingesterCheckDoubleParam()) {
-            patch_data.dy_param_double = this.ingesterChange.doubleParam;
+        if (this.ingesterCheckPeakMsseMinEnergy()) {
+            patch_data.dy_peak_msse_min_energy = this.ingesterChange.peakMsseMinEnergy;
         }
-        if (this.ingesterCheckIntegerParam()) {
-            patch_data.dy_param_int = this.ingesterChange.integerParam;
+        if (this.ingesterCheckPeakMsseMaxEnergy()) {
+            patch_data.dy_peak_msse_max_energy = this.ingesterChange.peakMsseMaxEnergy;
         }
-        if (this.ingesterCheckStringParam()) {
-            patch_data.dy_param_string = this.ingesterChange.stringParam;
+        if (this.ingesterCheckPeakMsseInlierThr()) {
+            patch_data.dy_peak_msse_inlier_thr = this.ingesterChange.peakMsseInlierThr;
         }
+        if (this.ingesterCheckPeakMsseOutlierThr()) {
+            patch_data.dy_peak_msse_outlier_thr = this.ingesterChange.peakMsseOutlierThr;
+        }
+        if (this.ingesterCheckPeakMsseResidualThr()) {
+            patch_data.dy_peak_msse_residual_thr = this.ingesterChange.peakMsseResidualThr;
+        }
+        if (this.ingesterCheckPeakMsseEnergyThr()) {
+            patch_data.dy_peak_msse_energy_thr = this.ingesterChange.peakMsseEnergyThr;
+        }
+        if (this.ingesterCheckMeanRmsMinEnergy()) {
+            patch_data.dy_mean_rms_min_energy = this.ingesterChange.meanRmsMinEnergy;
+        }
+        if (this.ingesterCheckMeanRmsMaxEnergy()) {
+            patch_data.dy_mean_rms_max_energy = this.ingesterChange.meanRmsMaxEnergy;
+        }
+        if (this.ingesterCheckSavingGlobalMeanThr()) {
+            patch_data.dy_saving_global_mean_thr = this.ingesterChange.savingGlobalMeanThr;
+        }
+        if (this.ingesterCheckSavingGlobalRmsThr()) {
+            patch_data.dy_saving_global_rms_thr = this.ingesterChange.savingGlobalRmsThr;
+        }
+        if (this.ingesterCheckSavingPeakPixelsThr()) {
+            patch_data.dy_saving_peak_pixels_thr = this.ingesterChange.savingPeakPixelsThr;
+        }
+        if (this.ingesterCheckMonitorGlobalMeanThr()) {
+            patch_data.dy_monitor_global_mean_thr = this.ingesterChange.monitorGlobalMeanThr;
+        }
+        if (this.ingesterCheckMonitorGlobalRmsThr()) {
+            patch_data.dy_monitor_global_rms_thr = this.ingesterChange.monitorGlobalRmsThr;
+        }
+        if (this.ingesterCheckMonitorPeakPixelsThr()) {
+            patch_data.dy_monitor_peak_pixels_thr = this.ingesterChange.monitorPeakPixelsThr;
+        }
+
         let response = await fetch(ingesterConfigUrl, {
             method: 'PATCH',
             headers: new Headers({ 'Content-Type': 'application/json' }),
@@ -177,14 +276,47 @@ export class PanelComponent implements OnInit, OnDestroy {
             case 'runNumber':
                 patch_data.dy_run_number = this.ingesterChange.runNumber;
                 break;
-            case 'doubleParam':
-                patch_data.dy_param_double = this.ingesterChange.doubleParam;
+            case 'peakMsseMinEnergy':
+                patch_data.dy_peak_msse_min_energy = this.ingesterChange.peakMsseMinEnergy;
                 break;
-            case 'integerParam':
-                patch_data.dy_param_int = this.ingesterChange.integerParam;
+            case 'peakMsseMaxEnergy':
+                patch_data.dy_peak_msse_max_energy = this.ingesterChange.peakMsseMaxEnergy;
                 break;
-            case 'stringParam':
-                patch_data.dy_param_string = this.ingesterChange.stringParam;
+            case 'peakMsseInlierThr':
+                patch_data.dy_peak_msse_inlier_thr = this.ingesterChange.peakMsseInlierThr;
+                break;
+            case 'peakMsseOutlierThr':
+                patch_data.dy_peak_msse_outlier_thr = this.ingesterChange.peakMsseOutlierThr;
+                break;
+            case 'peakMsseResidualThr':
+                patch_data.dy_peak_msse_residual_thr = this.ingesterChange.peakMsseResidualThr;
+                break;
+            case 'peakMsseEnergyThr':
+                patch_data.dy_peak_msse_energy_thr = this.ingesterChange.peakMsseEnergyThr;
+                break;
+            case 'meanRmsMinEnergy':
+                patch_data.dy_mean_rms_min_energy = this.ingesterChange.meanRmsMinEnergy;
+                break;
+            case 'meanRmsMaxEnergy':
+                patch_data.dy_mean_rms_max_energy = this.ingesterChange.meanRmsMaxEnergy;
+                break;
+            case 'savingGlobalMeanThr':
+                patch_data.dy_saving_global_mean_thr = this.ingesterChange.savingGlobalMeanThr;
+                break;
+            case 'savingGlobalRmsThr':
+                patch_data.dy_saving_global_rms_thr = this.ingesterChange.savingGlobalRmsThr;
+                break;
+            case 'savingPeakPixelsThr':
+                patch_data.dy_saving_peak_pixels_thr = this.ingesterChange.savingPeakPixelsThr;
+                break;
+            case 'monitorGlobalMeanThr':
+                patch_data.dy_monitor_global_mean_thr = this.ingesterChange.monitorGlobalMeanThr;
+                break;
+            case 'monitorGlobalRmsThr':
+                patch_data.dy_monitor_global_rms_thr = this.ingesterChange.monitorGlobalRmsThr;
+                break;
+            case 'monitorPeakPixelsThr':
+                patch_data.dy_monitor_peak_pixels_thr = this.ingesterChange.monitorPeakPixelsThr;
                 break;
             default:
                 throw new Error(`unknown key ${key}`);
@@ -353,9 +485,8 @@ export class PanelComponent implements OnInit, OnDestroy {
     ingesterCheckAll(): boolean {
         return (
             this.ingesterCheckRunNumber() ||
-            this.ingesterCheckDoubleParam() ||
-            this.ingesterCheckIntegerParam() ||
-            this.ingesterCheckStringParam()
+            this.ingesterCheckPeakMsseMinEnergy() ||
+            this.ingesterCheckPeakMsseMaxEnergy()
         );
     }
     ingesterCheckRunNumber(): boolean {
@@ -364,24 +495,164 @@ export class PanelComponent implements OnInit, OnDestroy {
         if (!this.ingesterChange.runNumber.match(/^\d+$/)) return false;
         return true;
     }
-    ingesterCheckDoubleParam(): boolean {
-        if (!this.ingesterChange.doubleParam) return false;
-        if (this.ingesterChange.doubleParam === this.ingesterCurrent.doubleParam) return false;
-        if (!this.ingesterChange.doubleParam.match(/^-?\d+\.?\d*$/)) return false;
-        if (parseFloat(this.ingesterChange.doubleParam) === parseFloat(this.ingesterCurrent.doubleParam)) {
+    ingesterCheckPeakMsseMinEnergy(): boolean {
+        if (!this.ingesterChange.peakMsseMinEnergy) return false;
+        if (this.ingesterChange.peakMsseMinEnergy === this.ingesterCurrent.peakMsseMinEnergy) return false;
+        if (!this.ingesterChange.peakMsseMinEnergy.match(/^-?\d+\.?\d*$/)) return false;
+        if (parseFloat(this.ingesterChange.peakMsseMinEnergy) === parseFloat(this.ingesterCurrent.peakMsseMinEnergy)) {
+            return false;
+        }
+        if (parseFloat(this.ingesterChange.peakMsseMinEnergy) < parseFloat(this.ingesterCurrent.peakMsseMaxEnergy)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    ingesterCheckPeakMsseMaxEnergy(): boolean {
+        if (!this.ingesterChange.peakMsseMaxEnergy) return false;
+        if (this.ingesterChange.peakMsseMaxEnergy === this.ingesterCurrent.peakMsseMaxEnergy) return false;
+        if (!this.ingesterChange.peakMsseMaxEnergy.match(/^-?\d+\.?\d*$/)) return false;
+        if (parseFloat(this.ingesterChange.peakMsseMaxEnergy) === parseFloat(this.ingesterCurrent.peakMsseMaxEnergy)) {
+            return false;
+        }
+        if (parseFloat(this.ingesterChange.peakMsseMaxEnergy) > parseFloat(this.ingesterCurrent.peakMsseMinEnergy)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    ingesterCheckPeakMsseInlierThr(): boolean {
+        if (!this.ingesterChange.peakMsseInlierThr) return false;
+        if (this.ingesterChange.peakMsseInlierThr === this.ingesterCurrent.peakMsseInlierThr) return false;
+        if (!this.ingesterChange.peakMsseInlierThr.match(/^-?\d+\.?\d*$/)) return false;
+        if (parseFloat(this.ingesterChange.peakMsseInlierThr) === parseFloat(this.ingesterCurrent.peakMsseInlierThr)) {
             return false;
         }
         return true;
     }
-    ingesterCheckIntegerParam(): boolean {
-        if (!this.ingesterChange.integerParam) return false;
-        if (this.ingesterChange.integerParam === this.ingesterCurrent.integerParam) return false;
-        if (!this.ingesterChange.integerParam.match(/^-?\d+$/)) return false;
+    ingesterCheckPeakMsseOutlierThr(): boolean {
+        if (!this.ingesterChange.peakMsseOutlierThr) return false;
+        if (this.ingesterChange.peakMsseOutlierThr === this.ingesterCurrent.peakMsseOutlierThr) return false;
+        if (!this.ingesterChange.peakMsseOutlierThr.match(/^-?\d+\.?\d*$/)) return false;
+        if (
+            parseFloat(this.ingesterChange.peakMsseOutlierThr) === parseFloat(this.ingesterCurrent.peakMsseOutlierThr)
+        ) {
+            return false;
+        }
         return true;
     }
-    ingesterCheckStringParam(): boolean {
-        if (!this.ingesterChange.stringParam) return false;
-        if (this.ingesterChange.stringParam === this.ingesterCurrent.stringParam) return false;
+    ingesterCheckPeakMsseResidualThr(): boolean {
+        if (!this.ingesterChange.peakMsseResidualThr) return false;
+        if (this.ingesterChange.peakMsseResidualThr === this.ingesterCurrent.peakMsseResidualThr) return false;
+        if (!this.ingesterChange.peakMsseResidualThr.match(/^-?\d+\.?\d*$/)) return false;
+        if (
+            parseFloat(this.ingesterChange.peakMsseResidualThr) === parseFloat(this.ingesterCurrent.peakMsseResidualThr)
+        ) {
+            return false;
+        }
+        return true;
+    }
+    ingesterCheckPeakMsseEnergyThr(): boolean {
+        if (!this.ingesterChange.peakMsseEnergyThr) return false;
+        if (this.ingesterChange.peakMsseEnergyThr === this.ingesterCurrent.peakMsseEnergyThr) return false;
+        if (!this.ingesterChange.peakMsseEnergyThr.match(/^-?\d+\.?\d*$/)) return false;
+        if (parseFloat(this.ingesterChange.peakMsseEnergyThr) === parseFloat(this.ingesterCurrent.peakMsseEnergyThr)) {
+            return false;
+        }
+        return true;
+    }
+    ingesterCheckMeanRmsMinEnergy(): boolean {
+        if (!this.ingesterChange.meanRmsMinEnergy) return false;
+        if (this.ingesterChange.meanRmsMinEnergy === this.ingesterCurrent.meanRmsMinEnergy) return false;
+        if (!this.ingesterChange.meanRmsMinEnergy.match(/^-?\d+\.?\d*$/)) return false;
+        if (parseFloat(this.ingesterChange.meanRmsMinEnergy) === parseFloat(this.ingesterCurrent.meanRmsMinEnergy)) {
+            return false;
+        }
+        if (parseFloat(this.ingesterChange.meanRmsMinEnergy) < parseFloat(this.ingesterCurrent.meanRmsMaxEnergy)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    ingesterCheckMeanRmsMaxEnergy(): boolean {
+        if (!this.ingesterChange.meanRmsMaxEnergy) return false;
+        if (this.ingesterChange.meanRmsMaxEnergy === this.ingesterCurrent.meanRmsMaxEnergy) return false;
+        if (!this.ingesterChange.meanRmsMaxEnergy.match(/^-?\d+\.?\d*$/)) return false;
+        if (parseFloat(this.ingesterChange.meanRmsMaxEnergy) === parseFloat(this.ingesterCurrent.meanRmsMaxEnergy)) {
+            return false;
+        }
+        if (parseFloat(this.ingesterChange.meanRmsMaxEnergy) > parseFloat(this.ingesterCurrent.meanRmsMinEnergy)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    ingesterCheckSavingGlobalMeanThr(): boolean {
+        if (!this.ingesterChange.savingGlobalMeanThr) return false;
+        if (this.ingesterChange.savingGlobalMeanThr === this.ingesterCurrent.savingGlobalMeanThr) return false;
+        if (!this.ingesterChange.savingGlobalMeanThr.match(/^-?\d+\.?\d*$/)) return false;
+        if (
+            parseFloat(this.ingesterChange.savingGlobalMeanThr) === parseFloat(this.ingesterCurrent.savingGlobalMeanThr)
+        ) {
+            return false;
+        }
+        return true;
+    }
+    ingesterCheckSavingGlobalRmsThr(): boolean {
+        if (!this.ingesterChange.savingGlobalRmsThr) return false;
+        if (this.ingesterChange.savingGlobalRmsThr === this.ingesterCurrent.savingGlobalRmsThr) return false;
+        if (!this.ingesterChange.savingGlobalRmsThr.match(/^-?\d+\.?\d*$/)) return false;
+        if (
+            parseFloat(this.ingesterChange.savingGlobalRmsThr) === parseFloat(this.ingesterCurrent.savingGlobalRmsThr)
+        ) {
+            return false;
+        }
+        return true;
+    }
+    ingesterCheckSavingPeakPixelsThr(): boolean {
+        if (!this.ingesterChange.savingPeakPixelsThr) return false;
+        if (this.ingesterChange.savingPeakPixelsThr === this.ingesterCurrent.savingPeakPixelsThr) return false;
+        if (!this.ingesterChange.savingPeakPixelsThr.match(/^-?\d+\.?\d*$/)) return false;
+        if (
+            parseFloat(this.ingesterChange.savingPeakPixelsThr) === parseFloat(this.ingesterCurrent.savingPeakPixelsThr)
+        ) {
+            return false;
+        }
+        return true;
+    }
+    ingesterCheckMonitorGlobalMeanThr(): boolean {
+        if (!this.ingesterChange.monitorGlobalMeanThr) return false;
+        if (this.ingesterChange.monitorGlobalMeanThr === this.ingesterCurrent.monitorGlobalMeanThr) return false;
+        if (!this.ingesterChange.monitorGlobalMeanThr.match(/^-?\d+\.?\d*$/)) return false;
+        if (
+            parseFloat(this.ingesterChange.monitorGlobalMeanThr) ===
+            parseFloat(this.ingesterCurrent.monitorGlobalMeanThr)
+        ) {
+            return false;
+        }
+        return true;
+    }
+    ingesterCheckMonitorGlobalRmsThr(): boolean {
+        if (!this.ingesterChange.monitorGlobalRmsThr) return false;
+        if (this.ingesterChange.monitorGlobalRmsThr === this.ingesterCurrent.monitorGlobalRmsThr) return false;
+        if (!this.ingesterChange.monitorGlobalRmsThr.match(/^-?\d+\.?\d*$/)) return false;
+        if (
+            parseFloat(this.ingesterChange.monitorGlobalRmsThr) === parseFloat(this.ingesterCurrent.monitorGlobalRmsThr)
+        ) {
+            return false;
+        }
+        return true;
+    }
+    ingesterCheckMonitorPeakPixelsThr(): boolean {
+        if (!this.ingesterChange.monitorPeakPixelsThr) return false;
+        if (this.ingesterChange.monitorPeakPixelsThr === this.ingesterCurrent.monitorPeakPixelsThr) return false;
+        if (!this.ingesterChange.monitorPeakPixelsThr.match(/^-?\d+\.?\d*$/)) return false;
+        if (
+            parseFloat(this.ingesterChange.monitorPeakPixelsThr) ===
+            parseFloat(this.ingesterCurrent.monitorPeakPixelsThr)
+        ) {
+            return false;
+        }
         return true;
     }
 

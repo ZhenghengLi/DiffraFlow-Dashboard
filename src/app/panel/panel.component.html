@@ -110,39 +110,182 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="col1">Double Param</td>
-                        <td class="col2">{{ ingesterCurrent.doubleParam }}</td>
-                        <td class="col3"><input [(ngModel)]="ingesterChange.doubleParam" /></td>
+                        <td class="col1">Peak Finding : Min Energy</td>
+                        <td class="col2">{{ ingesterCurrent.peakMsseMinEnergy }}</td>
+                        <td class="col3"><input [(ngModel)]="ingesterChange.peakMsseMinEnergy" /></td>
                         <td class="col4">
                             <button
-                                [disabled]="!ingesterCheckDoubleParam()"
-                                (click)="onIngesterUpdateOne('doubleParam')"
+                                [disabled]="!ingesterCheckPeakMsseMinEnergy()"
+                                (click)="onIngesterUpdateOne('peakMsseMinEnergy')"
                             >
                                 Update
                             </button>
                         </td>
                     </tr>
                     <tr>
-                        <td class="col1">Integer Param</td>
-                        <td class="col2">{{ ingesterCurrent.integerParam }}</td>
-                        <td class="col3"><input [(ngModel)]="ingesterChange.integerParam" /></td>
+                        <td class="col1">Peak Finding : Max Energy</td>
+                        <td class="col2">{{ ingesterCurrent.peakMsseMaxEnergy }}</td>
+                        <td class="col3"><input [(ngModel)]="ingesterChange.peakMsseMaxEnergy" /></td>
                         <td class="col4">
                             <button
-                                [disabled]="!ingesterCheckIntegerParam()"
-                                (click)="onIngesterUpdateOne('integerParam')"
+                                [disabled]="!ingesterCheckPeakMsseMaxEnergy()"
+                                (click)="onIngesterUpdateOne('peakMsseMaxEnergy')"
                             >
                                 Update
                             </button>
                         </td>
                     </tr>
                     <tr>
-                        <td class="col1">String Param</td>
-                        <td class="col2">{{ ingesterCurrent.stringParam }}</td>
-                        <td class="col3"><input [(ngModel)]="ingesterChange.stringParam" /></td>
+                        <td class="col1">Peak Finding : Inlier Threshold</td>
+                        <td class="col2">{{ ingesterCurrent.peakMsseInlierThr }}</td>
+                        <td class="col3"><input [(ngModel)]="ingesterChange.peakMsseInlierThr" /></td>
                         <td class="col4">
                             <button
-                                [disabled]="!ingesterCheckStringParam()"
-                                (click)="onIngesterUpdateOne('stringParam')"
+                                [disabled]="!ingesterCheckPeakMsseInlierThr()"
+                                (click)="onIngesterUpdateOne('peakMsseInlierThr')"
+                            >
+                                Update
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col1">Peak Finding : Outlier Threshold</td>
+                        <td class="col2">{{ ingesterCurrent.peakMsseOutlierThr }}</td>
+                        <td class="col3"><input [(ngModel)]="ingesterChange.peakMsseOutlierThr" /></td>
+                        <td class="col4">
+                            <button
+                                [disabled]="!ingesterCheckPeakMsseOutlierThr()"
+                                (click)="onIngesterUpdateOne('peakMsseOutlierThr')"
+                            >
+                                Update
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col1">Peak Finding : Residual Threshold</td>
+                        <td class="col2">{{ ingesterCurrent.peakMsseResidualThr }}</td>
+                        <td class="col3"><input [(ngModel)]="ingesterChange.peakMsseResidualThr" /></td>
+                        <td class="col4">
+                            <button
+                                [disabled]="!ingesterCheckPeakMsseResidualThr()"
+                                (click)="onIngesterUpdateOne('peakMsseResidualThr')"
+                            >
+                                Update
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col1">Peak Finding : Energy Threshold</td>
+                        <td class="col2">{{ ingesterCurrent.peakMsseEnergyThr }}</td>
+                        <td class="col3"><input [(ngModel)]="ingesterChange.peakMsseEnergyThr" /></td>
+                        <td class="col4">
+                            <button
+                                [disabled]="!ingesterCheckPeakMsseEnergyThr()"
+                                (click)="onIngesterUpdateOne('peakMsseEnergyThr')"
+                            >
+                                Update
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col1">Global Mean & RMS : Min Energy</td>
+                        <td class="col2">{{ ingesterCurrent.meanRmsMinEnergy }}</td>
+                        <td class="col3"><input [(ngModel)]="ingesterChange.meanRmsMinEnergy" /></td>
+                        <td class="col4">
+                            <button
+                                [disabled]="!ingesterCheckMeanRmsMinEnergy()"
+                                (click)="onIngesterUpdateOne('meanRmsMinEnergy')"
+                            >
+                                Update
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col1">Global Mean & RMS : Max Energy</td>
+                        <td class="col2">{{ ingesterCurrent.meanRmsMaxEnergy }}</td>
+                        <td class="col3"><input [(ngModel)]="ingesterChange.meanRmsMaxEnergy" /></td>
+                        <td class="col4">
+                            <button
+                                [disabled]="!ingesterCheckMeanRmsMaxEnergy()"
+                                (click)="onIngesterUpdateOne('meanRmsMaxEnergy')"
+                            >
+                                Update
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col1">Saving : Global Mean Threshold</td>
+                        <td class="col2">{{ ingesterCurrent.savingGlobalMeanThr }}</td>
+                        <td class="col3"><input [(ngModel)]="ingesterChange.savingGlobalMeanThr" /></td>
+                        <td class="col4">
+                            <button
+                                [disabled]="!ingesterCheckSavingGlobalMeanThr()"
+                                (click)="onIngesterUpdateOne('savingGlobalMeanThr')"
+                            >
+                                Update
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col1">Saving : Global RMS Threshold</td>
+                        <td class="col2">{{ ingesterCurrent.savingGlobalRmsThr }}</td>
+                        <td class="col3"><input [(ngModel)]="ingesterChange.savingGlobalRmsThr" /></td>
+                        <td class="col4">
+                            <button
+                                [disabled]="!ingesterCheckSavingGlobalRmsThr()"
+                                (click)="onIngesterUpdateOne('savingGlobalRmsThr')"
+                            >
+                                Update
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col1">Saving : Peak Pixels Threshold</td>
+                        <td class="col2">{{ ingesterCurrent.savingPeakPixelsThr }}</td>
+                        <td class="col3"><input [(ngModel)]="ingesterChange.savingPeakPixelsThr" /></td>
+                        <td class="col4">
+                            <button
+                                [disabled]="!ingesterCheckSavingPeakPixelsThr()"
+                                (click)="onIngesterUpdateOne('savingPeakPixelsThr')"
+                            >
+                                Update
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col1">Monitor : Global Mean Threshold</td>
+                        <td class="col2">{{ ingesterCurrent.monitorGlobalMeanThr }}</td>
+                        <td class="col3"><input [(ngModel)]="ingesterChange.monitorGlobalMeanThr" /></td>
+                        <td class="col4">
+                            <button
+                                [disabled]="!ingesterCheckMonitorGlobalMeanThr()"
+                                (click)="onIngesterUpdateOne('monitorGlobalMeanThr')"
+                            >
+                                Update
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col1">Monitor : Global RMS Threshold</td>
+                        <td class="col2">{{ ingesterCurrent.monitorGlobalRmsThr }}</td>
+                        <td class="col3"><input [(ngModel)]="ingesterChange.monitorGlobalRmsThr" /></td>
+                        <td class="col4">
+                            <button
+                                [disabled]="!ingesterCheckMonitorGlobalRmsThr()"
+                                (click)="onIngesterUpdateOne('monitorGlobalRmsThr')"
+                            >
+                                Update
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col1">Monitor : Peak Pixels Threshold</td>
+                        <td class="col2">{{ ingesterCurrent.monitorPeakPixelsThr }}</td>
+                        <td class="col3"><input [(ngModel)]="ingesterChange.monitorPeakPixelsThr" /></td>
+                        <td class="col4">
+                            <button
+                                [disabled]="!ingesterCheckMonitorPeakPixelsThr()"
+                                (click)="onIngesterUpdateOne('monitorPeakPixelsThr')"
                             >
                                 Update
                             </button>

@@ -10,9 +10,24 @@ export enum ImageFetcherMsgType {
 
 export type IngesterParam = {
     runNumber: string;
-    doubleParam: string;
-    integerParam: string;
-    stringParam: string;
+
+    peakMsseMinEnergy: string;
+    peakMsseMaxEnergy: string;
+    peakMsseInlierThr: string;
+    peakMsseOutlierThr: string;
+    peakMsseResidualThr: string;
+    peakMsseEnergyThr: string;
+
+    meanRmsMinEnergy: string;
+    meanRmsMaxEnergy: string;
+
+    savingGlobalMeanThr: string;
+    savingGlobalRmsThr: string;
+    savingPeakPixelsThr: string;
+
+    monitorGlobalMeanThr: string;
+    monitorGlobalRmsThr: string;
+    monitorPeakPixelsThr: string;
 };
 
 export type MonitorParam = {
