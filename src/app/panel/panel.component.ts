@@ -486,7 +486,19 @@ export class PanelComponent implements OnInit, OnDestroy {
         return (
             this.ingesterCheckRunNumber() ||
             this.ingesterCheckPeakMsseMinEnergy() ||
-            this.ingesterCheckPeakMsseMaxEnergy()
+            this.ingesterCheckPeakMsseMaxEnergy() ||
+            this.ingesterCheckPeakMsseInlierThr() ||
+            this.ingesterCheckPeakMsseOutlierThr() ||
+            this.ingesterCheckPeakMsseResidualThr() ||
+            this.ingesterCheckPeakMsseEnergyThr() ||
+            this.ingesterCheckMeanRmsMinEnergy() ||
+            this.ingesterCheckMeanRmsMaxEnergy() ||
+            this.ingesterCheckSavingGlobalMeanThr() ||
+            this.ingesterCheckSavingGlobalRmsThr() ||
+            this.ingesterCheckSavingPeakPixelsThr() ||
+            this.ingesterCheckMonitorGlobalMeanThr() ||
+            this.ingesterCheckMonitorGlobalRmsThr() ||
+            this.ingesterCheckMonitorPeakPixelsThr()
         );
     }
     ingesterCheckRunNumber(): boolean {
