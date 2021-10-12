@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+empty
+
+## [0.1.2] - 2021-10-12
+
+### Added
+
+- panel page: add input fields for adjusting the configuration parameters of image feature extraction and data filtering.
+
+### Changed
+
+- about page: update the content of introduction text and the copyright year.
+
 ## [0.1.1] - 2021-01-08
 
 ### Added
