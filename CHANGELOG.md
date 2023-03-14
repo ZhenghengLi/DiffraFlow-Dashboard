@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 empty
 
+## [0.1.3] - 2023-03-14
+
+- Update the NOTICE file and prepare for the first public.
+
 ## [0.1.2] - 2021-10-12
 
 ### Added

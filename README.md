@@ -8,3 +8,13 @@
  ![panel](docs/images/panel.png)
 
  Note: the image shown in this screenshot is from the test data generated using [CXIDB ID 83](https://cxidb.org/id-83.html).
+
+## Build and Test
+
+Tested node version: 12, 14, 16
+
+```bash
+npm install --legacy-peer-deps
+npx ng build
+npx ng serve
+```
