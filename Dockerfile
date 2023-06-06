@@ -3,7 +3,7 @@
 
 # build ############################################################
 # FROM zhenghengli/angular:10.1.5 AS builder
-FROM registry.physky.org/lizhengheng/docker-angular:10.1.5 AS builder
+FROM registry.starlightdf.cc/lizhengheng/docker-angular:10.1.5 AS builder
 
 ARG SOURCE_DIR=/opt/angular-devel
 
